@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\CartController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\UserController;
@@ -31,7 +32,8 @@ Route::group(['prefix'=>'V1'],function(){
     Route::get('/users/{id}',[UserController::class,'show'])->name('api-user-show');
     Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::post('/users/logout',[UserController::class,'logout'])->name('api-user-logout');
-    Route::resource('/categories',CategoryController::class);
+        Route::resource('/categories',CategoryController::class);
         Route::resource('/products',ProductController::class);
+        Route::resource('/carts',CartController::class);
     });
 });
