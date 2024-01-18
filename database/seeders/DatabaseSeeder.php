@@ -27,13 +27,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        // TestModel::factory(10)->create();
-        // User::factory(10)->create();
-        // Category::factory(10)->create();
-        // Product::factory(10)->create();
-        // Order::factory(10)->create();
-        // OrderDetail::factory(10)->create();
-        Cart::factory(10)->create();
+        TestModel::factory(10)->create();
+        User::factory(10)->create();
+        $this->call([
+            UserSeeder::class
+        ]);
+        Category::factory(10)->create();
+        Product::factory(10)->create();
+        Order::factory(10)->create();
+        OrderDetail::factory(10)->create();
+        Cart::factory(50)->create();
 
     }
 }

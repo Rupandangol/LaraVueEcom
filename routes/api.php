@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\CartController;
 use App\Http\Controllers\V1\CategoryController;
+use App\Http\Controllers\V1\OrderController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\UserController;
 use Illuminate\Http\Request;
@@ -35,5 +36,6 @@ Route::group(['prefix'=>'V1'],function(){
         Route::resource('/categories',CategoryController::class);
         Route::resource('/products',ProductController::class);
         Route::resource('/carts',CartController::class);
+        Route::resource('/orders',OrderController::class);
     });
 });
