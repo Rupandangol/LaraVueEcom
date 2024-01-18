@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Order;
@@ -29,8 +30,10 @@ class DatabaseSeeder extends Seeder
         // ]);
         TestModel::factory(10)->create();
         User::factory(10)->create();
+        Admin::factory(10)->create();
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
+            AdminSeeder::class
         ]);
         Category::factory(10)->create();
         Product::factory(10)->create();
