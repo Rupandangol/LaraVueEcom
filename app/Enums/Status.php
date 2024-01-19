@@ -2,10 +2,9 @@
 
 namespace App\Enums;
 
-class Status
+enum Status: string
 {
-    const PENDING='pending';
-    const DELIVERED='delivered';
-    const IN_TRANSIT='in_transit';
-
+    case PENDING = 'pending';
+    case DELIVERED = 'delivered';
+    case IN_TRANSIT = 'in_transit';
 }

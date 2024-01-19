@@ -23,7 +23,7 @@ class UserController extends Controller
                 'message'=>'Invalid Credentials'
             ],401);
         }
-        $data['token']=$user->createToken($request->email)->plainTextToken;
+        $data['token']=$user->createToken($request->email,['role:user'])->plainTextToken;
         $data['user']=$user;
         $response=[
             'status'=>'success',
@@ -35,7 +35,7 @@ class UserController extends Controller
     public function register(RegisterUserRequest $request) 
     {
         $user=User::create($request->all());
-        $data['token']=$user->createToken($request->email)->plainTextToken;
+        $data['token']=$user->createToken($request->email,['role:user'])->plainTextToken;
         $data['user']=$user;
         $response = [
             'status' => 'success',

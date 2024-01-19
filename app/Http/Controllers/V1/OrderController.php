@@ -22,8 +22,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $userId=Auth::user()->id;
-        $orders=Order::with('orderDetails')->where('user_id',$userId)->get();
+        $userId = Auth::user()->id;
+        $orders = Order::with('orderDetails')->where('user_id', $userId)->get();
         return new OrderCollection($orders);
     }
 
@@ -32,17 +32,17 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request)
     {
-        $orderData=$this->orderDataBind($request);
+        $orderData = $this->orderDataBind($request);
         $order = Order::create($orderData);
         foreach ($request->product_id as $key => $item) {
-            $orderDetailData=$this->orderDetailDataBind($order,$request,$key);
+            $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
             $orderItem[] = OrderDetail::create($orderDetailData);
         }
         return response()->json([
-            'status'=>'success',
-            'message'=>'Order created successfully',
-            'data'=>['order'=>$order,'orderDetails'=>$orderItem]
-        ],200);
+            'status' => 'success',
+            'message' => 'Order created successfully',
+            'data' => ['order' => $order, 'orderDetails' => $orderItem]
+        ], 200);
     }
 
     /**
@@ -50,7 +50,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order=Order::with('orderDetails')->findOrFail($id);
+        $order = Order::with('orderDetails')->findOrFail($id);
         return new OrderResource($order);
     }
 
@@ -75,12 +75,23 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $order = Order::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
+        if (!$order) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Not Authorized'
+            ], 401);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Deleted Successfully'
+        ], 200);
     }
 
-    public function orderDataBind($request) : array {
+    public function orderDataBind($request): array
+    {
         $userId = Auth::user()->id;
-        $data=[
+        $data = [
             'user_id' => $userId,
             'total_price' => $request->total_price,
             'shipping_address' => $request->shipping_address,
@@ -88,8 +99,9 @@ class OrderController extends Controller
         ];
         return $data;
     }
-    public function orderDetailDataBind($order,$request,$key) : array {
-        $data=[
+    public function orderDetailDataBind($order, $request, $key): array
+    {
+        $data = [
             'order_id' => $order->id,
             'product_id' => $request->product_id[$key],
             'quantity' => $request->quantity[$key],
