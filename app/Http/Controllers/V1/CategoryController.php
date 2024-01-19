@@ -53,6 +53,10 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        return Category::findOrFail($id)->delete();
+        Category::findOrFail($id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Deleted Successfully'
+        ], 200);
     }
 }

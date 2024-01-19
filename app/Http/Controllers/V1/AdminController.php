@@ -50,6 +50,10 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
-        return $admin->delete();
+        $admin->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Deleted Successfully'
+        ], 200);
     }
 }
