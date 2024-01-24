@@ -23,6 +23,7 @@
                     </li>
                 </ul>
                 <form class="d-flex">
+                    <router-link class="btn btn-default" to="/login">Login</router-link>
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi-cart-fill me-1"></i>
                         Cart

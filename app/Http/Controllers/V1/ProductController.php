@@ -53,4 +53,12 @@ class ProductController extends Controller
     {
         return Product::findOrfail($id)->delete();
     }
+
+    /**
+     * Related products from storage
+     */
+    public function related()
+    {
+        return new ProductCollection(Product::orderByRaw('RAND()')->take(4)->get());
+    }
 }
