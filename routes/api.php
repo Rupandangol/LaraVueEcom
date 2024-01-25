@@ -33,15 +33,16 @@ Route::group(['prefix' => 'V1'], function () {
     Route::get('/users', [UserController::class, 'index'])->name('api-user-index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api-user-show');
     Route::group(['middleware' => ['auth:sanctum', 'type.user']], function () {
+        Route::get('/users-data', [UserController::class, 'getUserData'])->name('api-user-data');
         Route::post('/users/logout', [UserController::class, 'logout'])->name('api-user-logout');
         Route::resource('/categories', CategoryController::class);
-        Route::resource('/products', ProductController::class)->except('index','show');
+        Route::resource('/products', ProductController::class)->except('index', 'show');
         Route::resource('/carts', CartController::class);
         Route::resource('/orders', OrderController::class);
     });
-    Route::get('/products',[ProductController::class,'index'])->name('api-products.index');
-    Route::get('/products/{id}',[ProductController::class,'show'])->name('api-products.show');
-    Route::get('/related-products',[ProductController::class,'related'])->name('api-products.related');
+    Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('api-products.show');
+    Route::get('/related-products', [ProductController::class, 'related'])->name('api-products.related');
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
