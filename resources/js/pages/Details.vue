@@ -2,6 +2,7 @@
 import { onMounted, ref, watch, watchEffect } from 'vue';
 import Card from '../components/DashboardProductCard.vue';
 import { useRoute } from 'vue-router';
+import axios from 'axios';
 
 const route = useRoute();
 const product = ref();
@@ -16,14 +17,27 @@ const getRelatedProducts = () => {
         relatedProducts.value = response.data.data;
     });
 }
-watchEffect(()=>{
+const addToCart = () => {
+    axios.post(`/api/V1/carts`, {
+        headers: {
+            Authoraization: `Bearer ${localStorage.getItem('user-token')}`
+        },
+        payload: {
+            'product_id': this.product.id,
+            'quantity': 1,
+        }
+    }).then((response) => {
+        console.log(response);
+    })
+}
+
+watchEffect(() => {
     getProductDetail();
     getRelatedProducts();
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 })
 onMounted(() => {
-    // getProductDetail();
-    // getRelatedProducts();
+
 })
 </script>
 <template>
@@ -42,8 +56,8 @@ onMounted(() => {
                     </div>
                     <p class="lead">{{ product?.description }}</p>
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
-                            style="max-width: 3rem" />
+                        <input class="form-control text-center me-3" id="inputQuantity" type="num"
+                            value="1" style="max-width: 3rem" />
                         <button class="btn btn-outline-dark flex-shrink-0" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
@@ -59,8 +73,9 @@ onMounted(() => {
             <h2 class="fw-bolder mb-4">Related products</h2>
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 <div class="col mb-5" v-for="relatedProduct in relatedProducts">
-                    <Card :item="relatedProduct"/>
+                    <Card :item="relatedProduct" />
                 </div>
             </div>
         </div>
-    </section></template>
+    </section>
+</template>

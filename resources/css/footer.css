@@ -1,0 +1,31 @@
+
+  
+  /* Apply a clearfix to the container to clear floats */
+  .footer-container::after {
+    content: "";
+    /* display: table; */
+    clear: both;
+  }
+  
+  /* Style for the footer container */
+  .footer-container {
+    background-color: #333; /* Background color */
+    color: #fff; /* Text color */
+    padding: 20px; /* Padding around the content */
+    text-align: center; /* Center-align text */
+    position: relative;
+    margin-top: auto; /* Push the footer to the bottom of the container */
+  }
+  
+  /* Style for footer links */
+  .footer-container a {
+    color: #fff; /* Link color */
+    text-decoration: none; /* Remove underline */
+    margin: 0 10px; /* Add spacing between links */
+  }
+  
+  /* Style for footer links on hover */
+  .footer-container a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+  

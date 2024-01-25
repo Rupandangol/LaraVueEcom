@@ -62,4 +62,9 @@ class UserController extends Controller
         // return User::findOrFail($id);
         return new UserResource(User::findOrFail($id));
     }
+    public function getUserData()  {
+        $user=Auth::user();
+        // return User::findOrFail($id);
+        return new UserResource($user);
+    }
 }
