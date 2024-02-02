@@ -16,7 +16,19 @@ class AdminOrderController extends Controller
      */
     public function index()
     {
-        return new OrderCollection(Order::with('orderDetails')->get());
+        $orders = new OrderCollection(Order::with('orderDetails', 'user')->get());
+        foreach ($orders as &$item) {
+            $total = 0;
+            foreach ($item['orderDetails'] as $subItem) {
+                $total += ($subItem['price'] * $subItem['quantity']);
+            }
+            $item['total_price'] = $total;
+        }
+        // return new OrderCollection(Order::with('orderDetails', 'user')->get());
+        return response()->json([
+            'status' => 'success',
+            'data' => $orders
+        ], 200);
     }
 
     /**
@@ -66,16 +78,15 @@ class AdminOrderController extends Controller
     /**
      * Update the status of resource in storage.
      */
-    public function statusUpdate(OrderStatusUpdateRequest $request,string $id)
+    public function statusUpdate(OrderStatusUpdateRequest $request, string $id)
     {
-        $order=Order::findOrFail($id);
-        if($order->status!=$request->status){
+        $order = Order::findOrFail($id);
+        if ($order->status != $request->status) {
             $order->update($request->all());
         }
         return response()->json([
-            'status'=>'success',
-            'message'=>'Updated Successfully'
+            'status' => 'success',
+            'message' => 'Updated Successfully'
         ]);
-        
     }
 }

@@ -47,30 +47,36 @@ export default [
         path: '/admin/dashboard',
         name: 'admin-dashboard',
         component: AdminDashboard,
+        meta: { requiresAdminAuth: true }
     },
     {
         path: '/admin/users',
         name: 'admin-users',
         component: AdminUserManagement,
+        meta: { requiresAdminAuth: true }
     },
     {
         path: '/admin/admins',
         name: 'admin-admins',
         component: AdminManagement,
+        meta: { requiresAdminAuth: true }
     },
     {
         path: '/admin/categories',
         name: 'admin-categories',
         component: Categories,
+        meta: { requiresAdminAuth: true }
     },
     {
         path: '/admin/products',
         name: 'admin-products',
         component: Products,
+        meta: { requiresAdminAuth: true }
     },
     {
         path: '/admin/orders',
         name: 'admin-orders',
         component: Orders,
+        meta: { requiresAdminAuth: true }
     },
 ]

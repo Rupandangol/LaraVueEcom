@@ -4,16 +4,21 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 
 const categories = ref([]);
-const getCategories = () => {
-    axios.get('/api/V1/categories')
-        .then((response) => {
-            categories.value = response.data.data;
-            console.log(response);
-        }).catch((error) => {
-            console.log(error);
-        })
+const getCategories = async() => {
+    const adminToken = localStorage.getItem('admin-token');
+    console.log(adminToken);
+    await axios.get('/api/V1/categories', {
+        headers: {
+            Authorization: `Bearer ${adminToken}`
+        }
+    }).then((response) => {
+        categories.value = response.data.data;
+        console.log(response);
+    }).catch((error) => {
+        console.log(error);
+    })
 }
-onMounted(()=>{
+onMounted(() => {
     getCategories();
 })
 </script>
