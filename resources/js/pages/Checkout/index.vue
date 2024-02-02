@@ -1,7 +1,9 @@
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import CardProductCard from '../../components/CartProductCard.vue';
+import AppNavbar from '../../components/AppNavbar.vue';
+import Footer from '../../components/Footer.vue';
 
 const cartData = ref({ 'data': [] });
 const getData = async () => {
@@ -19,11 +21,19 @@ const getData = async () => {
 
     }
 }
+const handleRemoveItem = (item) => {
+    // Handle the remove item event, you can remove the item from cartData
+    const index = this.cartData.indexOf(item);
+    if (index !== -1) {
+        this.cartData.splice(index, 1);
+    }
+}
 onMounted(() => {
     getData();
 })
 </script>
 <template>
+    <AppNavbar />
     <section class="h-100" style="background-color: #eee;">
         <div class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -50,4 +60,5 @@ onMounted(() => {
             </div>
         </div>
     </section>
+    <Footer />
 </template>

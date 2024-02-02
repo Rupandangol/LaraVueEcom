@@ -14,10 +14,11 @@ class AdminLoginController extends Controller
     public function login(AdminLoginRequest $request)
     {
         $admin = Admin::where('email', $request->email)->first();
-        if (!$admin || Hash::check($request->password, $admin->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Provided credential is incorrect']
-            ]);
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
+            return response()->json([
+                'status'=>'failed',
+                'message'=>'Invalid Credentials'
+            ],401);
         }
 
         return response()->json([

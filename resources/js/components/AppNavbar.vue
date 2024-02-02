@@ -1,3 +1,63 @@
+<script setup>
+import axios from 'axios';
+import { onMounted, ref, watchEffect } from 'vue';
+
+const cartCount = ref(0);
+const username = ref('');
+const isLoggedIn = ref(false);
+const logout = () => {
+    if (confirm('Are you sure?')) {
+        const headers = { Authorization: `Bearer ${localStorage.getItem('user-token')}` }
+        axios.post('/api/V1/users/logout', {}, { headers })
+            .then((response) => {
+                if (response.status == 200) {
+                    isLoggedIn.value = false;
+                    alert('Logged Out Successfully');
+                }
+            })
+    }
+}
+const getNameFromToken = async () => {
+    const token = localStorage.getItem('user-token');
+    // const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    if (!token) {
+        return ''; // Handle the case where the token is not present
+    }
+    try {
+        const response = await axios.get('/api/V1/users-data', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }).then((response) => {
+            isLoggedIn.value = true;
+            username.value = response.data.data.name;
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+const getCartCount = () => {
+    axios.get('/api/V1/carts-count',
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('user-token')}`
+            }
+        })
+        .then((response) => {
+            if (response.status == 200) {
+                cartCount.value = response.data.count;
+            }
+        });
+}
+watchEffect(() => {
+    isLoggedIn;
+    username;
+})
+onMounted(() => {
+    getNameFromToken();
+    getCartCount();
+})
+</script>
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
@@ -27,49 +87,19 @@
                     <div v-if="!isLoggedIn">
                         <router-link class="btn btn-default" to="/login">Login</router-link>
                     </div>
-                    <div v-else class="btn btn-primary">
-                        aa {{ username }}
+                    <div v-else>
+                        <button @click="logout" type="button" class="btn btn-default" to="/logout">
+                            Logout
+                            (<code class="text text-success">{{ username }}</code>)
+                        </button>
                     </div>
                     <router-link class="btn btn-outline-dark" to="/checkout">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">{{ cartCount }}</span>
                     </router-link>
                 </form>
             </div>
         </div>
     </nav>
 </template>
-<script>
-import axios from 'axios';
-
-export default {
-    data() {
-        return {
-            isLoggedIn: localStorage.getItem('user-token') !== null,
-            username: toString(this.getNameFromToken())
-        };
-    },
-    methods: {
-        async getNameFromToken() {
-            const token = localStorage.getItem('user-token');
-            // const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            if (!token) {
-                return ''; // Handle the case where the token is not present
-            }
-            try {
-                const response = await axios.get('/api/V1/users-data', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).then((response) => {
-                    return response.data.data.name;
-                });
-            } catch (error) {
-                console.log(error);
-            }
-
-        }
-    },
-}
-</script>

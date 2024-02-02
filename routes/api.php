@@ -35,9 +35,8 @@ Route::group(['prefix' => 'V1'], function () {
     Route::group(['middleware' => ['auth:sanctum', 'type.user']], function () {
         Route::get('/users-data', [UserController::class, 'getUserData'])->name('api-user-data');
         Route::post('/users/logout', [UserController::class, 'logout'])->name('api-user-logout');
-        Route::resource('/categories', CategoryController::class);
-        Route::resource('/products', ProductController::class)->except('index', 'show');
         Route::resource('/carts', CartController::class);
+        Route::get('/carts-count', [CartController::class, 'getCartCount'])->name('api-cart-count');
         Route::resource('/orders', OrderController::class);
     });
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
@@ -46,6 +45,8 @@ Route::group(['prefix' => 'V1'], function () {
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
+        Route::resource('/categories', CategoryController::class);
+        Route::resource('/products', ProductController::class)->except('index', 'show');
         Route::patch('/admin-status-orders/{id}', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
         Route::resource('/admin-orders', AdminOrderController::class);
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');

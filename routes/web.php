@@ -4,6 +4,7 @@ use App\Http\Controllers\Chat\pusherController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\V1\Admin\BackendApplicationController;
 use App\Http\Controllers\V1\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+Route::get('/admin/{view}',BackendApplicationController::class)->where('view','(.*)');
 Route::get('{view}',ApplicationController::class)->where('view','(.*)');
 // Route::get('/login',[LoginController::class,'index']);
 // Route::post('/login',[LoginController::class,'login'])->name('login');
