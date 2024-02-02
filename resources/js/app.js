@@ -25,5 +25,15 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+router.beforeEach((to, from, next) => {
+    const isAdminAuthenticated = localStorage.getItem('admin-token');
+
+    if (to.matched.some((route) => route.meta.requiresAdminAuth) && !isAdminAuthenticated) {
+        next('/admin/login');
+    } else {
+        next();
+    }
+});
+
 app.use(router);
 app.mount('#app');

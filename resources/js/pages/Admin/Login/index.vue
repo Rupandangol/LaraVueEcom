@@ -1,24 +1,3 @@
-<script setup>
-import axios from 'axios';
-import { reactive, ref, ssrContextKey } from 'vue';
-
-const form = reactive({
-    'email': "",
-    'password': "",
-})
-
-const login = () => {
-    axios.post('/api/V1/admins/login', { ...form })
-        .then((response) => {
-            const token = response.data.token;
-            localStorage.setItem('admin-token', token);
-            context.root.$router.push({ name: "admin-dashboard" });
-            console.log(response.data.token);
-        }).catch((error) => {
-            console.log('ERROR==>', error);
-        })
-};
-</script>
 <template>
     <div class="d-flex justify-content-center mt-5">
         <div class="login-box">
@@ -30,7 +9,7 @@ const login = () => {
                     <p class="login-box-msg">Sign in</p>
                     <form @submit.prevent="login">
                         <div class="input-group mb-3">
-                            <input type="email" name="email" required v-model="form.email" class="form-control"
+                            <input type="email" name="email" required v-model="email" class="form-control"
                                 placeholder="Email">
                             <div class="input-group-append">
                                 <div class="input-group-text">
@@ -39,7 +18,7 @@ const login = () => {
                             </div>
                         </div>
                         <div class="input-group mb-3">
-                            <input type="password" name="password" required v-model="form.password" class="form-control"
+                            <input type="password" name="password" required v-model="password" class="form-control"
                                 placeholder="Password">
                             <div class="input-group-append">
                                 <div class="input-group-text">
@@ -61,3 +40,29 @@ const login = () => {
         </div>
     </div>
 </template>
+<script>
+export default {
+    data() {
+        return {
+            'email': '',
+            'password': '',
+        };
+    },
+    methods: {
+        async login() {
+            try {
+                const response = await axios.post('/api/V1/admins/login', {
+                    email: this.email,
+                    password: this.password,
+                });
+                const token = response?.data?.token;
+                localStorage.setItem('admin-token', token);
+                this.$router.push('/admin/dashboard');
+               
+            } catch (error) {
+                console.log('Login Failed', error);
+            }
+        }
+    }
+}
+</script>
