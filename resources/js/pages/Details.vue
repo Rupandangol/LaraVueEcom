@@ -3,10 +3,13 @@ import { onMounted, ref, watch, watchEffect } from 'vue';
 import Card from '../components/DashboardProductCard.vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import AppNavbar from '../components/AppNavbar.vue';
+import Footer from '../components/Footer.vue';
 
 const route = useRoute();
-const product = ref();
-const relatedProducts = ref();
+const product = ref([]);
+const relatedProducts = ref([]);
+const quantityValue = ref(1);
 const getProductDetail = () => {
     axios.get(`/api/V1/products/${route.params.id}`).then((response) => {
         product.value = response.data.data;
@@ -17,18 +20,22 @@ const getRelatedProducts = () => {
         relatedProducts.value = response.data.data;
     });
 }
-const addToCart = () => {
-    axios.post(`/api/V1/carts`, {
-        headers: {
-            Authoraization: `Bearer ${localStorage.getItem('user-token')}`
-        },
-        payload: {
-            'product_id': this.product.id,
-            'quantity': 1,
-        }
-    }).then((response) => {
-        console.log(response);
-    })
+const addToCart = async () => {
+    const headers = {
+        Authorization: `Bearer ${localStorage.getItem('user-token')}`
+    }
+    const data = {
+        product_id: product.value.id,
+        quantity: quantityValue.value
+    }
+    await axios.post(`/api/V1/carts`, data, { headers })
+        .then((response) => {
+            if (response.status == 201) {
+                alert('Added to Cart');
+            } else if (response.status == 200) {
+                alert('Updated to Cart');
+            }
+        });
 }
 
 watchEffect(() => {
@@ -42,6 +49,8 @@ onMounted(() => {
 </script>
 <template>
     <!-- Product section-->
+    <AppNavbar />
+
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
@@ -56,9 +65,9 @@ onMounted(() => {
                     </div>
                     <p class="lead">{{ product?.description }}</p>
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num"
-                            value="1" style="max-width: 3rem" />
-                        <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <input class="form-control text-center me-3" v-model="quantityValue" id="inputQuantity" type="num"
+                            style="max-width: 3rem" />
+                        <button @click="addToCart" class="btn btn-outline-dark flex-shrink-0" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
                         </button>
@@ -78,4 +87,5 @@ onMounted(() => {
             </div>
         </div>
     </section>
+    <Footer />
 </template>

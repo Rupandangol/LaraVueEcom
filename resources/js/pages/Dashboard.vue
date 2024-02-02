@@ -2,6 +2,8 @@
 import Header from '../components/Header.vue';
 import Card from '../components/DashboardProductCard.vue';
 import { onMounted, ref } from 'vue';
+import Footer from '../components/Footer.vue';
+import AppNavbar from '../components/AppNavbar.vue';
 
 const products = ref({ 'data': [] });
 
@@ -16,6 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <AppNavbar />
     <Header />
     <!-- Section-->
     <section class="py-5">
@@ -27,4 +30,5 @@ onMounted(() => {
             </div>
         </div>
     </section>
+    <Footer />
 </template>
