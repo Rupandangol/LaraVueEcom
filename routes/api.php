@@ -45,6 +45,8 @@ Route::group(['prefix' => 'V1'], function () {
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('api-user-delete');
         Route::resource('/categories', CategoryController::class);
         Route::resource('/products', ProductController::class)->except('index', 'show');
         Route::patch('/admin-status-orders/{id}', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
