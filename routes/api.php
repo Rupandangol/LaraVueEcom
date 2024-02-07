@@ -52,6 +52,6 @@ Route::group(['prefix' => 'V1'], function () {
         Route::patch('/admin-status-orders/{id}', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
         Route::resource('/admin-orders', AdminOrderController::class);
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
+        Route::resource('/admins', AdminController::class);
     });
-    Route::resource('/admins', AdminController::class);
 });
