@@ -21,6 +21,7 @@ class OrderResource extends JsonResource
             'shipping_address' => $this->shipping_address,
             'status' => $this->status,
             'order_details' => new OrderDetailResource($this->whenLoaded('orderDetails')),
+            'product'=>new ProductResource($this->whenLoaded('orderDetails.product'))
         ];
     }
 }

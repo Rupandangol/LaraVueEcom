@@ -9,11 +9,14 @@ import AdminUserManagement from './pages/Admin/UserManagement/index.vue';
 import AdminUserManagementCreate from './pages/Admin/UserManagement/create.vue';
 import AdminUserManagementEdit from './pages/Admin/UserManagement/edit.vue';
 import AdminManagement from './pages/Admin/AdminManagement/index.vue';
+import AdminManagementCreate from './pages/Admin/AdminManagement/create.vue';
+import AdminManagementEdit from './pages/Admin/AdminManagement/edit.vue';
 import Categories from './pages/Admin/Categories/index.vue';
 import CategoryCreate from './pages/Admin/Categories/create.vue';
 import CategoryEdit from './pages/Admin/Categories/edit.vue';
 import Products from './pages/Admin/Products/index.vue';
 import Orders from './pages/Admin/Orders/index.vue';
+import OrderDetail from './pages/Admin/Orders/detail.vue';
 
 export default [
     {
@@ -79,6 +82,19 @@ export default [
         meta: { requiresAdminAuth: true }
     },
     {
+        path: '/admin/admins/create',
+        name: 'admin-admins-create',
+        component: AdminManagementCreate,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/admins/edit/:id',
+        name: 'admin-admins-edit',
+        component: AdminManagementEdit,
+        props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
         path: '/admin/categories',
         name: 'admin-categories',
         component: Categories,
@@ -107,6 +123,13 @@ export default [
         path: '/admin/orders',
         name: 'admin-orders',
         component: Orders,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/order-details/:id',
+        name: 'admin-order-details',
+        component: OrderDetail,
+        props: true,
         meta: { requiresAdminAuth: true }
     },
 ]

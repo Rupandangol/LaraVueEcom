@@ -1,11 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 
 const orders = ref([]);
 
-const getOrders = async() => {
+const getOrders = async () => {
     const adminToken = localStorage.getItem('admin-token');
     await axios.get(`/api/V1/admin-orders`, {
         headers: {
@@ -17,6 +17,15 @@ const getOrders = async() => {
         console.log(error);
     })
 }
+const status = (data) => {
+    if (data == 'delivered') {
+        return 'badge badge-success';
+    } else if (data == 'on_transit') {
+        return 'badge badge-info';
+    } else {
+        return 'badge badge-warning';
+    }
+};
 onMounted(() => {
     getOrders();
 })
@@ -45,19 +54,16 @@ onMounted(() => {
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.shipping_address }}</td>
                         <td>
-                            <div class="badge badge-warning" v-if="order.status==='pending'">
-                                Pending
-                            </div>
-                            <div class="badge badge-info" v-else-if="order.status==='on_transit'">
-                                On transit
-                            </div>
-                            <div class="badge badge-success" v-else>
-                                Delivered
+                            <div :class="status(order?.status)">
+                                {{ order?.status }}
                             </div>
                         </td>
                         <td>
-                            <button class="btn btn-warning btn-sm mr-2"><i class="fa fa-pen"></i></button>
-                            <button class="btn btn-danger btn-sm mr-2"><i class="fa fa-trash-alt"></i></button>
+                            <router-link title="Details" :to="{ name: 'admin-order-details', params: { id: order.id } }"
+                                class="btn btn-warning btn-sm mr-2"><i class="fa fa-file"></i></router-link>
+                            <button title="Edit" class="btn btn-warning btn-sm mr-2"><i class="fa fa-pen"></i></button>
+                            <button title="Delete" class="btn btn-danger btn-sm mr-2"><i
+                                    class="fa fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 </tbody>

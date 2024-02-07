@@ -24,7 +24,6 @@ class AdminOrderController extends Controller
             }
             $item['total_price'] = $total;
         }
-        // return new OrderCollection(Order::with('orderDetails', 'user')->get());
         return response()->json([
             'status' => 'success',
             'data' => $orders
@@ -44,7 +43,7 @@ class AdminOrderController extends Controller
      */
     public function show(string $id)
     {
-        return new OrderResource(Order::with('orderDetails')->where('id', $id)->first());
+        return new OrderResource(Order::with('orderDetails.product','user')->where('id', $id)->first());
     }
 
     /**

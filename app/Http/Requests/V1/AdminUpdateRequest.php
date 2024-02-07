@@ -22,12 +22,13 @@ class AdminUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>['required'],
-            'email'=>[
+            'name' => ['required'],
+            'email' => [
                 'required',
-                'unique:admins,email,'. $this->route()->parameter('admin')
+                'email',
+                'unique:admins,email,' . $this->route()->parameter('admin')
             ],
-            'password'=>['required','min:4','max:10'],
+            'password' => ['required', 'min:4', 'max:10'],
         ];
     }
 }
