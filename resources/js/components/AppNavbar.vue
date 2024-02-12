@@ -13,13 +13,13 @@ const logout = () => {
                 if (response.status == 200) {
                     isLoggedIn.value = false;
                     alert('Logged Out Successfully');
+                    localStorage.removeItem('user-token');
                 }
             })
     }
 }
 const getNameFromToken = async () => {
     const token = localStorage.getItem('user-token');
-    // const decodedToken = JSON.parse(atob(token.split('.')[1]));
     if (!token) {
         return ''; // Handle the case where the token is not present
     }

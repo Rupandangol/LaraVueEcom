@@ -4,6 +4,9 @@
             <div class="login-logo">
                 <a href="/dashboard"><b>LE</b>com</a>
             </div>
+            <div v-if="errorMsg" class="alert alert-danger">
+                {{ errorMsg }}
+            </div>
             <div class="card">
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Sign in</p>
@@ -46,6 +49,7 @@ export default {
         return {
             'email': '',
             'password': '',
+            'errorMsg': '',
         };
     },
     methods: {
@@ -58,9 +62,10 @@ export default {
                 const token = response?.data?.token;
                 localStorage.setItem('admin-token', token);
                 this.$router.push('/admin/dashboard');
-               
+
             } catch (error) {
-                console.log('Login Failed', error);
+                this.errorMsg = error.response.data.message;
+                console.log('Login Failed', error.response.data.message);
             }
         }
     }
