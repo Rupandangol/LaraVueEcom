@@ -23,6 +23,7 @@ class ProductFactory extends Factory
           'description'=>$this->faker->paragraph(),
           'price'=>$this->faker->randomDigit(),
           'stock_quantity'=>$this->faker->randomDigit(),
+          'image'=>$this->faker->image(storage_path('app/public/images'),400,300, null, false),
           'category_id'=>$this->faker->randomElement(Category::pluck('id'))
         ];
     }

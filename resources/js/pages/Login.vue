@@ -2,17 +2,20 @@
     <div class="row">
         <div class="col-md-6 offset-3 p-5">
             <h1 class="d-flex justify-content-center">Login LEcom</h1>
+            <div v-if="errorMsg" class="alert alert-danger">
+                {{ errorMsg }}
+            </div>
             <form @submit.prevent="login">
                 <div class="form-group">
                     <label for="email">Email address</label>
                     <input name="email" v-model="email" type="email" class="form-control" id="email"
-                        aria-describedby="emailHelp" placeholder="Enter email">
+                        aria-describedby="emailHelp" required placeholder="Enter email">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" name="password" v-model="password" class="form-control" id="password"
+                    <input type="password" name="password" required v-model="password" class="form-control" id="password"
                         placeholder="Password">
                 </div>
                 <!-- <div class="form-check">
@@ -30,6 +33,7 @@ export default {
         return {
             'email': '',
             'password': '',
+            'errorMsg': '',
         };
     },
     methods: {
@@ -44,6 +48,7 @@ export default {
                 this.$router.push('/dashboard');
 
             } catch (error) {
+                this.errorMsg = error.response.data.message;
                 console.log('Login Failed', error);
             }
         }

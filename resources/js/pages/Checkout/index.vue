@@ -21,13 +21,6 @@ const getData = async () => {
 
     }
 }
-const handleRemoveItem = (item) => {
-    // Handle the remove item event, you can remove the item from cartData
-    const index = this.cartData.indexOf(item);
-    if (index !== -1) {
-        this.cartData.splice(index, 1);
-    }
-}
 onMounted(() => {
     getData();
 })
@@ -47,7 +40,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <div v-for="cart in cartData">
-                        <CardProductCard :item="cart" />
+                        <CardProductCard :item="cart" @fetchData="getData" />
                     </div>
 
                     <div class="card">

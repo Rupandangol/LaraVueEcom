@@ -1,3 +1,26 @@
+<script setup>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const logout = () => {
+    if (!window.confirm('Are you sure?')) {
+        return;
+    }
+    axios.post('/api/V1/admins/logout', [], {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+        }
+    }).then((response) => {
+        if (response.data.status == 'success') {
+            localStorage.removeItem('admin-token');
+            alert(response.data.message);
+            router.push('/admin/login');
+        }
+    }).catch((e) => {
+        console.log(e)
+    });
+}
+</script>
 <template>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
@@ -7,9 +30,10 @@
 
         <div class="sidebar">
 
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="info">
+            <div class="user-panel mt-3 pb-3 mb-3 ">
+                <div class="info d-flex justify-content-between">
                     <a href="#" class="d-block">Alexander Pierce</a>
+                    <button class="btn btn-dark btn-sm" @click="logout()"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
 

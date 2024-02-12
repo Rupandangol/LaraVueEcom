@@ -21,23 +21,13 @@ class ProductUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if($this->method()=='PUT'){
-            return [
-                'name'=>['required'],
-                'description'=>['required'],
-                'price'=>['required'],
-                'stock_quantity'=>['required'],
-                'category_id'=>['required'],
-            ];
-        }else{
-            return [
-                'name'=>['sometimes','required'],
-                'description'=>['sometimes','required'],
-                'price'=>['sometimes','required'],
-                'stock_quantity'=>['sometimes','required'],
-                'category_id'=>['sometimes','required'],
-            ];
-        }
-
+        return [
+            'name' => ['required'],
+            'description' => ['required'],
+            'price' => ['required'],
+            'stock_quantity' => ['required'],
+            'image' => ['required'],
+            'category_id' => ['required'],
+        ];
     }
 }

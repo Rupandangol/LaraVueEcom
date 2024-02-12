@@ -15,8 +15,12 @@ import Categories from './pages/Admin/Categories/index.vue';
 import CategoryCreate from './pages/Admin/Categories/create.vue';
 import CategoryEdit from './pages/Admin/Categories/edit.vue';
 import Products from './pages/Admin/Products/index.vue';
+import ProductCreate from './pages/Admin/Products/create.vue';
+import ProductEdit from './pages/Admin/Products/edit.vue';
 import Orders from './pages/Admin/Orders/index.vue';
 import OrderDetail from './pages/Admin/Orders/detail.vue';
+import OrderEdit from './pages/Admin/Orders/edit.vue';
+
 
 export default [
     {
@@ -120,6 +124,19 @@ export default [
         meta: { requiresAdminAuth: true }
     },
     {
+        path: '/admin/products/create',
+        name: 'admin-products-create',
+        component: ProductCreate,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/products/edit/:id',
+        name: 'admin-products-edit',
+        component: ProductEdit,
+        props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
         path: '/admin/orders',
         name: 'admin-orders',
         component: Orders,
@@ -129,6 +146,13 @@ export default [
         path: '/admin/order-details/:id',
         name: 'admin-order-details',
         component: OrderDetail,
+        props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/orders/:id',
+        name: 'admin-order-edit',
+        component: OrderEdit,
         props: true,
         meta: { requiresAdminAuth: true }
     },

@@ -5,6 +5,11 @@ export default {
             type: Object,
             required: true
         }
+    },
+    methods: {
+        getImageUrl() {
+            return this.item.image ? `/storage/images/${this.item.image}` : '/images/test.jpg';
+        }
     }
 }
 </script>
@@ -14,9 +19,7 @@ export default {
         <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
         </div>
         <!-- Product image-->
-        <img class="card-img-top"
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D"
-            alt="..." />
+        <img class="card-img-top" :src="getImageUrl()" alt="..." />
         <!-- Product details-->
         <div class="card-body p-4">
             <div class="text-center">

@@ -26,6 +26,26 @@ const status = (data) => {
         return 'badge badge-warning';
     }
 };
+const deleteOrder = (id) => {
+    if (!window.confirm('You sure?')) {
+        return;
+    }
+    const adminToken = localStorage.getItem('admin-token');
+    axios.delete(`/api/V1/admin-orders/${id}`, {
+        headers: {
+            Authorization: `Bearer ${adminToken}`
+        }
+    }).then((response) => {
+        if (response.data.status == 'success') {
+            alert(response.data.message);
+        }
+        getOrders();
+
+    }).catch((e) => {
+        console.log(e);
+    })
+}
+
 onMounted(() => {
     getOrders();
 })
@@ -61,8 +81,9 @@ onMounted(() => {
                         <td>
                             <router-link title="Details" :to="{ name: 'admin-order-details', params: { id: order.id } }"
                                 class="btn btn-warning btn-sm mr-2"><i class="fa fa-file"></i></router-link>
-                            <button title="Edit" class="btn btn-warning btn-sm mr-2"><i class="fa fa-pen"></i></button>
-                            <button title="Delete" class="btn btn-danger btn-sm mr-2"><i
+                            <router-link :to="{ name: 'admin-order-edit', params: { id: order.id } }" title="Edit"
+                                class="btn btn-warning btn-sm mr-2"><i class="fa fa-pen"></i></router-link>
+                            <button @click="deleteOrder(order.id)" title="Delete" class="btn btn-danger btn-sm mr-2"><i
                                     class="fa fa-trash-alt"></i></button>
                         </td>
                     </tr>
