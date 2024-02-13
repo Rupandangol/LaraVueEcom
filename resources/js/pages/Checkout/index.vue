@@ -6,20 +6,53 @@ import AppNavbar from '../../components/AppNavbar.vue';
 import Footer from '../../components/Footer.vue';
 
 const cartData = ref({ 'data': [] });
+const loading = ref(true);
 const getData = async () => {
+    loading.value = true;
     const token = localStorage.getItem('user-token');
-    try {
-        await axios.get('/api/V1/carts', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }).then((response) => {
-            cartData.value = response.data.data;
-            console.log(response.data.data);
-        })
-    } catch (error) {
-
+    await axios.get('/api/V1/carts', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }).then((response) => {
+        cartData.value = response.data.data;
+        console.log(response.data.data);
+    });
+    loading.value = false;
+    console.log(loading);
+}
+const order = () => {
+    var total = 0;
+    var productId = [];
+    var quantityNo = [];
+    var priceNo = [];
+    const shippingAddress = 'Kathmandu Banasathali';
+    cartData.value.map((item) => {
+        total += (item.quantity * item.products?.[0].price);
+        productId.push(item.product_id);
+        quantityNo.push(item.quantity);
+        priceNo.push(item?.products?.[0].price);
+    });
+    const data = {
+        'total_price': total,
+        'shipping_address': shippingAddress,
+        'product_id': productId,
+        'quantity': quantityNo,
+        'price': priceNo,
     }
+    axios.post('/api/V1/orders', data, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`
+        }
+    }).then((response) => {
+        if (response.data.status == 'success') {
+            alert('Order Placed successfully');
+            getData();
+        }
+    }).catch((e) => {
+        console.log(e);
+    })
+    console.log(data);
 }
 onMounted(() => {
     getData();
@@ -28,7 +61,10 @@ onMounted(() => {
 <template>
     <AppNavbar />
     <section class="h-100" style="background-color: #eee;">
-        <div class="container h-100 py-5">
+        <div v-if="loading" class="d-flex justify-content-center">
+            <h1><i class=" fa fa-spinner fa-spin"></i></h1>
+        </div>
+        <div v-else class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-10">
 
@@ -43,10 +79,15 @@ onMounted(() => {
                         <CardProductCard :item="cart" @fetchData="getData" />
                     </div>
 
-                    <div class="card">
+                    <div v-if="cartData.length != 0" class="card">
                         <div class="card-body">
-                            <button type="button" class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+                            <button @click="order" type="button" class="btn btn-warning btn-block btn-lg">Proceed to
+                                Pay </button>
                         </div>
+                    </div>
+                    <div v-else>
+                        <h3 class="d-flex justify-content-center"> <i class="fa fa-shopping-cart"></i>
+                            &nbsp;&nbsp;&nbsp;Empty Cart</h3>
                     </div>
 
                 </div>

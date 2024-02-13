@@ -10,6 +10,7 @@ use App\Http\Resources\V1\OrderResource;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,6 +39,7 @@ class OrderController extends Controller
             $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
             $orderItem[] = OrderDetail::create($orderDetailData);
         }
+        $this->clearCartData();
         return response()->json([
             'status' => 'success',
             'message' => 'Order created successfully',
@@ -108,5 +110,12 @@ class OrderController extends Controller
             'price' => $request->price[$key],
         ];
         return $data;
+    }
+
+    protected function clearCartData()
+    {
+        $userId = Auth::user()->id;
+        $cartId = Cart::where('user_id', $userId)->pluck('id');
+        Cart::whereIn('id', $cartId)->delete();
     }
 }

@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         TestModel::factory(10)->create();
-        User::factory(10)->create();
+        User::factory(20)->create();
         Admin::factory(10)->create();
         $this->call([
             UserSeeder::class,
