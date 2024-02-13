@@ -1,7 +1,9 @@
 <script setup>
 import axios from 'axios';
 import { onMounted, ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router=useRouter();
 const cartCount = ref(0);
 const username = ref('');
 const isLoggedIn = ref(false);
@@ -14,6 +16,7 @@ const logout = () => {
                     isLoggedIn.value = false;
                     alert('Logged Out Successfully');
                     localStorage.removeItem('user-token');
+                    router.push('/login');
                 }
             })
     }
