@@ -20,7 +20,7 @@ const getOrders = async () => {
 const status = (data) => {
     if (data == 'delivered') {
         return 'badge badge-success';
-    } else if (data == 'on_transit') {
+    } else if (data == 'in_transit') {
         return 'badge badge-info';
     } else {
         return 'badge badge-warning';
@@ -78,6 +78,7 @@ onMounted(() => {
                                 {{ order?.status }}
                             </div>
                         </td>
+                        
                         <td>
                             <router-link title="Details" :to="{ name: 'admin-order-details', params: { id: order.id } }"
                                 class="btn btn-warning btn-sm mr-2"><i class="fa fa-file"></i></router-link>
