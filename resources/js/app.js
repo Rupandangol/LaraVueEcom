@@ -1,7 +1,8 @@
 import './bootstrap';
 import 'admin-lte/plugins/jquery/jquery.min.js'; 
 import 'admin-lte/dist/js/adminlte.min.js';
-// import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
+import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
+import VueSweetalert2 from 'vue-sweetalert2';
 
 import { createApp } from 'vue';
 
@@ -36,4 +37,5 @@ router.beforeEach((to, from, next) => {
 });
 
 app.use(router);
+app.use(VueSweetalert2);
 app.mount('#app');

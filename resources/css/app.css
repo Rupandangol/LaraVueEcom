@@ -2,3 +2,4 @@
 @import './footer.css';
 @import 'admin-lte/dist/css/adminlte.min.css';
 @import 'admin-lte/plugins/fontawesome-free/css/all.min.css';
+@import 'sweetalert2/dist/sweetalert2.min.css';

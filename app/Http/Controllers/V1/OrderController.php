@@ -69,7 +69,26 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Order::findOrFail($id)->delete();
+        $orderData = $this->orderDataBind($request);
+        $order = Order::create($orderData);
+        foreach ($request->product_id as $key => $item) {
+            $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
+            $orderItem[] = OrderDetail::create($orderDetailData);
+        }
+        $this->clearCartData();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order Updated successfully',
+            'data' => ['order' => $order, 'orderDetails' => $orderItem]
+        ], 200);
+    }
+    /**
+     * Update Order status
+     */
+    public function updateOrder(Request $request, string $id)
+    {
+        dd($request->all());
     }
 
     /**

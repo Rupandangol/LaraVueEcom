@@ -21,7 +21,7 @@ class OrderFactory extends Factory
             'user_id'=>$this->faker->randomElement(User::pluck('id')),
             'total_price'=>$this->faker->randomDigit(),
             'shipping_address'=>$this->faker->streetAddress(),
-            'status'=>$this->faker->randomElement(['pending','delivered','on_transit'])
+            'status'=>$this->faker->randomElement(['pending','delivered','in_transit'])
         ];
     }
 }

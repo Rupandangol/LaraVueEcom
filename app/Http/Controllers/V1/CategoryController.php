@@ -8,6 +8,7 @@ use App\Http\Requests\V1\CategoryUpdateRequest;
 use App\Http\Resources\V1\CategoryCollection;
 use App\Http\Resources\V1\CategoryResource;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -26,7 +27,10 @@ class CategoryController extends Controller
      */
     public function store(CategoryCreateRequest $request)
     {
-        return Category::create($request->all());
+        $data['name']=$request->name;
+        $data['description']=$request->description;
+        $data['slug']=Str::of($request->name)->slug('-');
+        return Category::create($data);
     }
 
     /**
