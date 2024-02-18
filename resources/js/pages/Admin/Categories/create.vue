@@ -2,7 +2,8 @@
 import { reactive, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const form = reactive({
     'name': '',
@@ -18,6 +19,13 @@ const create = async () => {
             Authorization: `Bearer ${adminToken}`
         }
     }).then((response) => {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Category Created",
+            showConfirmButton: false,
+            timer: 1500
+        });
         router.push({ name: "admin-categories" });
         console.log(response);
     }).catch((e) => {
@@ -37,7 +45,7 @@ const create = async () => {
         <div class="container card p-3">
             <div v-if="errors">
                 <div v-for="error in errors" class="alert alert-danger">
-                    {{error}}
+                    {{ error }}
                 </div>
             </div>
             <form @submit.prevent="create">

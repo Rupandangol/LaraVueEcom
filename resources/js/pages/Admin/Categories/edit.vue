@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     id: {
@@ -42,7 +43,7 @@ const edit = () => {
         }
     }).then((response) => {
         router.push('/admin/categories');
-        alert('Updated Successfully');
+        Swal.fire('Updated Successfully');
         console.log(response);
     }).catch((e) => {
         if (e.response.status === 422) {

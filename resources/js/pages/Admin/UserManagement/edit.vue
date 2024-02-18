@@ -4,6 +4,7 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const props = defineProps({
@@ -38,7 +39,13 @@ const editUser = () => {
     }
     ).then((response) => {
         console.log(response);
-        alert('Edited Successfully');
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Updated Successfully",
+            showConfirmButton: false,
+            timer: 1500
+        });
         router.push('/admin/users');
     }).catch((e) => {
         if (e.response.status === 422) {

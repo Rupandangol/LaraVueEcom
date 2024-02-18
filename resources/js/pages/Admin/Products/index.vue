@@ -2,6 +2,7 @@
 import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import { onMounted, ref } from 'vue';
+import Swal from 'sweetalert2';
 
 const products = ref([]);
 const getProducts = () => {
@@ -15,24 +16,37 @@ const getProducts = () => {
 }
 
 const deleteProduct = (id) => {
-    if (!window.confirm('You sure?')) {
-        return;
-    }
-    const adminToken = localStorage.getItem('admin-token');
-    axios.delete(`/api/V1/products/${id}`,
-        {
-            headers: {
-                Authorization: `Bearer ${adminToken}`
-            }
-        }).then((response) => {
-            if (response.status == 200) {
-                alert('Deleted Sucessfully');
-                getProducts();
-            }
-            console.log(response);
-        }).catch((e) => {
-            console.log(e);
-        });
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const adminToken = localStorage.getItem('admin-token');
+            axios.delete(`/api/V1/products/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${adminToken}`
+                    }
+                }).then((response) => {
+                    if (response.status == 200) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your file has been deleted.",
+                            icon: "success"
+                        });
+                        getProducts();
+                    }
+                }).catch((e) => {
+                    console.log(e);
+                });
+        }
+    });
+
 }
 
 onMounted(() => {
@@ -77,4 +91,5 @@ onMounted(() => {
                 </tbody>
             </table>
         </div>
-    </AdminLayout></template>
+    </AdminLayout>
+</template>

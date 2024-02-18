@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\AdminLoginController;
@@ -34,10 +35,13 @@ Route::group(['prefix' => 'V1'], function () {
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api-user-show');
     Route::group(['middleware' => ['auth:sanctum', 'type.user']], function () {
         Route::get('/users-data', [UserController::class, 'getUserData'])->name('api-user-data');
+        Route::put('/users-data/{id}', [UserController::class, 'updateFromUser'])->name('api-user-data-update');
         Route::post('/users/logout', [UserController::class, 'logout'])->name('api-user-logout');
         Route::resource('/carts', CartController::class);
         Route::get('/carts-count', [CartController::class, 'getCartCount'])->name('api-cart-count');
         Route::resource('/orders', OrderController::class);
+        Route::post('/shipping-address', [ShippingAddressController::class,'store'])->name('api-shipping-address-store');
+        Route::get('/shipping-address/self', [ShippingAddressController::class,'show'])->name('api-shipping-address-show');
     });
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('api-products.show');

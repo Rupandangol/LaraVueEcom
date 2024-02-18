@@ -77,7 +77,7 @@ onMounted(() => {
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#!">All Products</a></li>
+                            <li><router-link class="dropdown-item" to="/profile">Profile</router-link></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
