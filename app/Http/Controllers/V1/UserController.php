@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\RegisterUserRequest;
 use App\Http\Requests\V1\UserLoginRequest;
+use App\Http\Requests\V1\UserUpdateFromUserRequest;
 use App\Http\Requests\V1\UserUpdateRequest;
 use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
@@ -106,5 +107,25 @@ class UserController extends Controller
                 'message' => $error->getMessage()
             ]);
         }
+    }
+
+    public function updateFromUser(UserUpdateFromUserRequest $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        if (!Hash::check($request->old_password, $user->password)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Incorrect Old Password'
+            ]);
+        }
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Updated Successfully'
+        ]);
     }
 }

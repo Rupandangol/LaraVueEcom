@@ -3,6 +3,7 @@ import About from './pages/About.vue';
 import Login from './pages/Login.vue';
 import Details from './pages/Details.vue';
 import Checkout from './pages/Checkout/index.vue';
+import Profile from './pages/Profile.vue';
 import AdminLogin from './pages/Admin/Login/index.vue';
 import AdminDashboard from './pages/Admin/Dashboard/index.vue';
 import AdminUserManagement from './pages/Admin/UserManagement/index.vue';
@@ -47,6 +48,12 @@ export default [
         path: '/checkout',
         name: 'user-checkout',
         component: Checkout,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/profile',
+        name: 'user-profile',
+        component: Profile,
         meta: { requiresAuth: true }
     },
     {

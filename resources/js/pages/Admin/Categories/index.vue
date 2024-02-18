@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const categories = ref([]);
 const getCategories = async () => {
@@ -20,24 +21,42 @@ const getCategories = async () => {
 }
 
 const deleteCategories = (id) => {
-    if (!window.confirm('you sure?')) {
-        return;
-    }
-    const adminToken = localStorage.getItem('admin-token');
-    axios.delete(`/api/V1/categories/${id}`, {
-        headers: {
-            Authorization: `Bearer ${adminToken}`
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const adminToken = localStorage.getItem('admin-token');
+            axios.delete(`/api/V1/categories/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${adminToken}`
+                }
+            }).then((response) => {
+                if (response.data.status == 'success') {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                    getCategories();
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Failed for some reason!",
+                    });
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+
         }
-    }).then((response) => {
-        if (response.data.status == 'success') {
-            alert('Successfully Deleted');
-            getCategories();
-        } else {
-            alert('Failed for some reason');
-        }
-    }).catch((error) => {
-        console.log(error);
-    })
+    });
 }
 
 onMounted(() => {

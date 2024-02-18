@@ -4,6 +4,7 @@ import { onMounted, ref, watchEffect } from 'vue';
 import CardProductCard from '../../components/CartProductCard.vue';
 import AppNavbar from '../../components/AppNavbar.vue';
 import Footer from '../../components/Footer.vue';
+import Swal from 'sweetalert2';
 
 const cartData = ref({ 'data': [] });
 const loading = ref(true);
@@ -46,7 +47,7 @@ const order = () => {
         }
     }).then((response) => {
         if (response.data.status == 'success') {
-            alert('Order Placed successfully');
+            Swal.fire('Order Placed successfully');
             getData();
         }
     }).catch((e) => {

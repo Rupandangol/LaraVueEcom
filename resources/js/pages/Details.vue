@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import AppNavbar from '../components/AppNavbar.vue';
 import Footer from '../components/Footer.vue';
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const product = ref([]);
@@ -31,9 +32,9 @@ const addToCart = async () => {
     await axios.post(`/api/V1/carts`, data, { headers })
         .then((response) => {
             if (response.status == 201) {
-                alert('Added to Cart');
+                Swal.fire('Added to Cart');
             } else if (response.status == 200) {
-                alert('Updated to Cart');
+                Swal.fire('Updated to Cart');
             }
         });
 }
@@ -54,7 +55,8 @@ onMounted(() => {
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" :src="`/storage/images/${product.image}`" alt="..." /></div>
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" :src="`/storage/images/${product.image}`"
+                        alt="..." /></div>
                 <div class="col-md-6">
                     <div class="small mb-1">SKU: {{ product?.name }}-{{ product?.id }}</div>
                     <h1 class="display-5 fw-bolder">{{ product?.name }}</h1>

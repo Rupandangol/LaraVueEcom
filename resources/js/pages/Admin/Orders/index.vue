@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const orders = ref([]);
 
@@ -27,23 +28,39 @@ const status = (data) => {
     }
 };
 const deleteOrder = (id) => {
-    if (!window.confirm('You sure?')) {
-        return;
-    }
-    const adminToken = localStorage.getItem('admin-token');
-    axios.delete(`/api/V1/admin-orders/${id}`, {
-        headers: {
-            Authorization: `Bearer ${adminToken}`
-        }
-    }).then((response) => {
-        if (response.data.status == 'success') {
-            alert(response.data.message);
-        }
-        getOrders();
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const adminToken = localStorage.getItem('admin-token');
+            axios.delete(`/api/V1/admin-orders/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${adminToken}`
+                }
+            }).then((response) => {
+                if (response.data.status == 'success') {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+                getOrders();
 
-    }).catch((e) => {
-        console.log(e);
-    })
+            }).catch((e) => {
+                console.log(e);
+            })
+        }
+    });
+
 }
 
 onMounted(() => {
@@ -78,7 +95,7 @@ onMounted(() => {
                                 {{ order?.status }}
                             </div>
                         </td>
-                        
+
                         <td>
                             <router-link title="Details" :to="{ name: 'admin-order-details', params: { id: order.id } }"
                                 class="btn btn-warning btn-sm mr-2"><i class="fa fa-file"></i></router-link>

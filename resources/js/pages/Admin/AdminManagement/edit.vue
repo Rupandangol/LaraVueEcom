@@ -4,6 +4,7 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const errors = ref('');
@@ -44,7 +45,13 @@ const editAdmin = () => {
         }
     }).then((response) => {
         if (response.status == 200) {
-            alert('Updated Successfully');
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Updated Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            });
             router.push('/admin/admins');
         }
     }).catch((e) => {

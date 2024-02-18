@@ -3,6 +3,7 @@ import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import { onMounted, ref } from 'vue';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
+import Swal from 'sweetalert2';
 
 const users = ref([]);
 const msg = ref('');
@@ -15,22 +16,37 @@ const getUsers = () => {
 }
 
 const deleteUser = (id) => {
-    msg.value = '';
-    if (!window.confirm('you sure?')) {
-        return;
-    }
-    const adminToken = localStorage.getItem('admin-token');
-    axios.delete(`/api/V1/users/${id}`, {
-        headers: {
-            Authorization: `Bearer ${adminToken}`
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            msg.value = '';
+            const adminToken = localStorage.getItem('admin-token');
+            axios.delete(`/api/V1/users/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${adminToken}`
+                }
+            }).then((response) => {
+                if (response.data.status == 'success') {
+                    msg.value = response.data.message;
+                }
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+                getUsers();
+            })
+
         }
-    }).then((response) => {
-        if (response.data.status == 'success') {
-            msg.value = response.data.message;
-        }
-        alert('Deleted sucessfully');
-        getUsers();
-    })
+    });
+
 }
 
 onMounted(() => {

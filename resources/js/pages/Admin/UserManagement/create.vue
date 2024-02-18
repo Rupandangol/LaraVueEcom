@@ -4,6 +4,7 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
+import Swal from 'sweetalert2';
 
 const errors = ref('');
 const msg = ref('');
@@ -18,7 +19,13 @@ const createUser = () => {
     errors.value = '';
     axios.post('/api/V1/users/register', { ...form }
     ).then((response) => {
-        alert('Created Successfully');
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Created Successfully",
+            showConfirmButton: false,
+            timer: 1500
+        });
         router.push('/admin/users');
     }).catch((e) => {
         if (e.response.status === 422) {

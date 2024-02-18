@@ -3,6 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const categories = ref([]);
 const props = defineProps({
@@ -68,7 +69,13 @@ const formSubmit = () => {
     }).then((response) => {
         if (response.status == 200) {
             router.push('/admin/products');
-            alert('Updated successfully');
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Updated successfully",
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
     }).catch((e) => {
         console.log(response);
