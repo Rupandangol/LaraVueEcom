@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ShippingAddressController;
+use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\AdminLoginController;
@@ -40,8 +41,8 @@ Route::group(['prefix' => 'V1'], function () {
         Route::resource('/carts', CartController::class);
         Route::get('/carts-count', [CartController::class, 'getCartCount'])->name('api-cart-count');
         Route::resource('/orders', OrderController::class);
-        Route::post('/shipping-address', [ShippingAddressController::class,'store'])->name('api-shipping-address-store');
-        Route::get('/shipping-address/self', [ShippingAddressController::class,'show'])->name('api-shipping-address-show');
+        Route::post('/shipping-address', [ShippingAddressController::class, 'store'])->name('api-shipping-address-store');
+        Route::get('/shipping-address/self', [ShippingAddressController::class, 'show'])->name('api-shipping-address-show');
     });
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('api-products.show');
@@ -49,6 +50,7 @@ Route::group(['prefix' => 'V1'], function () {
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
+        Route::get('/admin-dashboard', AdminDashboardController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('api-user-delete');
         Route::resource('/categories', CategoryController::class);

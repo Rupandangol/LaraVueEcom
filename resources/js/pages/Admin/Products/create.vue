@@ -76,25 +76,32 @@ onMounted(() => {
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <input type="text" v-model="description" class="form-control" placeholder="Description">
+                    <!-- <input type="text" v-model="description" class="form-control" placeholder="Description"> -->
+                    <textarea v-model="description" rows='5' class="form-control"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Price</label>
-                    <input type="text" v-model="price" class="form-control" placeholder="Price">
-                </div>
-                <div class="form-group">
-                    <label>Stock quantity</label>
-                    <input type="text" v-model="stock_quantity" class="form-control" placeholder="Stock quantity">
-                </div>
-                <div class="form-group">
-                    <label>Image</label>
-                    <input type="file" accept="image/*" ref="image" class="form-control">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="text" v-model="price" class="form-control" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Stock quantity</label>
+                            <input type="text" v-model="stock_quantity" class="form-control" placeholder="Stock quantity">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Category</label>
                     <select v-model="category_id" class="form-control">
                         <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Image</label>
+                    <input type="file" accept="image/*" ref="image" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
