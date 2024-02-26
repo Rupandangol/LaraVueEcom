@@ -20,6 +20,7 @@ const price = ref('');
 const stock_quantity = ref('');
 const category_id = ref('');
 const image = ref(null);
+const showImage = ref(null);
 
 const getCategory = () => {
     axios.get('/api/V1/categories', {
@@ -44,8 +45,9 @@ const getData = () => {
             description.value = response.data.data.description;
             price.value = response.data.data.price;
             stock_quantity.value = response.data.data.stock_quantity;
-            category_id.value = response.data.data.category_id;
+            category_id.value = response.data.data.category.id;
             image.value = response.data.data.image;
+            showImage.value = response.data.data.image;
         }
     }).catch((e) => {
         console.log(e);
@@ -81,7 +83,11 @@ const formSubmit = () => {
         console.log(response);
     })
 }
+const getImageUrl = (img) => {
+    console.log('asdfasdf====>', img);
 
+    return img ? `/storage/images/${img}` : '/images/test.jpg';
+}
 onMounted(() => {
     getCategory();
     getData();
@@ -101,25 +107,35 @@ onMounted(() => {
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <input type="text" v-model="description" class="form-control" placeholder="Description">
+                    <!-- <input type="text" v-model="description" class="form-control" placeholder="Description"> -->
+                    <textarea v-model="description" rows='5' class="form-control"></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Price</label>
-                    <input type="text" v-model="price" class="form-control" placeholder="Price">
-                </div>
-                <div class="form-group">
-                    <label>Stock quantity</label>
-                    <input type="text" v-model="stock_quantity" class="form-control" placeholder="Stock quantity">
-                </div>
-                <div class="form-group">
-                    <label>Image</label>
-                    <input type="file" accept="image/*" ref="image" class="form-control">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="text" v-model="price" class="form-control" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Stock quantity</label>
+                            <input type="text" v-model="stock_quantity" class="form-control" placeholder="Stock quantity">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Category</label>
                     <select v-model="category_id" class="form-control">
-                        <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
+                        <option v-for="category in categories" :selected="(category_id == category.id) ? true : false"
+                            :value="category.id">{{
+                                category.name }}</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Image</label><br>
+                    <img width="200px" height="200px" :src="getImageUrl(showImage)" alt=""><br><br>
+                    <input type="file" accept="image/*" ref="image" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

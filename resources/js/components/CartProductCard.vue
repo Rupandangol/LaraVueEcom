@@ -1,4 +1,5 @@
 <script setup>
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     item: {
@@ -7,24 +8,38 @@ const props = defineProps({
     }
 })
 const emit = defineEmits(['fetchData']);
-const deleteItem = async () => {
-    if (!window.confirm('You sure?')) {
-        return;
-    }
-    try {
-        const response = await axios.delete(`/api/V1/carts/${props.item.id}`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('user-token')}`
+const deleteItem = () => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await axios.delete(`/api/V1/carts/${props.item.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('user-token')}`
+                    }
+                })
+                if (response.data) { emit('fetchData') }
+                Swal.fire({
+                    title: "Removed!",
+                    text: "Removed from the cart",
+                    icon: "success"
+                });
+            } catch (error) {
+                console.log(error);
             }
-        })
-        if (response.data) { emit('fetchData') }
-        console.log(response);
-    } catch (error) {
-        console.log(error);
-    }
+        }
+    });
+
 }
 const getImageUrl = () => {
-    return props?.item?.products?.[0].image ? `/storage/images/${props?.item?.products?.[0].image}` : '';
+    return props?.item?.products?.[0]?.image ? `/storage/images/${props?.item?.products?.[0].image}` : '';
 }
 </script>
 

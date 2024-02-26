@@ -4,6 +4,8 @@ import Login from './pages/Login.vue';
 import Details from './pages/Details.vue';
 import Checkout from './pages/Checkout/index.vue';
 import Profile from './pages/Profile.vue';
+import MyOrder from './pages/MyOrder.vue';
+import MyOrderDetail from './pages/MyOrderDetail.vue';
 import AdminLogin from './pages/Admin/Login/index.vue';
 import AdminDashboard from './pages/Admin/Dashboard/index.vue';
 import AdminUserManagement from './pages/Admin/UserManagement/index.vue';
@@ -54,6 +56,19 @@ export default [
         path: '/profile',
         name: 'user-profile',
         component: Profile,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/my-order',
+        name: 'user-my-order',
+        component: MyOrder,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/my-order/detail/:id',
+        name: 'user-my-order-detail',
+        component: MyOrderDetail,
+        props: true,
         meta: { requiresAuth: true }
     },
     {
