@@ -6,6 +6,7 @@ import axios from 'axios';
 import AppNavbar from '../components/AppNavbar.vue';
 import Footer from '../components/Footer.vue';
 import Swal from 'sweetalert2';
+import store from '../store';
 
 const route = useRoute();
 const product = ref([]);
@@ -31,6 +32,7 @@ const addToCart = async () => {
     }
     await axios.post(`/api/V1/carts`, data, { headers })
         .then((response) => {
+            store.dispatch('getCartCount');
             if (response.status == 201) {
                 Swal.fire('Added to Cart');
             } else if (response.status == 200) {
