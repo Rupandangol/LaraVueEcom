@@ -3,6 +3,7 @@ import 'admin-lte/plugins/jquery/jquery.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import { createApp } from 'vue';
+import store from './store/index.js';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import Routes from './routes.js';
@@ -33,5 +34,6 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+app.use(store);
 app.use(router);
 app.mount('#app');

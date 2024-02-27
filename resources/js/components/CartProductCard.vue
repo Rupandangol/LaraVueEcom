@@ -1,5 +1,6 @@
 <script setup>
 import Swal from 'sweetalert2';
+import store from '../store';
 
 const props = defineProps({
     item: {
@@ -26,6 +27,7 @@ const deleteItem = () => {
                     }
                 })
                 if (response.data) { emit('fetchData') }
+                store.dispatch('getCartCount');
                 Swal.fire({
                     title: "Removed!",
                     text: "Removed from the cart",

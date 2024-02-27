@@ -1,9 +1,14 @@
 <script setup>
 import axios from 'axios';
-import { onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
+import store from '../store';
 
 const router=useRouter();
+
+store.dispatch('getCartCount');
+const test = computed(() =>  store.state.cartCount)
+
 const cartCount = ref(0);
 const username = ref('');
 const isLoggedIn = ref(false);
@@ -100,7 +105,7 @@ onMounted(() => {
                     <router-link class="btn btn-outline-dark" to="/checkout">
                         <i class="bi-cart-fill me-1"></i>
                         Cart
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">{{ cartCount }}</span>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">{{ test }}</span>
                     </router-link>
                 </form>
             </div>
