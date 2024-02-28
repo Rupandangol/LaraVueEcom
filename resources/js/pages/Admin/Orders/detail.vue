@@ -104,9 +104,9 @@ onMounted(() => {
                 <div class="col-sm-4">
                     <h5>Shipping Address</h5>
                     <address>
-                        {{order?.country}}, <br>
-                        {{order?.zone}},{{order?.district}} <br>
-                        {{order?.street}}, {{order?.zip_code}} <br>
+                        {{ order?.country }}, <br>
+                        {{ order?.zone }},{{ order?.district }} <br>
+                        {{ order?.street }}, {{ order?.zip_code }} <br>
                     </address>
                 </div>
 
@@ -130,7 +130,8 @@ onMounted(() => {
                         <tbody>
                             <tr v-for="(item, index) in (order?.order_details)">
                                 <td>{{ item.quantity }}</td>
-                                <td><img :src="'/storage/images/'+item.product.image" width="35px" height="35px" alt=""></td>
+                                <td><img :src="'/storage/images/' + item.product.image" width="35px" height="35px" alt="">
+                                </td>
                                 <td>{{ item.product.name }}</td>
                                 <td>{{ item.id }}</td>
                                 <td>{{ item.product.description.substring(0, 40) + '...' }}</td>
@@ -165,19 +166,19 @@ onMounted(() => {
                             <tbody>
                                 <tr>
                                     <th style="width:50%">Subtotal:</th>
-                                    <td>$250.30</td>
+                                    <td>Rs. {{ order.total_price }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Tax (9.3%)</th>
-                                    <td>$10.34</td>
+                                    <th>Tax (13%)</th>
+                                    <td>Rs. {{ 0.13 * order.total_price }}</td>
                                 </tr>
                                 <tr>
                                     <th>Shipping:</th>
-                                    <td>$5.80</td>
+                                    <td>Rs. 20</td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
-                                    <td>Rs. {{ order.total_price }}</td>
+                                    <td>Rs. {{ parseFloat(order.total_price) + parseFloat(0.13 *order.total_price)-20 }}</td>
                                 </tr>
                             </tbody>
                         </table>
