@@ -10,6 +10,7 @@ use App\Http\Resources\V1\OrderResource;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\ShippingAddress;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,10 +113,15 @@ class OrderController extends Controller
     public function orderDataBind($request): array
     {
         $userId = Auth::user()->id;
+        $shippingAddress=ShippingAddress::where('user_id',$userId)->first();
         $data = [
             'user_id' => $userId,
             'total_price' => $request->total_price,
-            'shipping_address' => $request->shipping_address,
+            'country' => $shippingAddress->country,
+            'zone' => $shippingAddress->zone,
+            'district' => $shippingAddress->district,
+            'street' => $shippingAddress->street,
+            'zip_code' => $shippingAddress->zip_code,
             'status' => Status::PENDING,
         ];
         return $data;

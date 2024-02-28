@@ -23,7 +23,11 @@ class OrderStoreRequest extends FormRequest
     {
         return [
             'total_price'=>['required'],
-            'shipping_address'=>['required'],
+            // 'country'=>['required'],
+            // 'zone'=>['required'],
+            // 'district'=>['required'],
+            // 'street'=>['required'],
+            // 'zip_code'=>['required'],
             'product_id'=>['required'],
             'product_id.*'=>['required'],
             'quantity'=>['required'],

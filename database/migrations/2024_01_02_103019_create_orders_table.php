@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->decimal('total_price',10,2);
-            $table->text('shipping_address');
+            $table->text('country');
+            $table->text('zone');
+            $table->text('district');
+            $table->text('street');
+            $table->text('zip_code');
             $table->string('status')->default('pending');
             $table->timestamps();
 
