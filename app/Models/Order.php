@@ -15,7 +15,11 @@ class Order extends Model
     protected $fillable=[
         'user_id',
         'total_price',
-        'shipping_address',
+        'country',
+        'zone',
+        'district',
+        'street',
+        'zip_code',
         'status',
     ];
 

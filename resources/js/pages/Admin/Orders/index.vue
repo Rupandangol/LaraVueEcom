@@ -89,7 +89,7 @@ onMounted(() => {
                         <td>{{ index + 1 }}</td>
                         <td>{{ order.user.name }}</td>
                         <td>{{ order.total_price }}</td>
-                        <td>{{ order.shipping_address }}</td>
+                        <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{ order.zip_code }}</td>
                         <td>
                             <div :class="status(order?.status)">
                                 {{ order?.status }}

@@ -1,7 +1,9 @@
 <script setup>
 import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
+import OrderStatusEnum from '../../../enums/OrderStatusEnum';
+import Swal from 'sweetalert2';
 
 const props = defineProps({
     'id': {
@@ -9,8 +11,16 @@ const props = defineProps({
         type: String
     }
 });
+const formData=reactive({
+    'user_id':'',
+    'total_price':'',
+    'status':'',
+    'product_id':'',
+    'quantity':'',
+})
 
 const order = ref([]);
+const users = ref([]);
 const getOrder = () => {
     const adminToken = localStorage.getItem('admin-token');
     axios.get(`/api/V1/admin-orders/${props.id}`,
@@ -25,9 +35,18 @@ const getOrder = () => {
             console.log(e.response);
         });
 }
+const getUsers=async()=>{
+    const response= await axios.get('/api/V1/users');
+    if(response.status==200){
+        users.value=response.data.data;
+    }else{
+        Swal.fire('Error');
+    }
+}
 
 onMounted(() => {
     getOrder();
+    getUsers();
 })
 </script>
 <template>
@@ -39,37 +58,31 @@ onMounted(() => {
             <form>
                 <div class="form-group">
                     <label>User Id</label>
-                    <input type="text" class="form-control" placeholder="user id">
+                    <select class="form-control">
+                        <option v-for="user in users" :value="user.id">{{ user.name }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>total_price</label>
                     <input type="text" class="form-control" placeholder="total_price">
                 </div>
                 <div class="form-group">
-                    <label>shipping_address</label>
-                    <input type="text" class="form-control" placeholder="shipping_address">
-                </div>
-                <div class="form-group">
                     <label>status</label>
-                    <input type="text" class="form-control" placeholder="status">
+                    <select class="form-control">
+                        <option v-for="item in OrderStatusEnum">{{item}}</option>
+                    </select>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>Product_id</label>
                             <input type="text" class="form-control" placeholder="Product_id">
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>quantity</label>
                             <input type="text" class="form-control" placeholder="quantity">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>price</label>
-                            <input type="text" class="form-control" placeholder="price">
                         </div>
                     </div>
                 </div>

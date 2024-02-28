@@ -104,9 +104,9 @@ onMounted(() => {
                 <div class="col-sm-4">
                     <h5>Shipping Address</h5>
                     <address>
-                        Test Address 1, Test Address 2 <br>
-                        Test, 12345 <br>
-                        CA, Nepal <br>
+                        {{order?.country}}, <br>
+                        {{order?.zone}},{{order?.district}} <br>
+                        {{order?.street}}, {{order?.zip_code}} <br>
                     </address>
                 </div>
 

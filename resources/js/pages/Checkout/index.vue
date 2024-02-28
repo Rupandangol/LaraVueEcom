@@ -36,7 +36,6 @@ const order = () => {
     });
     const data = {
         'total_price': total,
-        'shipping_address': shippingAddress,
         'product_id': productId,
         'quantity': quantityNo,
         'price': priceNo,
