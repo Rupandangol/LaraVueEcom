@@ -5,6 +5,7 @@ import CardProductCard from '../../components/CartProductCard.vue';
 import AppNavbar from '../../components/AppNavbar.vue';
 import Footer from '../../components/Footer.vue';
 import Swal from 'sweetalert2';
+import store from '../../store';
 
 const cartData = ref({ 'data': [] });
 const loading = ref(true);
@@ -46,6 +47,7 @@ const order = () => {
         }
     }).then((response) => {
         if (response.data.status == 'success') {
+            store.dispatch('getCartCount');
             Swal.fire('Order Placed successfully');
             getData();
         }

@@ -3,12 +3,14 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import { Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
 const dashboardData = ref([]);
 const barLabel = ref([]);
 const barData = ref([]);
+const pieLabel = ref([]);
+const pieData = ref([]);
 const getDashboardData = async () => {
     const response = await axios.get('/api/V1/admin-dashboard', {
         headers: {
@@ -19,35 +21,45 @@ const getDashboardData = async () => {
         dashboardData.value = response.data;
         barLabel.value = response.data.orderDate.map(obj => obj.month);
         barData.value = response.data.orderDate.map(obj => obj.pending_count);
-        console.log(barLabel.value,barData);
+        pieLabel.value = response.data.orderStatusData.map(obj => obj.status);
+        pieData.value = response.data.orderStatusData.map(obj => obj.total);
     }
 }
 
-const chartData = {
-    // labels: ['January', 'February', 'March'],
-    // datasets: [{ data: [40, 20, 12] }]
-    labels: barLabel?.value,
-    datasets: [{ data: barData?.value }]
-};
+const chartData = computed(() => {
+    return {
+        labels: Object.values(barLabel?.value),
+        datasets: [{
+            label: 'Orders',
+            backgroundColor: ['#41B883'],
+            data: Object.values(barData?.value)
+        }]
+    };
+})
+
 const chartOptions = {
     responsive: true
 };
-const data = {
-    labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
-    datasets: [
-        {
-            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-            data: [40, 20, 80, 10]
-        }
-    ]
-};
+const data = computed(() => {
+    return {
+        labels: Object.values(pieLabel?.value),
+        datasets: [
+            {
+                label: 'Status',
+                backgroundColor: ['#E46651', '#00D8FF', '#DD1B16'],
+                data: Object.values(pieData?.value)
+            }
+        ]
+    }
+});
 const options = {
     responsive: true,
     maintainAspectRatio: false
 };
 
-onMounted(() => {
-    getDashboardData();
+onMounted(async () => {
+    await nextTick();
+    await getDashboardData();
 })
 
 </script>
@@ -125,27 +137,31 @@ onMounted(() => {
                         <i class="fas fa-chart-pie mr-1"></i>
                         Orders
                     </h3>
-                    <div class="card-tools">
-                        <ul class="nav nav-pills ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                            </li>
-                        </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div v-if="(barLabel.length > 0) && (barData.length > 0)" class="card bar">
+                        <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="tab-content p-0">
-                        <div  class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
-                            <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
-                        </div>
-                        <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                            <Pie :data="data" :options="options" />
-                        </div>
+                <div class="col-md-6">
+                    <div v-if="(pieLabel.length > 0) && (pieLabel.length > 0)" class="card pie">
+                        <Pie :data="data" :options="options" />
                     </div>
                 </div>
             </div>
-    </div>
-</AdminLayout></template>
+        </div>
+    </AdminLayout>
+</template>
+
+<style scoped>
+.bar {
+    padding: 10px;
+    height: 300px;
+}
+
+.pie {
+    height: 300px;
+}
+</style>

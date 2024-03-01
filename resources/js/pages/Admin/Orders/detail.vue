@@ -1,7 +1,7 @@
 <script setup>
 import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
     'id': {
@@ -57,6 +57,15 @@ const submitOrder = async () => {
 onMounted(() => {
     getOrder();
 })
+
+const getTaxTotal = computed(() => {
+    return (0.13 * order.value.total_price);
+})
+
+const getTotal = computed(() => {
+    return parseFloat(getTaxTotal.value) + parseFloat(order.value.total_price)  - 20;
+})
+
 </script>
 <template>
     <AdminLayout>
@@ -145,20 +154,6 @@ onMounted(() => {
             </div>
 
             <div class="row">
-
-                <!-- <div class="col-6">
-                    <p class="lead">Payment Methods:</p>
-                    <img src="" alt="Visa">
-                    <img src="" alt="Mastercard">
-                    <img src="" alt="American Express">
-                    <img src="" alt="Paypal">
-                    <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                        plugg
-                        dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                    </p>
-                </div> -->
-
                 <div class="col-6">
                     <p class="lead">Amount Due 2/22/2014</p>
                     <div class="table-responsive">
@@ -170,7 +165,7 @@ onMounted(() => {
                                 </tr>
                                 <tr>
                                     <th>Tax (13%)</th>
-                                    <td>Rs. {{ 0.13 * order.total_price }}</td>
+                                    <td>Rs. {{ getTaxTotal }}</td>
                                 </tr>
                                 <tr>
                                     <th>Shipping:</th>
@@ -178,7 +173,7 @@ onMounted(() => {
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
-                                    <td>Rs. {{ parseFloat(order.total_price) + parseFloat(0.13 *order.total_price)-20 }}</td>
+                                    <td>Rs. {{ getTotal }}</td>
                                 </tr>
                             </tbody>
                         </table>

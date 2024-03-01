@@ -33,13 +33,19 @@ class AdminDashboardController extends Controller
         ORDER BY
             month;"
         );
+        $orderStatusData = DB::select(
+            "SELECT  status,count(status) as total FROM orders
+            GROUP BY status;
+             "
+        );
 
         return response()->json([
             'userCount' => $userCount,
             'productCount' => $productCount,
             'pendingOrderCount' => $pendingOrderCount,
             'deliveredOrderCount' => $deliveredOrderCount,
-            'orderDate'=>$orderDate
+            'orderDate' => $orderDate,
+            'orderStatusData' => $orderStatusData,
         ]);
     }
 }
