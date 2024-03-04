@@ -23,6 +23,7 @@ import ProductEdit from './pages/Admin/Products/edit.vue';
 import Orders from './pages/Admin/Orders/index.vue';
 import OrderDetail from './pages/Admin/Orders/detail.vue';
 import OrderEdit from './pages/Admin/Orders/edit.vue';
+import OrderCreate from './pages/Admin/Orders/create.vue';
 
 
 export default [
@@ -169,6 +170,12 @@ export default [
         name: 'admin-order-details',
         component: OrderDetail,
         props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/orders/create',
+        name: 'admin-order-create',
+        component: OrderCreate,
         meta: { requiresAdminAuth: true }
     },
     {
