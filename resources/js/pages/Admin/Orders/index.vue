@@ -69,8 +69,9 @@ onMounted(() => {
 </script>
 <template>
     <AdminLayout>
-        <div class="heading m-2 p-3">
+        <div class="heading m-2 p-3 d-flex justify-content-between">
             <h3>Orders</h3>
+            <router-link class="btn btn-info btn-sm" :to="{name:'admin-order-create'}">Create Order</router-link>
         </div>
         <div class="container">
             <table class="table table-bordered">

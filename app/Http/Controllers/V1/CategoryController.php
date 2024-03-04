@@ -10,6 +10,7 @@ use App\Http\Resources\V1\CategoryResource;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -18,7 +19,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::with('products')->get();   
+        $categories = Category::with('products')->get();
+        if (Cache::has('categories')) {
+            return new CategoryCollection(Cache::get('categories'));
+        }
         return new CategoryCollection($categories);
     }
 
@@ -27,9 +31,9 @@ class CategoryController extends Controller
      */
     public function store(CategoryCreateRequest $request)
     {
-        $data['name']=$request->name;
-        $data['description']=$request->description;
-        $data['slug']=Str::of($request->name)->slug('-');
+        $data['name'] = $request->name;
+        $data['description'] = $request->description;
+        $data['slug'] = Str::of($request->name)->slug('-');
         return Category::create($data);
     }
 
@@ -48,7 +52,7 @@ class CategoryController extends Controller
      */
     public function update(CategoryUpdateRequest $request, string $id)
     {
-        $category=Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         return $category->update($request->all());
     }
 
