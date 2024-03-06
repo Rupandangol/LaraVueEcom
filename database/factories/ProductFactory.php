@@ -21,9 +21,10 @@ class ProductFactory extends Factory
         return [
           'name'=>$this->faker->name(),
           'description'=>$this->faker->paragraph(),
-          'price'=>$this->faker->randomDigit(),
+          'price'=>$this->faker->randomDigitNotZero(),
           'stock_quantity'=>$this->faker->randomDigit(),
-          'image'=>$this->faker->image(storage_path('app/public/images'),400,300, null, false),
+          // 'image'=>$this->faker->image(storage_path('app/public/images'),400,300, null, false),
+          'image'=>'1709115148.png',
           'category_id'=>$this->faker->randomElement(Category::pluck('id'))
         ];
     }

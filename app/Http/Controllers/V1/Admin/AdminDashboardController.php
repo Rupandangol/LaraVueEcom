@@ -39,6 +39,9 @@ class AdminDashboardController extends Controller
              "
         );
 
+        $top5Products = DB::select("SELECT product_id, count(product_id) as ordered_count from order_details
+          group by product_id order by ordered_count desc limit 5;");
+
         return response()->json([
             'userCount' => $userCount,
             'productCount' => $productCount,
@@ -46,6 +49,7 @@ class AdminDashboardController extends Controller
             'deliveredOrderCount' => $deliveredOrderCount,
             'orderDate' => $orderDate,
             'orderStatusData' => $orderStatusData,
+            'top5Products'=>$top5Products,
         ]);
     }
 }

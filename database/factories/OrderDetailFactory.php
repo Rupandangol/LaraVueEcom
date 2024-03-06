@@ -22,7 +22,7 @@ class OrderDetailFactory extends Factory
             'order_id'=>$this->faker->randomElement(Order::pluck('id')),
             'product_id'=>$this->faker->randomElement(Product::pluck('id')),
             'quantity'=>$this->faker->randomDigit(),
-            'price'=>$this->faker->randomDigit()
+            'price'=>$this->faker->randomDigitNotZero()
         ];
     }
 }

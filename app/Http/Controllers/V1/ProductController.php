@@ -10,6 +10,7 @@ use App\Http\Resources\V1\ProductResource;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -20,7 +21,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return new ProductCollection(Product::with('category')->paginate());
+
+        // return new ProductCollection(Product::with('category')->paginate());
+        return new ProductCollection(Cache::remember('products',10, function(){
+            return Product::with('category')->paginate();
+        }));
     }
 
 
