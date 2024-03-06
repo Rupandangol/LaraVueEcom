@@ -35,10 +35,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AdminSeeder::class
         ]);
-        Category::factory(10)->create();
-        Product::factory(10)->create();
-        Order::factory(10)->create();
-        OrderDetail::factory(10)->create();
+        Category::factory(50)->create();
+        Product::factory(1000)->create();
+        Order::factory(100)->create();
+        OrderDetail::factory(1000)->create();
         Cart::factory(50)->create();
 
     }

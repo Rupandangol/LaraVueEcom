@@ -19,11 +19,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('products')->get();
-        if (Cache::has('categories')) {
-            return new CategoryCollection(Cache::get('categories'));
-        }
-        return new CategoryCollection($categories);
+        return new CategoryCollection(Cache::remember('categories',3, function () {
+            return Category::with('products')->get();
+        }));
     }
 
     /**
