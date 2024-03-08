@@ -43,6 +43,10 @@ const deleteItem = () => {
 const getImageUrl = () => {
     return props?.item?.products?.[0]?.image ? `/storage/images/${props?.item?.products?.[0].image}` : '';
 }
+const stockDataClass=()=>{
+    return props?.item?.products?.[0]?.stock_quantity == 0 ?'badge badge-danger':'badge badge-info';
+}
+
 </script>
 
 
@@ -56,7 +60,10 @@ const getImageUrl = () => {
                 </div>
                 <div class="col-md-3 col-lg-3 col-xl-3">
                     <p class="lead fw-normal mb-2">{{ item?.products?.[0]?.name }}</p>
-                    <p><span class="text-muted">Unit Price: Rs.{{ item?.products?.[0]?.price }}</span></p>
+                    <p>
+                        <span class="text-muted">Unit Price: Rs.{{ item?.products?.[0]?.price }}</span><br>
+                        <span class="text-muted">Stock Quantity:</span> <span :class="stockDataClass()"> {{ item?.products?.[0]?.stock_quantity == 0 ?'Out of Stock':(item?.products?.[0]?.stock_quantity) }}</span>
+                    </p>
                 </div>
                 <div class="col-md-3 col-lg-3 col-xl-2">
                     <p class="lead fw-normal mb-2">Quantity</p>

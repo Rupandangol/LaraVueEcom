@@ -66,13 +66,16 @@ onMounted(() => {
                         <span>Rs.{{ product?.price }}</span>
                     </div>
                     <p class="lead">{{ product?.description }}</p>
-                    <div class="d-flex">
-                        <input class="form-control text-center me-3" v-model="quantityValue" id="inputQuantity" type="num"
-                            style="max-width: 3rem" />
+                    <div v-if="product?.stock_quantity != 0" class="d-flex">
+                        <input class="form-control text-center me-3" v-model="quantityValue" id="inputQuantity"
+                            type="num" style="max-width: 3rem" />
                         <button @click="addToCart" class="btn btn-outline-dark flex-shrink-0" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Add to cart
                         </button>
+                    </div>
+                    <div class="badge badge-danger" v-else>
+                        Out of Stock
                     </div>
                 </div>
             </div>

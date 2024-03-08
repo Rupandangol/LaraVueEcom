@@ -50,6 +50,8 @@ const order = () => {
             store.dispatch('getCartCount');
             Swal.fire('Order Placed successfully');
             getData();
+        }else if(response.data.status=='failed'){
+            Swal.fire('Order Failed, Out of stock product!! Pls remove the items that are out of stock')
         }
     }).catch((e) => {
         console.log(e);

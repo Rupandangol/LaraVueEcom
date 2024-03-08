@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Enums\Status;
+use App\Events\ProductQuantityUpdater;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\OrderStoreRequest;
 use App\Http\Resources\V1\OrderCollection;
@@ -13,7 +14,12 @@ use App\Models\OrderDetail;
 use App\Models\ShippingAddress;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\ProductQuantityType;
+use App\Models\Product;
+use App\Services\CheckProductQuantity;
+use Illuminate\Support\Facades\DB;
 
 use function PHPSTORM_META\map;
 
@@ -34,18 +40,47 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request)
     {
+        DB::beginTransaction();
         $orderData = $this->orderDataBind($request);
         $order = Order::create($orderData);
         foreach ($request->product_id as $key => $item) {
-            $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
-            $orderItem[] = OrderDetail::create($orderDetailData);
+            if (CheckProductQuantity::check($item, $request->quantity[$key])) {
+                $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
+                $orderItem[] = OrderDetail::create($orderDetailData);
+            } else {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Order Failed',
+                    'data' => ['error product'=>$item]
+                ], 200);
+            }
         }
+        event(new ProductQuantityUpdater($this->convertToTypeObject($request->product_id,$request->quantity)));
         $this->clearCartData();
+        DB::commit();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Order created successfully',
             'data' => ['order' => $order, 'orderDetails' => $orderItem]
         ], 200);
+    }
+
+    /**
+     * check Product in stock
+     */
+    protected function convertToTypeObject(array $product_ids, array $quantities): array
+    {
+        $array = [];
+        foreach ($product_ids as $key => $item) {
+            $array[] = [
+                'product_id' => $item,
+                'quantity' => $quantities[$key],
+                'type' => ProductQuantityType::TYPE_DECREMENT
+            ];
+        }
+        return $array;
     }
 
     /**
@@ -70,6 +105,9 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        dd($request->all());
+        dd($request->product_id);
+
         Order::findOrFail($id)->delete();
         $orderData = $this->orderDataBind($request);
         $order = Order::create($orderData);
@@ -77,6 +115,8 @@ class OrderController extends Controller
             $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
             $orderItem[] = OrderDetail::create($orderDetailData);
         }
+        dd($request->product_id);
+        event(new ProductQuantityUpdater($request->product_id));
         $this->clearCartData();
         return response()->json([
             'status' => 'success',
@@ -113,7 +153,7 @@ class OrderController extends Controller
     public function orderDataBind($request): array
     {
         $userId = Auth::user()->id;
-        $shippingAddress=ShippingAddress::where('user_id',$userId)->first();
+        $shippingAddress = ShippingAddress::where('user_id', $userId)->first();
         $data = [
             'user_id' => $userId,
             'total_price' => $request->total_price,
