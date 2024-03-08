@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\ProductQuantityUpdater;
+use App\Listeners\ProductQuantityUpdaterListener;
 use App\Models\Category;
 use App\Models\Product;
 use App\Observers\CategoryObserver;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ProductQuantityUpdater::class => [
+            ProductQuantityUpdaterListener::class,
+        ]
     ];
 
     /**
