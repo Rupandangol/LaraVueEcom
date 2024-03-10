@@ -60,7 +60,26 @@ class UserController extends Controller
 
     public function index()
     {
-        return new UserCollection(User::all());
+        $arraySort=request()->only([
+            'sort_field',
+            'sort_direction',
+        ]);
+        if($arraySort['sort_field']==null){
+            $sort_field='id';
+        }else{
+            $sort_field=$arraySort['sort_field'];
+        }
+        $arrayFilter = request()->only([
+            'name',
+            'email'
+        ]);
+        $user = User::when(count($arrayFilter) > 0, function ($q) use ($arrayFilter) {
+            foreach ($arrayFilter as $column => $item) {
+                $q->where($column, 'LIKE', '%' . $item . '%');
+            }
+        })->orderBy($sort_field,$arraySort['sort_direction'])->get();
+        return new UserCollection($user);
+        // return new UserCollection(User::all());
     }
 
     public function show(string $id)

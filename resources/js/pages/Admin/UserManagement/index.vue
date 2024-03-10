@@ -1,20 +1,25 @@
 <script setup>
 import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
 import Swal from 'sweetalert2';
+import Placeholder from '../../../components/Placeholder.vue';
 
 const users = ref([]);
 const msg = ref('');
 const errors = ref('');
-const getUsers = () => {
-    axios.get('/api/V1/users')
-        .then((response) => {
-            users.value = response.data.data;
-        })
-}
-
+const loading = ref(true);
+const param = reactive({
+    'sort': {
+        'sort_field': '',
+        'sort_direction': 'desc'
+    },
+    'search': {
+        'name': '',
+        'email': '',
+    }
+});
 const deleteUser = (id) => {
     Swal.fire({
         title: "Are you sure?",
@@ -46,9 +51,37 @@ const deleteUser = (id) => {
 
         }
     });
-
 }
 
+const getUsers = async () => {
+    users.value = [];
+    loading.value = true;
+    const response = await axios.get('/api/V1/users', {
+        params: {
+            ...param.search,
+            ...param.sort
+        }
+    });
+    if (response.status == 200) {
+        loading.value = false;
+        users.value = response.data.data;
+    }
+}
+
+const sort = (field) => {
+    if (param.sort.sort_field == field && param.sort.sort_direction=='desc') {
+        param.sort.sort_direction = 'asc';
+    }else{
+        param.sort.sort_direction = 'desc';
+    }
+    param.sort.sort_field = field;
+    getUsers();
+}
+const clearForm=()=>{
+    param.search.name='';
+    param.search.email='';
+    getUsers();
+}
 onMounted(() => {
     getUsers();
 })
@@ -61,13 +94,48 @@ onMounted(() => {
             <router-link class="btn btn-success" to="/admin/users/create"><i class=" fa fa-plus"></i><i
                     class="fa fa-user"></i></router-link>
         </div>
+
+        <div class="container d-flex justify-content-end">
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fa fa-search"></i>
+                </a>
+            </p>
+
+        </div>
+        <div class="collapse container" id="collapseExample">
+            <div class="mb-5">
+                <form @submit.prevent="getUsers()">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="text" v-model="param.search.name" class="form-control" placeholder="Username">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" v-model="param.search.email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm">Submit</button> &nbsp;
+                    <button type="reset" @click="clearForm()" class="btn btn-default btn-sm">Reset</button>
+                </form>
+            </div>
+        </div>
+
         <div class="container">
-            <table class="table table-bordered">
+            <div v-if="loading">
+                <Placeholder />
+            </div>
+            <table v-else class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Sn</th>
-                        <th>Username</th>
-                        <th>Email</th>
+                        <th v-if="param.sort.sort_field=='name'&& param.sort.sort_direction=='asc'" @click="sort('name')">Username <i class="fa fa-arrow-up"></i></th>
+                        <th v-else-if="param.sort.sort_field=='name'&& param.sort.sort_direction=='desc'" @click="sort('name')">Username <i class="fa fa-arrow-down"></i></th>
+                        <th v-else @click="sort('name')">Username</th>
+                        <th v-if="param.sort.sort_field=='email'&& param.sort.sort_direction=='asc'" @click="sort('email')">Email <i class="fa fa-arrow-up"></i></th>
+                        <th v-else-if="param.sort.sort_field=='email'&& param.sort.sort_direction=='desc'" @click="sort('email')">Email <i class="fa fa-arrow-down"></i></th>
+                        <th  v-else @click="sort('email')">Email</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

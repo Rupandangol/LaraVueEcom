@@ -16,6 +16,19 @@ class ProductQuantityUpdater
     public $productDetails;
     /**
      * Create a new event instance.
+     * product detail array
+     * {
+     *  {
+     *    'product_id' => 1,
+     *     'quantity' =>1
+     *     'type' => ProductQuantityType::TYPE_DECREMENT
+     *  },
+     *  {
+     *    'product_id' => 2,
+     *     'quantity' =>2
+     *     'type' => ProductQuantityType::TYPE_INCREMENT
+     *  },
+     * }
      */
     public function __construct($productDetails)
     {
