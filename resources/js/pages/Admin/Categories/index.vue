@@ -1,25 +1,34 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+const param = reactive({
+    'search': {
+        'name': ''
+    },
+});
 const categories = ref([]);
 const getCategories = async () => {
-    const adminToken = localStorage.getItem('admin-token');
-    console.log(adminToken);
-    await axios.get('/api/V1/categories', {
+    const response = await axios.get('/api/V1/categories', {
         headers: {
-            Authorization: `Bearer ${adminToken}`
+            Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+        },
+        params: {
+            ...param.search
         }
-    }).then((response) => {
+    });
+    if (response.status == 200) {
         categories.value = response.data.data;
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
-    })
+    } else {
+        Swal.fire('ERROR')
+    }
 }
-
+const resetSearch = () => {
+    param.search.name = '';
+    getCategories();
+}
 const deleteCategories = (id) => {
     Swal.fire({
         title: "Are you sure?",
@@ -59,6 +68,7 @@ const deleteCategories = (id) => {
     });
 }
 
+
 onMounted(() => {
     getCategories();
 })
@@ -70,7 +80,29 @@ onMounted(() => {
             <router-link to="/admin/categories/create" class="btn btn-success"><i class="fa fa-plus"></i>
                 Create</router-link>
         </div>
+        <p class="container d-flex justify-content-end">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseCategorySearch"
+                aria-expanded="false" aria-controls="collapseCategorySearch">
+                <i class="fa fa-search"></i>
+            </button>
+        </p>
+
         <div class="container">
+            <div class="collapse" id="collapseCategorySearch">
+                <div>
+                    <form @submit.prevent="getCategories" class="row">
+                        <div class="form-group col-md-10">
+                            <input type="text" v-model="param.search.name" class="form-control"
+                                placeholder="Category Name">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button> &nbsp;
+                            <button type="reset" class="btn btn-default" @click="resetSearch()"><i
+                                    class="fa fa-sync"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div><br>
             <table class="table table-bordered">
                 <thead>
                     <tr>

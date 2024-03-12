@@ -4,15 +4,18 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+const loading = ref(true);
 const orders = ref([]);
 
 const getOrders = async () => {
+    loading.value = true;
     const adminToken = localStorage.getItem('admin-token');
     await axios.get(`/api/V1/admin-orders`, {
         headers: {
             Authorization: `Bearer ${adminToken}`
         }
     }).then((response) => {
+        loading.value = false;
         orders.value = response.data.data;
     }).catch((error) => {
         console.log(error);
@@ -71,7 +74,7 @@ onMounted(() => {
     <AdminLayout>
         <div class="heading m-2 p-3 d-flex justify-content-between">
             <h3>Orders</h3>
-            <router-link class="btn btn-info btn-sm" :to="{name:'admin-order-create'}">Create Order</router-link>
+            <router-link class="btn btn-info btn-sm" :to="{ name: 'admin-order-create' }">Create Order</router-link>
         </div>
         <div class="container">
             <table class="table table-bordered">
@@ -86,11 +89,20 @@ onMounted(() => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(order, index) in orders">
+                    <tr v-if="loading" v-for="placeholder in [1,1,1,1 ] " class="placeholder-glow">
+                        <td ><span class="placeholder col-12"></span></td>
+                        <td ><span class="placeholder col-12"></span></td>
+                        <td ><span class="placeholder col-12"></span></td>
+                        <td ><span class="placeholder col-12"></span></td>
+                        <td ><span class="placeholder col-12"></span></td>
+                        <td ><span class="placeholder col-12"></span></td>
+                    </tr>
+                    <tr v-else v-for="(order, index) in orders">
                         <td>{{ index + 1 }}</td>
                         <td>{{ order.user.name }}</td>
                         <td>{{ order.total_price }}</td>
-                        <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{ order.zip_code }}</td>
+                        <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{
+                order.zip_code }}</td>
                         <td>
                             <div :class="status(order?.status)">
                                 {{ order?.status }}
