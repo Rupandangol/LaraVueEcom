@@ -19,9 +19,26 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return new CategoryCollection(Cache::remember('categories',3, function () {
-            return Category::with('products')->get();
-        }));
+        $array_filters = request()->only([
+            'name'
+        ]);
+        if (count($array_filters) == 0) {
+            $array_filters = [
+                'name' => ''
+            ];
+        }
+        $categories = Category::when(count($array_filters) > 0, function ($q) use ($array_filters) {
+            foreach ($array_filters as $column => $value) {
+                if ($value != '') {
+                    $q->where($column, 'LIKE', '%' . $value . '%');
+                }
+            }
+        })->with('products')->get();
+        if (!Cache::has('categories_' . $array_filters['name'])) {
+            $cachedData = Cache::put('categories_' . ($array_filters['name'] ?? ''), $categories, 3);
+        }
+        $cachedData = Cache::get('categories_' . ($array_filters['name'] ?? ''));
+        return new CategoryCollection($cachedData);
     }
 
     /**

@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Route::get('payment-verify',function(){
+    return '1';
+});
 Route::get('/admin/{view}',BackendApplicationController::class)->where('view','(.*)');
 Route::get('{view}',ApplicationController::class)->where('view','(.*)');
 // Route::get('/login',[LoginController::class,'index']);

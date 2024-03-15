@@ -1,18 +1,31 @@
 <script setup>
 import axios from 'axios';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import Swal from 'sweetalert2';
 
+const param = reactive({
+    'search': {
+        'name': '',
+        'price': '',
+        'stock_quantity': '',
+        'category_id': '',
+    }
+})
 const products = ref([]);
-const getProducts = () => {
-    axios.get('/api/V1/products')
-        .then((response) => {
-            products.value = response.data.data;
-            console.log(response);
-        }).catch((error) => {
-            console.log(error);
-        })
+
+const getProducts = async () => {
+    const response = await axios.get('/api/V1/products',
+        {
+            params: {
+                ...param.search
+            }
+        });
+    if (response.status = 200) {
+        products.value = response.data.data;
+    } else {
+        Swal.fire('ERROR');
+    }
 }
 
 const deleteProduct = (id) => {
@@ -49,6 +62,14 @@ const deleteProduct = (id) => {
 
 }
 
+const clearSearch = () => {
+    param.search.name='';
+    param.search.category_id='';
+    param.search.price='';
+    param.search.stock_quantity='';
+    getProducts();
+}
+
 onMounted(() => {
     getProducts();
 })
@@ -60,7 +81,50 @@ onMounted(() => {
             <router-link to="/admin/products/create" class="btn btn-success "><i class="fa fa-plus"></i>
                 Create</router-link>
         </div>
+
+        <p class="container d-flex justify-content-end">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseProductSearch"
+                aria-expanded="false" aria-controls="collapseProductSearch">
+                <i class="fa fa-search"></i>
+            </button>
+        </p>
+
+
         <div class="container">
+            <div class="collapse" id="collapseProductSearch">
+                <div>
+                    <form @submit.prevent="getProducts()" class="row">
+                        <div class="form-group col-md-8 ">
+                            <input type="text" v-model="param.search.name" class="form-control"
+                                placeholder="Product Name">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <select class="form-control" v-model="param.search.price">
+                                <option>0-100</option>
+                                <option>100-500</option>
+                                <option>500-1000</option>
+                                <option>>1000</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-6 ">
+                            <input type="text" v-model="param.search.stock_quantity" class="form-control"
+                                placeholder="Quantity">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" v-model="param.search.category_id" class="form-control"
+                                placeholder="Category">
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button> &nbsp;
+                            <button type="reset" @click="clearSearch()" class="btn btn-primary"><i class="fa fa-sync"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+            </div><br>
             <table class="table table-bordered">
                 <thead>
                     <tr>

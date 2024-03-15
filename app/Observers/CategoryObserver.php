@@ -52,7 +52,8 @@ class CategoryObserver
      */
     protected function cachingCategories()
     {
-        Cache::forget('categories');
+        // Cache::forget('categories');
+        Cache::flush();
         // $allCategory = Category::all();
         // Cache::forever('categories', $allCategory);
     }

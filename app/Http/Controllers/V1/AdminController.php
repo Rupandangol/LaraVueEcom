@@ -17,7 +17,17 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return new AdminCollection(Admin::paginate());   
+        $array_filter=request()->only([
+            'name',
+            'email'
+        ]);
+        $admin=Admin::when(count($array_filter)>0,function($query) use ($array_filter){
+            foreach($array_filter as $column =>$item){
+                $query->where($column,'LIKE','%'.$item.'%');
+            }
+        })->paginate();
+        return new AdminCollection($admin);   
+        // return new AdminCollection(Admin::paginate());   
     }
 
     /**

@@ -21,11 +21,45 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $array_filter = request()->only([
+            'name',
+            'price',
+            'stock_quantity',
+            'category_id',
+        ]);
+        if (count($array_filter) == 0) {
+            $array_filter = [
+                'name' => '',
+                'price' => '',
+                'stock_quantity' => '',
+                'category_id' => '',
+            ];
+        }
+        $products = Product::when(count($array_filter) > 0, function ($q) use ($array_filter) {
+            foreach ($array_filter as $column => $value) {
+                if ($column === 'category_id' && $value != '') {
+                    $q->where($column, $value);
+                } elseif ($column === 'price' && $value != '') {
+                    $priceData = explode('-', $value);
+                    if (count($priceData) != 1) {
+                        $q->whereBetween('price', [$priceData[0], $priceData[1]]);
+                    } else {
+                        $q->where($column, '>=', substr($priceData[0], 1));
+                    }
+                } else {
+                    $q->where($column, 'LIKE', '%' . $value . '%');
+                }
+            }
+        })->with('category')->paginate();
+        if (!Cache::has('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'])) {
+            $productData = Cache::put('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'], $products, 100);
+        }
+        $productData = Cache::get('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id']);
 
-        // return new ProductCollection(Product::with('category')->paginate());
-        return new ProductCollection(Cache::remember('products',10, function(){
-            return Product::with('category')->paginate();
-        }));
+        return new ProductCollection($productData);
+        // return new ProductCollection(Cache::remember('products', 10, function () {
+        //     return Product::with('category')->paginate();
+        // }));
     }
 
 

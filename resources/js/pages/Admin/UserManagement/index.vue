@@ -69,17 +69,17 @@ const getUsers = async () => {
 }
 
 const sort = (field) => {
-    if (param.sort.sort_field == field && param.sort.sort_direction=='desc') {
+    if (param.sort.sort_field == field && param.sort.sort_direction == 'desc') {
         param.sort.sort_direction = 'asc';
-    }else{
+    } else {
         param.sort.sort_direction = 'desc';
     }
     param.sort.sort_field = field;
     getUsers();
 }
-const clearForm=()=>{
-    param.search.name='';
-    param.search.email='';
+const clearForm = () => {
+    param.search.name = '';
+    param.search.email = '';
     getUsers();
 }
 onMounted(() => {
@@ -106,41 +106,47 @@ onMounted(() => {
         </div>
         <div class="collapse container" id="collapseExample">
             <div class="mb-5">
-                <form @submit.prevent="getUsers()">
-                    <div class="row">
-                        <div class="form-group col-md-6">
+                <form class="row" @submit.prevent="getUsers()">
+                        <div class="form-group col-md-5">
                             <input type="text" v-model="param.search.name" class="form-control" placeholder="Username">
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-5">
                             <input type="text" v-model="param.search.email" class="form-control" placeholder="Email">
                         </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Search</button> &nbsp;
+                        <button type="reset" @click="clearForm()" class="btn btn-default"><i class="fas fa-sync"></i></button>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-sm">Submit</button> &nbsp;
-                    <button type="reset" @click="clearForm()" class="btn btn-default btn-sm">Reset</button>
                 </form>
             </div>
         </div>
 
         <div class="container">
-            <div v-if="loading">
-                <Placeholder />
-            </div>
-            <table v-else class="table table-bordered">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Sn</th>
-                        <th v-if="param.sort.sort_field=='name'&& param.sort.sort_direction=='asc'" @click="sort('name')">Username <i class="fa fa-arrow-up"></i></th>
-                        <th v-else-if="param.sort.sort_field=='name'&& param.sort.sort_direction=='desc'" @click="sort('name')">Username <i class="fa fa-arrow-down"></i></th>
+                        <th v-if="param.sort.sort_field == 'name' && param.sort.sort_direction == 'asc'"
+                            @click="sort('name')">Username <i class="fa fa-arrow-up"></i></th>
+                        <th v-else-if="param.sort.sort_field == 'name' && param.sort.sort_direction == 'desc'"
+                            @click="sort('name')">Username <i class="fa fa-arrow-down"></i></th>
                         <th v-else @click="sort('name')">Username</th>
-                        <th v-if="param.sort.sort_field=='email'&& param.sort.sort_direction=='asc'" @click="sort('email')">Email <i class="fa fa-arrow-up"></i></th>
-                        <th v-else-if="param.sort.sort_field=='email'&& param.sort.sort_direction=='desc'" @click="sort('email')">Email <i class="fa fa-arrow-down"></i></th>
-                        <th  v-else @click="sort('email')">Email</th>
+                        <th v-if="param.sort.sort_field == 'email' && param.sort.sort_direction == 'asc'"
+                            @click="sort('email')">Email <i class="fa fa-arrow-up"></i></th>
+                        <th v-else-if="param.sort.sort_field == 'email' && param.sort.sort_direction == 'desc'"
+                            @click="sort('email')">Email <i class="fa fa-arrow-down"></i></th>
+                        <th v-else @click="sort('email')">Email</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(user, index) in users">
+                    <tr v-if="loading" class="placeholder-glow">
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                    </tr>
+                    <tr v-else v-for="(user, index) in users">
                         <td>{{ index + 1 }}</td>
                         <td>{{ user?.name }}</td>
                         <td>{{ user?.email }}</td>
