@@ -1,16 +1,30 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const loading = ref(true);
+const param = reactive({
+    'search': {
+        'name': '',
+        'status': '',
+        'country': '',
+        'zone': '',
+        'district': '',
+        'street': '',
+        'zip_code': '',
+    }
+})
 const orders = ref([]);
 
 const getOrders = async () => {
     loading.value = true;
     const adminToken = localStorage.getItem('admin-token');
     await axios.get(`/api/V1/admin-orders`, {
+        params: {
+            ...param.search
+        },
         headers: {
             Authorization: `Bearer ${adminToken}`
         }
@@ -20,6 +34,17 @@ const getOrders = async () => {
     }).catch((error) => {
         console.log(error);
     })
+}
+
+const resetSearch = () => {
+    param.search.name = '';
+    param.search.status = '';
+    param.search.country = '';
+    param.search.zone = '';
+    param.search.district = '';
+    param.search.street = '';
+    param.search.zip_code = '';
+    getOrders();
 }
 const status = (data) => {
     if (data == 'delivered') {
@@ -76,7 +101,62 @@ onMounted(() => {
             <h3>Orders</h3>
             <router-link class="btn btn-info btn-sm" :to="{ name: 'admin-order-create' }">Create Order</router-link>
         </div>
+
+        <p class="container d-flex justify-content-end">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOrderSearch"
+                aria-expanded="false" aria-controls="collapseOrderSearch">
+                <i class="fa fa-search"></i>
+            </button>
+        </p>
         <div class="container">
+
+            <div class="collapse" id="collapseOrderSearch">
+                <div>
+                    <form class="row" @submit.prevent="getOrders()">
+                        <div class="form-group col-md-6">
+                            <input v-model="param.search.name" type="text" class="form-control"
+                                placeholder="Ordered by">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <!-- <input type="text" v-model="param.search.status" class="form-control" placeholder="Status"> -->
+                            <select class="form-control" v-model="param.search.status">
+                                <option value="">Choose status</option>
+                                <option value="pending">Pending</option>
+                                <option value="in_transit">In Transit</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 row">
+                            <label>Shipping Address</label>
+                            <div class="form-group col-md-3">
+                                <input type="text" v-model="param.search.country" class="form-control"
+                                    placeholder="Country">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input type="text" v-model="param.search.zone" class="form-control" placeholder="Zone">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="text" v-model="param.search.district" class="form-control"
+                                    placeholder="District">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="text" v-model="param.search.street" class="form-control"
+                                    placeholder="Street">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <input type="text" v-model="param.search.zip_code" class="form-control"
+                                    placeholder="Zip code">
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                                &nbsp;
+                                <button type="reset" @click="resetSearch()" class="btn btn-default"><i
+                                        class="fa fa-sync"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><br>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -89,17 +169,17 @@ onMounted(() => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="loading" v-for="placeholder in [1,1,1,1 ] " class="placeholder-glow">
-                        <td ><span class="placeholder col-12"></span></td>
-                        <td ><span class="placeholder col-12"></span></td>
-                        <td ><span class="placeholder col-12"></span></td>
-                        <td ><span class="placeholder col-12"></span></td>
-                        <td ><span class="placeholder col-12"></span></td>
-                        <td ><span class="placeholder col-12"></span></td>
+                    <tr v-if="loading" v-for="placeholder in [1, 1, 1, 1] " class="placeholder-glow">
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
                     </tr>
                     <tr v-else v-for="(order, index) in orders">
                         <td>{{ index + 1 }}</td>
-                        <td>{{ order.user.name }}</td>
+                        <td>{{ order?.user?.name }}</td>
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{
                 order.zip_code }}</td>
