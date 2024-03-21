@@ -18,6 +18,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\ProductQuantityType;
 use App\Models\Product;
+use App\Models\User;
+use App\Notifications\OrderPlacedNotification;
 use App\Services\CheckProductQuantity;
 use Illuminate\Support\Facades\DB;
 
@@ -57,6 +59,8 @@ class OrderController extends Controller
             }
         }
         event(new ProductQuantityUpdater($this->convertToTypeObject($request->product_id,$request->quantity)));
+        $user=User::findOrFail(Auth::user()->id);
+        $user->notify(new OrderPlacedNotification($order->id));
         $this->clearCartData();
         DB::commit();
 
