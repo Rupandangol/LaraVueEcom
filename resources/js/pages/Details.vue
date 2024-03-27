@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, watchEffect } from 'vue';
+import { onMounted, reactive, ref, watch, watchEffect } from 'vue';
 import Card from '../components/DashboardProductCard.vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
@@ -9,9 +9,14 @@ import Swal from 'sweetalert2';
 import store from '../store';
 
 const route = useRoute();
+const rating = ref([]);
+const avgRating = ref(null);
 const product = ref([]);
 const relatedProducts = ref([]);
 const quantityValue = ref(1);
+const formData = reactive({
+    'review': '',
+});
 const getProductDetail = () => {
     axios.get(`/api/V1/products/${route.params.id}`).then((response) => {
         product.value = response.data.data;
@@ -41,13 +46,50 @@ const addToCart = async () => {
         });
 }
 
+const getRating = async () => {
+    const response = await axios.get(`/api/V1/ratings/${route.params.id}`);
+    if (response.data.status == 'success') {
+        rating.value = response.data.data.rating;
+        avgRating.value = response.data.data?.avg?.[0]?.avgRating;
+        console.log('asdfasdfasdf', response.data.data.avg?.[0]?.avgRating);
+    }
+}
+console.log('AVG=====>', avgRating);
+const updateRating = async (num) => {
+    const response = await axios.post(`/api/V1/rating/${route.params.id}`, { 'rating': num }, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`
+        }
+    });
+    if (response.data.status == 'success') {
+        getRating();
+    }
+}
+
+const commentSubmit = async () => {
+    const response = await axios.post(`/api/V1/ratings-comment/${route.params.id}`, formData, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`
+        }
+    });
+    if (response.data.status == 'success') {
+        Swal.fire(response.data.message);
+        formData.review = '';
+        getRating();
+    } else {
+        formData.review = '';
+
+        Swal.fire(response.data.message);
+    }
+}
+
 watchEffect(() => {
     getProductDetail();
     getRelatedProducts();
+    getRating();
     window.scrollTo(0, 0);
 })
 onMounted(() => {
-
 })
 </script>
 <template>
@@ -77,6 +119,28 @@ onMounted(() => {
                     <div class="badge badge-danger" v-else>
                         Out of Stock
                     </div>
+                </div>
+            </div><br>
+            <div class="mt-2">
+                <h5>Reviews and Rating</h5><br>
+                <div style="background-color: #dbd9d9; text-align: center;">
+                    <span v-for="item in 5">
+                        <i class="fa fa-star fa-lg text-dark" v-if="avgRating >= item" @click="updateRating(item)"></i>
+                        <i class="fa fa-star fa-lg text-light" v-else @click="updateRating(item)"></i>
+                    </span>
+                </div><br>
+                <form @submit.prevent="commentSubmit">
+                    <textarea v-model="formData.review" class="form-control" cols="10" rows="2"></textarea><br>
+                    <button type="submit" class="btn btn-success">Comment</button>
+                </form>
+                <div class="mt-3">
+                    <ul class="list-group">
+                        <li v-for="item in rating" class="list-group-item">
+                            <h4>{{ item.user.name }} <i v-for="icon in item.rating"
+                                    class="fa fa-star fa-xs text-warning"></i></h4>
+                            <p> {{ item.review }}</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

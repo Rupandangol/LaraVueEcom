@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\Rating;
 use App\Models\TestModel;
 use App\Models\User;
 use Database\Factories\TestModelFactory;
@@ -40,6 +41,6 @@ class DatabaseSeeder extends Seeder
         Order::factory(100)->create();
         OrderDetail::factory(1000)->create();
         Cart::factory(50)->create();
-
+        Rating::factory(100)->create();
     }
 }
