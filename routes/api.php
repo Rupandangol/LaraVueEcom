@@ -9,7 +9,9 @@ use App\Http\Controllers\V1\CartController;
 use App\Http\Controllers\V1\CategoryController;
 use App\Http\Controllers\V1\OrderController;
 use App\Http\Controllers\V1\ProductController;
+use App\Http\Controllers\V1\RatingController;
 use App\Http\Controllers\V1\UserController;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +45,10 @@ Route::group(['prefix' => 'V1'], function () {
         Route::resource('/orders', OrderController::class);
         Route::post('/shipping-address', [ShippingAddressController::class, 'store'])->name('api-shipping-address-store');
         Route::get('/shipping-address/self', [ShippingAddressController::class, 'show'])->name('api-shipping-address-show');
+        Route::post('/ratings-comment/{product_id}', [RatingController::class, 'reviewStore']);
+        Route::post('/rating/{product_id}',[RatingController::class,'ratingStore']);
     });
+    Route::get('/ratings/{product_id}', [RatingController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('api-products.show');
     Route::get('/related-products', [ProductController::class, 'related'])->name('api-products.related');

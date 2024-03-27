@@ -50,7 +50,7 @@ class ProductController extends Controller
                     $q->where($column, 'LIKE', '%' . $value . '%');
                 }
             }
-        })->with('category')->paginate();
+        })->with('category')->get();
         if (!Cache::has('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'])) {
             $productData = Cache::put('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'], $products, 100);
         }
