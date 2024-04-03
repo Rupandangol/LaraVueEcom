@@ -59,6 +59,19 @@ const order = () => {
     })
     console.log(data);
 }
+
+const payByKhalti = async () => {
+    const response = await axios.post('/api/V1/pay', [], {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('user-token')}`
+        }
+    });
+    if (response.status = 200) {
+        window.open(response.data.payment_url, "_blank");
+    }
+    console.log(response.data);
+}
+
 onMounted(() => {
     getData();
 })
@@ -86,14 +99,49 @@ onMounted(() => {
 
                         <div v-if="cartData.length != 0" class="card">
                             <div class="card-body">
-                                <button @click="order" type="button" class="btn btn-warning btn-block btn-lg">Proceed to
-                                    Pay </button>
+                                <!-- <button @click="order" type="button" class="btn btn-warning btn-block btn-lg">Proceed to
+                                    Pay </button> -->
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-warning btn-block btn-lg" data-toggle="modal"
+                                    data-target="#payModal">
+                                    Proceed to
+                                    Pay
+                                </button>
                             </div>
                         </div>
                         <div v-else>
                             <h3 class="d-flex justify-content-center"> <i class="fa fa-shopping-cart"></i>
                                 &nbsp;&nbsp;&nbsp;Empty Cart</h3>
                         </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="payModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="payModalLabel">Payment Method</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button @click="order" type="button" class="btn btn-warning btn-block">Cash on Delivery
+                        </button>
+                        <button type="button" @click="payByKhalti()" class="btn btn-success btn-block">Pay by
+                            khalti</button>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

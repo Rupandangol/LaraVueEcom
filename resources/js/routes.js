@@ -4,6 +4,7 @@ import Login from './pages/Login.vue';
 import Details from './pages/Details.vue';
 import Checkout from './pages/Checkout/index.vue';
 import Profile from './pages/Profile.vue';
+import PaymentInfo from './pages/PaymentInfo.vue';
 import MyOrder from './pages/MyOrder.vue';
 import MyOrderDetail from './pages/MyOrderDetail.vue';
 import AdminLogin from './pages/Admin/Login/index.vue';
@@ -57,6 +58,12 @@ export default [
         path: '/profile',
         name: 'user-profile',
         component: Profile,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/payment-info',
+        name: 'payment-info',
+        component: PaymentInfo,
         meta: { requiresAuth: true }
     },
     {
