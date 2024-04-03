@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\AdminLoginController;
 use App\Http\Controllers\V1\CartController;
 use App\Http\Controllers\V1\CategoryController;
+use App\Http\Controllers\V1\KhaltiPaymentController;
 use App\Http\Controllers\V1\OrderController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\RatingController;
@@ -47,6 +48,8 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/shipping-address/self', [ShippingAddressController::class, 'show'])->name('api-shipping-address-show');
         Route::post('/ratings-comment/{product_id}', [RatingController::class, 'reviewStore']);
         Route::post('/rating/{product_id}',[RatingController::class,'ratingStore']);
+        Route::post('/pay',[KhaltiPaymentController::class,'pay']);
+        Route::post('/lookup',[KhaltiPaymentController::class,'lookup']);
     });
     Route::get('/ratings/{product_id}', [RatingController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');

@@ -136,9 +136,9 @@ onMounted(() => {
                 <div class="mt-3">
                     <ul class="list-group">
                         <li v-for="item in rating" class="list-group-item">
-                            <h4>{{ item.user.name }} <i v-for="icon in item.rating"
+                            <h4>{{ item?.user?.name }} <i v-for="icon in item.rating"
                                     class="fa fa-star fa-xs text-warning"></i></h4>
-                            <p> {{ item.review }}</p>
+                            <p> {{ item?.review }}</p>
                         </li>
                     </ul>
                 </div>
