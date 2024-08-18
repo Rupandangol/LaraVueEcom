@@ -9,6 +9,7 @@ use App\Models\BlogCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 use function PHPSTORM_META\map;
 use function PHPUnit\Framework\isNull;
@@ -40,10 +41,10 @@ class BlogController extends Controller
     public function store(BlogStoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['user_id'] = 1; // Add auth users for this later
+        $compliedData = $this->compliedData($validated);
         try {
-            $blog = Blog::create($validated);
-            event(new BlogCreatedEvent($validated['title']));
+            $blog = Blog::create($compliedData);
+            event(new BlogCreatedEvent($compliedData['title']));
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -57,6 +58,17 @@ class BlogController extends Controller
         ]);
     }
 
+    public function compliedData($validatedData)
+    {
+        return [
+            'title' => $validatedData['title'],
+            'status' => $validatedData['status'],
+            'blog_category_id' => $validatedData['blog_category_id'],
+            'content' => $validatedData['content'],
+            'written_from' => new Point($validatedData['latitude'], $validatedData['longitude']),
+            'user_id' => 1 // Add auth users for this later
+        ];
+    }
     /**
      * Display the specified resource.
      */
@@ -95,7 +107,7 @@ class BlogController extends Controller
     public function destroy($id, $slug)
     {
         try {
-            $blog = Blog::findIdSlug($id,$slug)->first();
+            $blog = Blog::findIdSlug($id, $slug)->first();
             if (is_null($blog)) {
                 throw new Exception('Blog Not Found', 404);
             }

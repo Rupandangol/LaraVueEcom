@@ -26,6 +26,8 @@ class BlogStoreRequest extends FormRequest
             'status' => 'required',
             'blog_category_id' => 'required',
             'content' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
         ];
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('content');
+            $table->point('written_from')->nullable();
             $table->unsignedBigInteger('blog_category_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
