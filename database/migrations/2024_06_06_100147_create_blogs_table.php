@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('comment_enabled')->default(1);
             $table->boolean('is_featured')->default(0);
             $table->string('title');
-            $table->string('slug');
+            $table->string('slug')->nullable();
             $table->text('content');
             $table->point('written_from')->nullable();
             $table->unsignedBigInteger('blog_category_id');

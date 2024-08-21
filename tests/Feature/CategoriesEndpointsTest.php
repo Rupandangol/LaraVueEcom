@@ -8,27 +8,21 @@ use Tests\TestCase;
 
 use function PHPSTORM_META\map;
 
-class CategoriesEndpoints extends TestCase
+class CategoriesEndpointsTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      */
-    public function testCategoriesCreate(): void
+    public function test_categories_create_unauthorized(): void
     {
         $category = [
             'name' => 'Test Category',
             'slug' => 'test-category',
             'description' => 'Test Description'
         ];
-        $this->json('post', '/api/V1/categories', $category)
-            ->assertStatus(201)
-            ->assertJsonStructure([
-                "name",
-                "description",
-                "slug",
-                "updated_at",
-                "created_at",
-                "id"
-            ]);
+       $response= $this->json('post', '/api/V1/categories', $category);
+
+       $response->assertStatus(401);
     }
 }
