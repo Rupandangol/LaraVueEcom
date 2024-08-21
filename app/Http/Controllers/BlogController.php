@@ -55,7 +55,7 @@ class BlogController extends Controller
             'status' => 'success',
             'message' => 'Successfully Created',
             'data' => $blog->load(['user', 'blogCategory'])
-        ]);
+        ], 201);
     }
 
     public function compliedData($validatedData)
@@ -66,7 +66,7 @@ class BlogController extends Controller
             'blog_category_id' => $validatedData['blog_category_id'],
             'content' => $validatedData['content'],
             'written_from' => new Point($validatedData['latitude'], $validatedData['longitude']),
-            'user_id' => 1 // Add auth users for this later
+            'user_id' => 3 // Add auth users for this later
         ];
     }
     /**

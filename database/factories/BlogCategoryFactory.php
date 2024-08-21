@@ -20,6 +20,7 @@ class BlogCategoryFactory extends Factory
             'blog_category'=> $this->faker->word(),
             'priority'=> $this->faker->randomNumber(),
             'description'=> $this->faker->sentence(),
+            'status'=> $this->faker->randomElement(['enable','disable'])
         ];
     }
 }
