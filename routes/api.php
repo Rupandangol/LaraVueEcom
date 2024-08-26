@@ -16,6 +16,7 @@ use App\Http\Controllers\V1\OrderController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\RatingController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\WebScraperController;
 use App\Models\BlogCategory;
 use App\Models\Rating;
 use Illuminate\Http\Request;
@@ -39,6 +40,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/blog-categories', [BlogCategoryController::class, 'index']);
 Route::get('/blog-categories/{id}', [BlogCategoryController::class, 'show']);
 
+Route::get('/scrape', [WebScraperController::class, 'scrape']);
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::post('/blogs', [BlogController::class, 'store']);
 Route::delete('/blogs/{id}-{slug}', [BlogController::class, 'destroy']);
