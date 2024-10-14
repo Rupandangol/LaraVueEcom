@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class BlogCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $blogCategory = BlogCategory::enabled()->get()->append(['random', 'blog_count']);
