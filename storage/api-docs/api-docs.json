@@ -1,0 +1,168 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "This is the API documentation for the Laravel application.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/blog-categories": {
+            "get": {
+                "tags": [
+                    "Blog Categories"
+                ],
+                "summary": "Get a list of Blog Categories",
+                "operationId": "53fcdc6074f514335d04a7aa7e1f30b7",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "enable"
+                                                    },
+                                                    "priority": {
+                                                        "type": "integer",
+                                                        "example": 73091
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Corrupti optio aliquam maiores facilis corporis fuga."
+                                                    },
+                                                    "blog_category": {
+                                                        "type": "string",
+                                                        "example": "Eos"
+                                                    },
+                                                    "time_of_creation": {
+                                                        "type": "string",
+                                                        "example": "9 seconds ago"
+                                                    },
+                                                    "random": {
+                                                        "type": "string",
+                                                        "example": "0hSp5ALxdTspNyet"
+                                                    },
+                                                    "blog_count": {
+                                                        "type": "integer",
+                                                        "example": 0
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/blog-categories/{id}": {
+            "get": {
+                "tags": [
+                    "Blog Categories"
+                ],
+                "summary": "Get details of a Blog Category",
+                "operationId": "08fed79fd7d2cc9ddb83253e83ee32e7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the blog category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "enable"
+                                                },
+                                                "priority": {
+                                                    "type": "integer",
+                                                    "example": 73091
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Corrupti optio aliquam maiores facilis corporis fuga."
+                                                },
+                                                "blog_category": {
+                                                    "type": "string",
+                                                    "example": "Eos"
+                                                },
+                                                "time_of_creation": {
+                                                    "type": "string",
+                                                    "example": "1 day ago"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog category not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [BlogCategory]."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Blog Categories",
+            "description": "Blog Categories"
+        }
+    ]
+}
