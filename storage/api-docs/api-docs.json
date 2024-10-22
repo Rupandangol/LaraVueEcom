@@ -6,6 +6,114 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/blogs": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Create a new blog",
+                "operationId": "2bd1a7882c4d5f5a5f79881bd1535a08",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My New Blog Post"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is the content of the blog post."
+                                    },
+                                    "blog_category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 123
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Blog successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully Created"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "My New Blog Post"
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "This is the content of the blog post."
+                                                },
+                                                "blog_category": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Tech"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 123
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "John Doe"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
         "/api/blog-categories": {
             "get": {
                 "tags": [
@@ -160,6 +268,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Blogs",
+            "description": "Blogs"
+        },
         {
             "name": "Blog Categories",
             "description": "Blog Categories"
