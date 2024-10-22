@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         // TestModel::truncate();
         // User::truncate();
         TestModel::factory(10)->create();
-        User::factory(20)->create();
+        User::factory(10000)->create();
         Admin::factory(10)->create();
         $this->call([
             UserSeeder::class,
