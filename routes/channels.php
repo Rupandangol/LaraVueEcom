@@ -19,3 +19,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('blog-created', function () {
     return true;
 });
+Broadcast::channel('public-chat', function () {
+    return true;
+});

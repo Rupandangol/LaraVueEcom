@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PublicMessageController;
 use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
@@ -68,6 +69,9 @@ Route::group(['prefix' => 'V1'], function () {
         Route::post('/rating/{product_id}', [RatingController::class, 'ratingStore']);
         Route::post('/pay', [KhaltiPaymentController::class, 'pay']);
         Route::post('/lookup', [KhaltiPaymentController::class, 'lookup']);
+
+        Route::get('/public-chat', [PublicMessageController::class, 'index']);
+        Route::post('/public-chat', [PublicMessageController::class, 'store']);
     });
     Route::get('/ratings/{product_id}', [RatingController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
