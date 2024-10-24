@@ -78,6 +78,7 @@ onMounted(() => {
                     <li class="nav-item"><router-link class="nav-link active" aria-current="page"
                             to="/dashboard">Home</router-link></li>
                     <li class="nav-item"><router-link class="nav-link" to="/about">About</router-link></li>
+                    <li class="nav-item"><router-link class="nav-link" to="/public-chat">Chat</router-link></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
