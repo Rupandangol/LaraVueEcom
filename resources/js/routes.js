@@ -25,6 +25,7 @@ import Orders from './pages/Admin/Orders/index.vue';
 import OrderDetail from './pages/Admin/Orders/detail.vue';
 import OrderEdit from './pages/Admin/Orders/edit.vue';
 import OrderCreate from './pages/Admin/Orders/create.vue';
+import Chat from './pages/Chat.vue';
 
 
 export default [
@@ -37,6 +38,11 @@ export default [
         path: '/about',
         name: 'user.about',
         component: About,
+    },
+    {
+        path: '/public-chat',
+        name: 'public.chat',
+        component: Chat,
     },
     {
         path: '/product/detail/:id',

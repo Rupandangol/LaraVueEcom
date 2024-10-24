@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class, 'user_id', 'id');
     }
+
+    public function publicChats()
+    {
+        return $this->hasMany(Message::class, 'user_id', 'id');
+    }
 }

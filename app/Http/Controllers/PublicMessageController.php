@@ -10,7 +10,7 @@ class PublicMessageController extends Controller
 {
     public function index()
     {
-        $message = Message::all();
+        $message = Message::with('users')->get();
         return response()->json([
             'status' => 'success',
             'data' => $message
@@ -27,7 +27,7 @@ class PublicMessageController extends Controller
         $data['user_id'] = auth()->user()->id;
 
         $message = Message::create($data);
-        broadcast(new \App\Events\PublicChatEvent($message));
+        broadcast(new \App\Events\PublicChatEvent($message->load('users')));
 
         return response()->json([
             'status' => 'success',

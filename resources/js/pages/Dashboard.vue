@@ -4,7 +4,6 @@ import Card from '../components/DashboardProductCard.vue';
 import { onMounted, ref } from 'vue';
 import Footer from '../components/Footer.vue';
 import AppNavbar from '../components/AppNavbar.vue';
-import Chat from './Chat.vue';
 
 const products = ref({ 'data': [] });
 
@@ -21,7 +20,6 @@ onMounted(() => {
 <template>
     <AppNavbar />
     <Header />
-    <Chat />
     <!-- Section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
