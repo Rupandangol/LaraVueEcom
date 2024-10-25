@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Admin;
 
+use App\Events\OrderStatusBroadcastEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\OrderStatusUpdateRequest;
 use App\Http\Resources\V1\OrderCollection;
@@ -106,6 +107,7 @@ class AdminOrderController extends Controller
         $order = Order::findOrFail($id);
         if ($order->status != $request->status) {
             $order->update($request->all());
+            broadcast(new OrderStatusBroadcastEvent($order));
         }
         return response()->json([
             'status' => 'success',

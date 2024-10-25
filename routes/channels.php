@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+
+// Route::post('/api/broadcasting/auth', function () {
+//     return Broadcast::auth(request());
+// });
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
@@ -22,3 +29,6 @@ Broadcast::channel('blog-created', function () {
 Broadcast::channel('public-chat', function () {
     return true;
 });
+Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
+    return (int)$user->id === (int)$userId;
+},['guards'=>['sanctum']]);
