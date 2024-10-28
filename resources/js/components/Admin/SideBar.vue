@@ -1,7 +1,13 @@
 <script setup>
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
+
+
+const AdminName = ref(null);
+const AdminId = ref(null);
 const logout = () => {
     if (!window.confirm('Are you sure?')) {
         return;
@@ -20,11 +26,41 @@ const logout = () => {
         console.log(e)
     });
 }
+
+const getAdminData = async () => {
+    await axios.get(`/api/V1/admin-data`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+        }
+    }).then((response) => {
+        AdminName.value = response.data.data.name;
+        AdminId.value = response.data.data.id;
+    });
+}
+
+const orderPlacedNotify = () => {
+    window.Echo.private('order.placed')
+        .listen('.order.placed', (e) => {
+            console.log(e);
+            Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: `New Order Placed #${e.order_id} by ${e.ordered_by}`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        })
+}
+
+onMounted(async () => {
+    await getAdminData();
+    orderPlacedNotify();
+})
 </script>
 <template>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-        <a href="index3.html" class="brand-link">
+        <a href="#" class="brand-link">
             <span class="brand-text font-weight-light">LEcom Admin</span>
         </a>
 
@@ -32,14 +68,15 @@ const logout = () => {
 
             <div class="user-panel mt-3 pb-3 mb-3 ">
                 <div class="info d-flex justify-content-between">
-                    <a href="#" class="d-block">Alexander Pierce</a>
+                    <a href="/admin/dashboard" class="d-block">{{ AdminName }}</a>
                     <button class="btn btn-dark btn-sm" @click="logout()"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
 
             <div class="form-inline">
                 <div class="input-group" data-widget="sidebar-search">
-                    <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control form-control-sidebar" type="search" placeholder="Search"
+                        aria-label="Search">
                     <div class="input-group-append">
                         <button class="btn btn-sidebar">
                             <i class="fas fa-search fa-fw"></i>
@@ -49,7 +86,8 @@ const logout = () => {
             </div>
 
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
                     <li class="nav-item">
                         <router-link to="/admin/dashboard" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
