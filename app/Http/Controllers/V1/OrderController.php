@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\ProductQuantityType;
+use App\Events\OrderPlacedNotificationAdminSideEvent;
 use App\Models\Product;
 use App\Models\User;
 use App\Notifications\OrderPlacedNotification;
@@ -54,13 +55,12 @@ class OrderController extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Order Failed',
-                    'data' => ['error product'=>$item]
+                    'data' => ['error product' => $item]
                 ], 200);
             }
         }
-        event(new ProductQuantityUpdater($this->convertToTypeObject($request->product_id,$request->quantity)));
-        $user=User::findOrFail(Auth::user()->id);
-        $user->notify(new OrderPlacedNotification($order->id));
+        event(new ProductQuantityUpdater($this->convertToTypeObject($request->product_id, $request->quantity)));
+        event(new OrderPlacedNotificationAdminSideEvent($order->load(['user'])));
         $this->clearCartData();
         DB::commit();
 

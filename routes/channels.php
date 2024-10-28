@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +33,8 @@ Broadcast::channel('public-chat', function () {
 });
 Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
     return (int)$user->id === (int)$userId;
+},['guards'=>['sanctum']]);
+
+Broadcast::channel('order.placed', function ($user) {
+   return true;
 },['guards'=>['sanctum']]);

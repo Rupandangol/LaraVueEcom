@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\OrderPlacedNotificationAdminSideEvent;
 use App\Events\ProductQuantityUpdater;
+use App\Listeners\OrderPlacedNotificationAdminSideListener;
 use App\Listeners\ProductQuantityUpdaterListener;
 use App\Models\Category;
 use App\Models\Product;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProductQuantityUpdater::class => [
             ProductQuantityUpdaterListener::class,
+        ],
+        OrderPlacedNotificationAdminSideEvent::class => [
+            OrderPlacedNotificationAdminSideListener::class,
         ]
     ];
 
