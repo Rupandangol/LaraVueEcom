@@ -60,8 +60,6 @@ class OrderController extends Controller
             }
         }
         event(new ProductQuantityUpdater($this->convertToTypeObject($request->product_id, $request->quantity)));
-        $user = User::findOrFail(Auth::user()->id);
-        // $user->notify(new OrderPlacedNotification($order->id));
         event(new OrderPlacedNotificationAdminSideEvent($order->load(['user'])));
         $this->clearCartData();
         DB::commit();
