@@ -2,7 +2,7 @@
 
 namespace App\Docs;
 
-class BlogAnnotation
+class BlogAnnotation 
 {
     /**
      * @OA\Post(
