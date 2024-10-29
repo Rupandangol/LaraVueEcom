@@ -2,14 +2,8 @@
 
 namespace App\Docs;
 
-/**
- * @OA\Info(
- *     version="1.0.0",
- *     title="API Documentation",
- *     description="This is the API documentation for the Laravel application.",
- * )
- */
-class BlogCategoryAnnotation
+
+class BlogCategoryAnnotation 
 {
     /**
      * @OA\Get(

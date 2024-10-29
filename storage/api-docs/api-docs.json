@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "API Documentation",
-        "description": "This is the API documentation for the Laravel application.",
+        "description": "API documentation with Sanctum Bearer token authentication",
         "version": "1.0.0"
     },
     "paths": {
@@ -265,6 +265,73 @@
                     }
                 }
             }
+        },
+        "/api/V1/admin-data": {
+            "get": {
+                "tags": [
+                    "Admin Data"
+                ],
+                "summary": "GetAdminData",
+                "operationId": "1f172f3e7b59b0e438fde79e839ff34c",
+                "responses": {
+                    "200": {
+                        "description": "Admin Data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 101
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "admin"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "admin@gmail.com"
+                                                },
+                                                "updated_at": {
+                                                    "type": "timestamp",
+                                                    "example": null
+                                                },
+                                                "created_at": {
+                                                    "type": "timestamp",
+                                                    "example": null
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
@@ -275,6 +342,10 @@
         {
             "name": "Blog Categories",
             "description": "Blog Categories"
+        },
+        {
+            "name": "Admin Data",
+            "description": "Admin Data"
         }
     ]
 }
