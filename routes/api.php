@@ -57,7 +57,8 @@ Route::group(['prefix' => 'V1'], function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('api-user-index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api-user-show');
-    Route::group(['middleware' => ['auth:sanctum', 'type.user']], function () {
+    // Route::group(['middleware' => ['auth:sanctum', 'type.user']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'auth:user']], function () {
         Route::get('/users-data', [UserController::class, 'getUserData'])->name('api-user-data');
         Route::put('/users-data/{id}', [UserController::class, 'updateFromUser'])->name('api-user-data-update');
         Route::post('/users/logout', [UserController::class, 'logout'])->name('api-user-logout');
@@ -80,7 +81,8 @@ Route::group(['prefix' => 'V1'], function () {
     Route::get('/related-products', [ProductController::class, 'related'])->name('api-products.related');
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
-    Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
+    // Route::group(['middleware' => ['auth:sanctum', 'type.admin']], function () {
+    Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
         Route::get('/admin-data', GetAdminDataController::class);
         Route::get('/admin-dashboard', AdminDashboardController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
