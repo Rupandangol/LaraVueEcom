@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="https://seeklogo.com/images/L/L-logo-2BD4B04DA4-seeklogo.com.png" />
     <title>Admin</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
