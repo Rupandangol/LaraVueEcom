@@ -43,6 +43,13 @@ const addToCart = async () => {
             } else if (response.status == 200) {
                 Swal.fire('Updated to Cart');
             }
+        }).catch((e) => {
+            if (e.response.data.status == 'failed') {
+                Swal.fire({
+                    title: 'Error',
+                    text: e.response.data.message
+                });
+            }
         });
 }
 
@@ -51,10 +58,9 @@ const getRating = async () => {
     if (response.data.status == 'success') {
         rating.value = response.data.data.rating;
         avgRating.value = response.data.data?.avg?.[0]?.avgRating;
-        console.log('asdfasdfasdf', response.data.data.avg?.[0]?.avgRating);
+
     }
 }
-console.log('AVG=====>', avgRating);
 const updateRating = async (num) => {
     const response = await axios.post(`/api/V1/rating/${route.params.id}`, { 'rating': num }, {
         headers: {
