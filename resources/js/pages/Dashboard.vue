@@ -24,7 +24,6 @@ const getUserId = async () => {
                 Authorization: `Bearer ${token}`,
             },
         }).then((response) => {
-            console.log('asdfasdfasdf', response.data.data.id);
             userId.value = response.data.data.id;
         });
     } catch (error) {
@@ -36,7 +35,6 @@ onMounted(async () => {
     await getUserId();
     window.Echo.private('order.status.' + userId.value)
         .listen('.order.status', (e) => {
-            console.log('asdfasdfasdf==>', e);
             Swal.fire({
                 position: "top-end",
                 icon: "success",

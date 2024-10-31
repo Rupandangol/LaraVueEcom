@@ -82,6 +82,42 @@ const clearForm = () => {
     param.search.email = '';
     getUsers();
 }
+
+const toggleUserLock = (userId, lockStatus) => {
+
+    const text = lockStatus ? 'You will be unlocking User access.' : 'You will be Locking User access';
+    const confirmButtonText = lockStatus ? 'Unlock!' : 'Lock!';
+    Swal.fire({
+        title: "Are you sure?",
+        text: text,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: confirmButtonText
+    }).then((result) => {
+        if (result.isConfirmed) {
+            msg.value = '';
+            const adminToken = localStorage.getItem('admin-token');
+            axios.patch('/api/V1/users/toggle-lock', { 'user_id': userId }, {
+                headers: {
+                    Authorization: `Bearer ${adminToken}`
+                }
+            })
+                .then((res) => {
+                    if (res.data.status == 'success') {
+                        const iconType = res.data.data.lock === 0 ? 'success' : 'warning'
+                        Swal.fire({
+                            title: res.data.message,
+                            icon: iconType,
+                        });
+                        getUsers();
+                    }
+                })
+
+        }
+    });
+}
 onMounted(() => {
     getUsers();
 })
@@ -107,15 +143,16 @@ onMounted(() => {
         <div class="collapse container" id="collapseExample">
             <div class="mb-5">
                 <form class="row" @submit.prevent="getUsers()">
-                        <div class="form-group col-md-5">
-                            <input type="text" v-model="param.search.name" class="form-control" placeholder="Username">
-                        </div>
-                        <div class="form-group col-md-5">
-                            <input type="text" v-model="param.search.email" class="form-control" placeholder="Email">
-                        </div>
+                    <div class="form-group col-md-5">
+                        <input type="text" v-model="param.search.name" class="form-control" placeholder="Username">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <input type="text" v-model="param.search.email" class="form-control" placeholder="Email">
+                    </div>
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary">Search</button> &nbsp;
-                        <button type="reset" @click="clearForm()" class="btn btn-default"><i class="fas fa-sync"></i></button>
+                        <button type="reset" @click="clearForm()" class="btn btn-default"><i
+                                class="fas fa-sync"></i></button>
                     </div>
                 </form>
             </div>
@@ -153,8 +190,12 @@ onMounted(() => {
                         <td>
                             <router-link :to="{ name: 'admin-users-edit', params: { id: user.id } }"
                                 class="btn btn-warning btn-sm mr-2"><i class="fa fa-pen"></i></router-link>
-                            <button @click="deleteUser(user?.id)" class="btn btn-danger btn-sm"><i
+                            <button @click="deleteUser(user?.id)" class="btn btn-danger btn-sm mr-2"><i
                                     class="fa fa-trash-alt"></i></button>
+                            <button @click="toggleUserLock(user?.id, user?.lock)"
+                                :class="['btn btn-sm', user?.lock === 1 ? 'btn-danger' : 'btn-success']">
+                                <i :class="['fa', user?.lock === 1 ? 'fa-lock' : 'fa-unlock']"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>

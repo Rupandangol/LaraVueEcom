@@ -26,6 +26,12 @@ class UserController extends Controller
                 'message' => 'Invalid Credentials'
             ], 401);
         }
+        if ($user->lock === 1) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Your account is locked. Pls contact support!!'
+            ], 403);
+        }
         $data['token'] = $user->createToken($request->email, ['role:user'])->plainTextToken;
         $data['user'] = $user;
         $response = [
@@ -60,14 +66,14 @@ class UserController extends Controller
 
     public function index()
     {
-        $arraySort=request()->only([
+        $arraySort = request()->only([
             'sort_field',
             'sort_direction',
         ]);
-        if($arraySort['sort_field']==null){
-            $sort_field='id';
-        }else{
-            $sort_field=$arraySort['sort_field'];
+        if ($arraySort['sort_field'] == null) {
+            $sort_field = 'id';
+        } else {
+            $sort_field = $arraySort['sort_field'];
         }
         $arrayFilter = request()->only([
             'name',
@@ -77,9 +83,9 @@ class UserController extends Controller
             foreach ($arrayFilter as $column => $item) {
                 $q->where($column, 'LIKE', '%' . $item . '%');
             }
-        })->orderBy($sort_field,$arraySort['sort_direction'])->get();
+        })->orderBy($sort_field, $arraySort['sort_direction'])->paginate(50);
+        //need to implement pagination on frontend
         return new UserCollection($user);
-        // return new UserCollection(User::all());
     }
 
     public function show(string $id)

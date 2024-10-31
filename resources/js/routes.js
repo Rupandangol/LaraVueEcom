@@ -46,7 +46,7 @@ export default [
     },
     {
         path: '/product/detail/:id',
-        name: 'user-detail',
+        name: 'product-detail',
         component: Details,
     },
     {
