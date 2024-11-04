@@ -27,7 +27,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'order_details' => new OrderDetailResource($this->whenLoaded('orderDetails')),
             'product' => new ProductResource($this->whenLoaded('orderDetails.product')),
-            'ordered_date' => Carbon::parse($this->created_at)->format('Y-m-d'),
+            'ordered_date' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
         ];
     }
 }

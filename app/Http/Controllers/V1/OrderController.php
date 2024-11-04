@@ -184,7 +184,7 @@ class OrderController extends Controller
     protected function clearCartData()
     {
         $userId = Auth::user()->id;
-        $cartId = Cart::where('user_id', $userId)->pluck('id');
+        $cartId = Cart::where(['user_id' => $userId, 'selected' => 1])->pluck('id');
         Cart::whereIn('id', $cartId)->delete();
     }
 }
