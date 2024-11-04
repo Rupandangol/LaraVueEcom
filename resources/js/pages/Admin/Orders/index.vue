@@ -162,6 +162,7 @@ onMounted(() => {
                     <tr>
                         <th>Sn</th>
                         <th>Ordered By</th>
+                        <th>Order At</th>
                         <th>Total Price (Rs.)</th>
                         <th>Shipping Address</th>
                         <th>Status</th>
@@ -176,10 +177,12 @@ onMounted(() => {
                         <td><span class="placeholder col-12"></span></td>
                         <td><span class="placeholder col-12"></span></td>
                         <td><span class="placeholder col-12"></span></td>
+                        <td><span class="placeholder col-12"></span></td>
                     </tr>
                     <tr v-else v-for="(order, index) in orders">
                         <td>{{ index + 1 }}</td>
                         <td>{{ order?.user?.name }}</td>
+                        <td>{{ order?.ordered_date }}</td>
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{
                 order.zip_code }}</td>

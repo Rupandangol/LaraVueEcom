@@ -32,7 +32,7 @@ class CartController extends Controller
 
         $cart = Cart::where([
             'product_id' => $request->product_id,
-            'user_id' => $data['user_id']
+            'user_id' => $data['user_id'],
         ])->first();
 
         if ($cart !== null) {

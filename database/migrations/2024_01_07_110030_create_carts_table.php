@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('selected')->default(1);
             $table->bigInteger('quantity');
             $table->timestamps();
         });

@@ -33,8 +33,8 @@ Broadcast::channel('public-chat', function () {
 });
 Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
     return (int)$user->id === (int)$userId;
-},['guards'=>['sanctum','users']]);
+},['guards'=>['user']]);
 
 Broadcast::channel('order.placed', function ($user) {
    return true;
-},['guards'=>['sanctum','admins']]);
+},['guards'=>['admin']]);

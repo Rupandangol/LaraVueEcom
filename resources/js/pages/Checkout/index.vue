@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import store from '../../store';
 
 const cartData = ref({ 'data': [] });
+const closeModalBtn = ref(null);
 const loading = ref(true);
 const getData = async () => {
     loading.value = true;
@@ -18,22 +19,25 @@ const getData = async () => {
         }
     }).then((response) => {
         cartData.value = response.data.data;
-        console.log(response.data.data);
+        console.log('getdata==>', response.data.data);
     });
     loading.value = false;
     console.log(loading);
 }
-const order = () => {
+const order = async() => {
+    await getData();
     loading.value = true;
     var total = 0;
     var productId = [];
     var quantityNo = [];
     var priceNo = [];
     cartData.value.map((item) => {
-        total += (item.quantity * item.products?.[0].price);
-        productId.push(item.product_id);
-        quantityNo.push(item.quantity);
-        priceNo.push(item?.products?.[0].price);
+        if (item.selected) {
+            total += (item.quantity * item.products?.[0].price);
+            productId.push(item.product_id);
+            quantityNo.push(item.quantity);
+            priceNo.push(item?.products?.[0].price);
+        }
     });
     const data = {
         'total_price': total,
@@ -47,7 +51,6 @@ const order = () => {
         }
     }).then((response) => {
         if (response.data.status == 'success') {
-            loading.value = false;
             store.dispatch('getCartCount');
             Swal.fire('Order Placed successfully');
             getData();
@@ -55,9 +58,10 @@ const order = () => {
             Swal.fire('Order Failed, Out of stock product!! Pls remove the items that are out of stock')
         }
     }).catch((e) => {
-        console.log(e);
-    })
-    console.log(data);
+        Swal.fire('Pls select product before ordering');
+    });
+    loading.value = false;
+    closeModalBtn.value.click();
 }
 
 const payByKhalti = async () => {
@@ -141,7 +145,7 @@ onMounted(() => {
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" ref="closeModalBtn" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
