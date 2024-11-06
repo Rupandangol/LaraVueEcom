@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,17 +10,17 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlacedNotificationAdminSideEvent implements ShouldBroadcast
+class AdminDeletedBroadcastEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $order;
+    public $data;
     /**
      * Create a new event instance.
      */
-    public function __construct(Order $order)
+    public function __construct($data)
     {
-        $this->order = $order;
+        $this->data = $data;
     }
 
     /**
@@ -32,19 +31,22 @@ class OrderPlacedNotificationAdminSideEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('order.placed'),
+            new Channel('admin-deleted'),
         ];
     }
-    public function broadcastAs(): string
+
+    public function broadcastAs()
     {
-        return 'order.placed';
+        return 'admin.deleted';
     }
+
+
     public function broadcastWith(): array
     {
         return [
-            'order_id' => $this->order->id,
-            'ordered_by' => $this->order->user->name,
-            'url' => url('/admin/order-details/' . $this->order->id)
+            'name' => $this->data['name'],
+            'email' => $this->data['email'],
+            'deleted_by'=>$this->data['deleted_by']
         ];
     }
 }

@@ -72,6 +72,14 @@ const deleteAdmin = (id) => {
                     getAdmins();
                 }
             }).catch((e) => {
+                if(e.response.status===404){
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Not Found",
+                        icon: "warning"
+                    });
+                    getAdmins();
+                }
                 console.log(e);
             })
         }

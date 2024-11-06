@@ -18,10 +18,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('payment-verify',function(){
-    return '1';
-});
 Route::get('/admin/{view}',BackendApplicationController::class)->where('view','(.*)');
 Route::get('{view}',ApplicationController::class)->where('view','(.*)');
 // Route::get('/login',[LoginController::class,'index']);
