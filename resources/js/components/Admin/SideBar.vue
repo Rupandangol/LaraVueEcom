@@ -39,22 +39,36 @@ const getAdminData = async () => {
 }
 
 const orderPlacedNotify = () => {
-    window.Echo.private('order.placed')
+    window.Echo.channel('order.placed')
         .listen('.order.placed', (e) => {
             console.log(e);
             Swal.fire({
                 position: "top-end",
                 icon: "warning",
                 title: `New Order Placed #${e.order_id} by ${e.ordered_by}`,
+                html:`<a href="${e.url}" autofocus>Go to Order</a>`,
                 showConfirmButton: false,
-                timer: 1500
+                // timer: 1500,
+                showCloseButton: true
             });
+        })
+}
+
+const adminDeletedNotify = () => {
+    window.Echo.channel('admin-deleted')
+        .listen('.admin.deleted', (e) => {
+            console.log('asdfasdfasd',e);
+            Swal.fire({
+                title:'Admin got Deleted',
+                text:`Admin: ${e.name}, email:${e.email} got deleted by Admin: ${e.deleted_by}`
+            }) 
         })
 }
 
 onMounted(async () => {
     await getAdminData();
     orderPlacedNotify();
+    adminDeletedNotify();
 })
 </script>
 <template>

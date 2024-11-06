@@ -52,11 +52,11 @@ Route::get('/reddit/test', [RedditQuoteController::class, 'test']);
 
 Route::group(['prefix' => 'V1'], function () {
     Route::post('/users/register', [UserController::class, 'register'])->name('api-user-register');
-    Route::post('/users/login', [UserController::class, 'login'])->name('api-user-login');
+    Route::post('/users/login', [UserController::class, 'login'])->name('login');
 
     Route::get('/users', [UserController::class, 'index'])->name('api-user-index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('api-user-show');
-    Route::group(['middleware' => ['auth:sanctum', 'auth:user', 'checkUserLocked']], function () {
+    Route::group(['middleware' => ['auth:user', 'checkUserLocked']], function () {
         Route::get('/users-data', [UserController::class, 'getUserData'])->name('api-user-data');
         Route::put('/users-data/{id}', [UserController::class, 'updateFromUser'])->name('api-user-data-update');
         Route::post('/users/logout', [UserController::class, 'logout'])->name('api-user-logout');
@@ -79,7 +79,7 @@ Route::group(['prefix' => 'V1'], function () {
     Route::get('/related-products', [ProductController::class, 'related'])->name('api-products.related');
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
-    Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
+    Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/admin-data', GetAdminDataController::class);
         Route::get('/admin-dashboard', AdminDashboardController::class);
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
@@ -88,7 +88,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::apiResource('/categories', CategoryController::class);
         Route::resource('/products', ProductController::class)->except('index', 'show');
         Route::patch('/admin-status-orders/{id}', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
-        Route::resource('/admin-orders', AdminOrderController::class);
+        Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
     });

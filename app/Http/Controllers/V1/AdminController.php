@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\AdminDeletedBroadcastEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\AdminStoreRequest;
 use App\Http\Requests\V1\AdminUpdateRequest;
@@ -17,16 +18,16 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $array_filter=request()->only([
+        $array_filter = request()->only([
             'name',
             'email'
         ]);
-        $admin=Admin::when(count($array_filter)>0,function($query) use ($array_filter){
-            foreach($array_filter as $column =>$item){
-                $query->where($column,'LIKE','%'.$item.'%');
+        $admin = Admin::when(count($array_filter) > 0, function ($query) use ($array_filter) {
+            foreach ($array_filter as $column => $item) {
+                $query->where($column, 'LIKE', '%' . $item . '%');
             }
         })->paginate();
-        return new AdminCollection($admin);   
+        return new AdminCollection($admin);
         // return new AdminCollection(Admin::paginate());   
     }
 
@@ -51,7 +52,7 @@ class AdminController extends Controller
      */
     public function update(AdminUpdateRequest $request, string $id)
     {
-        $admin=Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id);
         return $admin->update($request->all());
     }
 
@@ -60,7 +61,13 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
+        $oldadmin = [
+            'name' => $admin->name,
+            'email' => $admin->email,
+            'deleted_by' => auth()->guard('admin')->user()->name
+        ];
         $admin->delete();
+        event(new AdminDeletedBroadcastEvent($oldadmin));
         return response()->json([
             'status' => 'success',
             'message' => 'Deleted Successfully'

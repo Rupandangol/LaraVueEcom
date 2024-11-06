@@ -33,8 +33,13 @@ Broadcast::channel('public-chat', function () {
 });
 Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
     return (int)$user->id === (int)$userId;
-},['guards'=>['user']]);
+},['guards'=>['sanctum']]);
 
-Broadcast::channel('order.placed', function ($user) {
-   return true;
-},['guards'=>['admin']]);
+// Broadcast::channel('order.placed', function (Admin $admin) {
+//     dump($admin);
+//    return true;
+// },['guards'=>['admin']]);
+
+// Broadcast::channel('admin.deleted', function ($user) {
+//    return get_class($user) === 'App\Admin';
+// },['guards'=>['admin']]);
