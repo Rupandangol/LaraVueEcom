@@ -32,7 +32,8 @@ class PublicChatEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('public-chat'),
+            // new Channel('public-chat'),
+            new PrivateChannel('public-chat'),
         ];
     }
 
