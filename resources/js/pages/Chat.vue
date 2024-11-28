@@ -10,6 +10,7 @@ const newMessage = ref('');
 const isSending = ref(false);
 const userId = ref(null);
 const messagesContainer = ref(null); // Reference for the messages container
+const typing = ref(true);
 
 const getMessages = async () => {
     const headers = {
@@ -70,6 +71,22 @@ const scrollToBottom = () => {
     }
 };
 
+const chatWhisper = () => {
+    window.Echo.private(`public-chat`)
+        .whisper('.typing', {
+            name: 'asdf'
+        });
+}
+
+// const chatWhiperListener = () => {
+//     window.Echo.private(`public-chat-whisper`)
+//         // .listenForWhisper('typing', (e) => {
+//         .listen('client-typing', (e) => {
+//             console.log(e);
+//         }).subscribed(() => {
+//             console.log("Successfully subscribed to public-chat-whisper");
+//         });
+// }
 // Watch for new messages and scroll to bottom after DOM update
 watch(messages, async () => {
     await nextTick();
@@ -79,12 +96,15 @@ watch(messages, async () => {
 onMounted(() => {
     getUserIdFromToken();
     getMessages();
-    window.Echo.channel('public-chat')
+    window.Echo.private('public-chat')
         .listen('.public.chat.sent', (e) => {
             messages.value.push(e.message); // Add the new message to the chat
             scrollToBottom();
-        });
-
+        })
+        .listenForWhisper('.typing',(e)=>{
+            console.log(e);
+        })
+        ;
 })
 </script>
 <template>
@@ -98,12 +118,16 @@ onMounted(() => {
                     <span class="timestamp">{{ formatTimestamp(message.created_at) }}</span>
                 </div>
             </div>
+
+            <div v-if="typing" class="typing">
+                <i class="fa fa-pen fa-bounce"></i>
+            </div>
         </div>
 
         <div class="input-container">
-            <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
+            <input v-model="newMessage" @input="chatWhisper" @keyup.enter="sendMessage"
+                placeholder="Type a message..." />
             <button :disabled="isSending" @click="sendMessage">Send</button>
-     
         </div>
     </section>
 </template>
@@ -169,5 +193,25 @@ button {
     background-color: #007bff;
     color: white;
     cursor: pointer;
+}
+
+.typing {
+    background-color: whitesmoke;
+    max-width: 3%;
+    padding: 10px;
+    border-radius: 8px;
+    border: darkblue 1px solid;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+.fa-bounce {
+    animation: bounce 0.5s infinite;
 }
 </style>

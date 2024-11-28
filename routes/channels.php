@@ -35,6 +35,14 @@ Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
     return (int)$user->id === (int)$userId;
 },['guards'=>['sanctum']]);
 
+Broadcast::channel('public-chat', function (User $user) {
+    return true;
+},['guards'=>['sanctum']]);
+
+Broadcast::channel('public-chat-whisper', function (User $user) {
+    return true;
+},['guards'=>['sanctum']]);
+
 // Broadcast::channel('order.placed', function (Admin $admin) {
 //     dump($admin);
 //    return true;

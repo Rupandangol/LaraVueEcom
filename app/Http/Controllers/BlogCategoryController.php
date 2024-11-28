@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class BlogCategoryController extends Controller
 {
     public function index()
     {
-        $blogCategory = BlogCategory::enabled()->get()->append(['random', 'blog_count']);
+        $blogCategory = Cache::remember('blog-category', now()->addMinutes(10), function () {
+            return BlogCategory::enabled()->get()->append(['random', 'blog_count']);
+        });
 
         return response()->json([
             'data' => $blogCategory,
