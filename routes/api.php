@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\DailyScheduleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicMessageController;
 use App\Http\Controllers\RedditQuoteController;
@@ -91,5 +92,8 @@ Route::group(['prefix' => 'V1'], function () {
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
+        Route::get('/admins-daily-schedule/', [DailyScheduleController::class, 'index']);
+        Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);
+        Route::post('/admins-daily-schedule', [DailyScheduleController::class, 'store']);
     });
 });
