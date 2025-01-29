@@ -25,6 +25,7 @@ import Orders from './pages/Admin/Orders/index.vue';
 import OrderDetail from './pages/Admin/Orders/detail.vue';
 import OrderEdit from './pages/Admin/Orders/edit.vue';
 import OrderCreate from './pages/Admin/Orders/create.vue';
+import DailyPlannerIndex from './pages/Admin/DailyPlanner/index.vue';
 import Chat from './pages/Chat.vue';
 
 
@@ -198,4 +199,12 @@ export default [
         props: true,
         meta: { requiresAdminAuth: true }
     },
+    {
+        path: '/admin/daily-schedule',
+        name: 'admin-daily-schedule',
+        component: DailyPlannerIndex,
+        props: true,
+        meta: { requiresAdminAuth: true }
+    },
+
 ]

@@ -151,6 +151,14 @@ onMounted(async () => {
                         </router-link>
                     </li>
 
+                    <li class="nav-item">
+                        <router-link to="/admin/daily-schedule" class="nav-link">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>
+                                Daily planner
+                            </p>
+                        </router-link>
+                    </li>
                 </ul>
             </nav>
 
