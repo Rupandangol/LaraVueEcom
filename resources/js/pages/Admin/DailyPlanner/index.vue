@@ -5,6 +5,12 @@ import { onMounted, reactive, ref } from 'vue';
 import Swal from 'sweetalert2';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
 
+const props = defineProps({
+    'date': {
+        required: true,
+        type: String
+    }
+});
 const dailySchedule = ref([]);
 const showModal = ref(false);
 const form = reactive({
@@ -13,12 +19,14 @@ const form = reactive({
     'start_time': '',
     'end_time': '',
     'location': '',
+    'date': props.date
 })
+
 const errors = ref('');
 
 const fetchDailySchedule = async () => {
     const adminToken = localStorage.getItem('admin-token');
-    const response = await axios.get('/api/V1/admins-daily-schedule', {
+    const response = await axios.get(`/api/V1/admins-daily-schedule/${props.date}`, {
         headers: {
             Authorization: `Bearer ${adminToken}`
         }
@@ -51,8 +59,36 @@ const addTask = () => {
         }
     });
     closeModal();
+    clearForm();
+}
+
+const getDate = () => {
+    if (props.date) {
+        return props.date;
+    } else {
+        return new Date().toLocaleDateString();
+    }
+}
+const clearForm = () => {
+    form.title = '';
+    form.description = '';
+    form.start_time = '';
+    form.end_time = '';
+    form.location = '';
+}
+
+const updateStatus = async (id, status) => {
+    const adminToken = localStorage.getItem('admin-token');
+
+    const response = await axios.patch(`/api/V1/admins-daily-schedule-update-status/${id}`, { status }, {
+        headers: {
+            Authorization: `Bearer ${adminToken}`
+        }
+    });
+    console.log(response);
 }
 onMounted(() => {
+    getDate();
     fetchDailySchedule();
 });
 
@@ -68,13 +104,14 @@ const closeModal = () => {
     // Remove Bootstrap's modal-open class from <body>
     document.body.classList.remove('modal-open');
 };
+
 </script>
 <template>
     <AdminLayout>
         <ErrorMsg :errors="errors" :msg="''" />
         <div class="container">
             <div class="heading m-2 p-2 d-flex justify-content-between">
-                <h1>Daily Planner</h1>
+                <h1>Daily Planner {{ props.date }}</h1>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success" @click="showModal = true" data-toggle="modal"
                     data-target="#storeDailyScheduleModal">
@@ -99,7 +136,22 @@ const closeModal = () => {
                             <td>{{ item.description }}</td>
                             <td>{{ item.start_time }}</td>
                             <td>{{ item.end_time }}</td>
-                            <td>{{ item.status }}</td>
+                            <td>
+                                <form @submit.prevent>
+                                    <div class="form-group">
+                                        <!-- <label for="statusFormControlSelect1">{{ item.status }}</label> -->
+                                        <select @change="updateStatus(item.id, $event.target.value)"
+                                            class="form-control" id="statusFormControlSelect1">
+                                            <option :selected="item.status == 'pending'" value="pending">Pending
+                                            </option>
+                                            <option :selected="item.status == 'completed'" value="completed">Completed
+                                            </option>
+                                            <option :selected="item.status == 'canceled'" value="canceled">Canceled
+                                            </option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </td>
                             <td>{{ item.location }}</td>
                         </tr>
                     </tbody>
@@ -146,7 +198,6 @@ const closeModal = () => {
                             <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

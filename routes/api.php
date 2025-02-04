@@ -92,8 +92,10 @@ Route::group(['prefix' => 'V1'], function () {
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
-        Route::get('/admins-daily-schedule/', [DailyScheduleController::class, 'index']);
+        Route::get('/admins-daily-schedule/{date?}', [DailyScheduleController::class, 'index']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);
         Route::post('/admins-daily-schedule', [DailyScheduleController::class, 'store']);
+        Route::patch('/admins-daily-schedule', [DailyScheduleController::class, 'update']);
+        Route::patch('/admins-daily-schedule-update-status/{id}', [DailyScheduleController::class, 'updateStatus']);
     });
 });

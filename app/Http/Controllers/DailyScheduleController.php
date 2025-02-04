@@ -6,7 +6,10 @@ use App\Enums\DailyScheduleStatus;
 use App\Models\DailySchedule;
 use Carbon\Carbon;
 use Database\Factories\DailyScheduleFactory;
+use Exception;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class DailyScheduleController extends Controller
 {
@@ -24,11 +27,13 @@ class DailyScheduleController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'location' => 'required',
+            'date' => 'required'
         ]);
         $validated['status'] = DailyScheduleStatus::PENDING;
+        $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d');
         $validated['admin_id'] = $admin->id;
         try {
-            $overlap = DailySchedule::whereDate('date', Carbon::parse(now())->format('Y-m-d'))
+            $overlap = DailySchedule::whereDate('date', Carbon::parse($validated['date'])->format('Y-m-d'))
                 ->where(function ($query) use ($validated) {
                     $query->whereBetween('start_time', [$validated['start_time'], $validated['end_time']])
                         ->orWhereBetween('end_time', [$validated['start_time'], $validated['end_time']])
@@ -58,10 +63,11 @@ class DailyScheduleController extends Controller
         }
     }
 
-    public function index()
+    public function index(string $date = null)
     {
         try {
-            $dailySchedule = DailySchedule::wheredate('date', Carbon::now()->format('Y-m-d'))->orderBy('start_time', 'asc')->get();
+            $getdate = ($date != null) ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+            $dailySchedule = DailySchedule::wheredate('date', $getdate)->orderBy('start_time', 'asc')->get();
             return response()->json([
                 'status' => 'success',
                 'message' => 'fetched successfully',
@@ -72,6 +78,60 @@ class DailyScheduleController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             ]);
+        }
+    }
+
+    public function updateStatus($id, Request $request)
+    {
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                new Enum(DailyScheduleStatus::class)
+            ]
+        ]);
+        try {
+            $dailySchedule = DailySchedule::where(['id' => $id])->first();
+            if (!$dailySchedule) {
+                throw new Exception('No Schedule Found', 404);
+            }
+            $dailySchedule->update([
+                'status' => $validated['status']
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Updated Successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }
+    public function update($id, Request $request)
+    {
+        $validated = $request->validate([
+            'title' => ['required'],
+            'description' => ['required'],
+            'start_time' => ['required'],
+            'end_time' => ['required'],
+            'location' => ['required'],
+        ]);
+        try {
+            $dailySchedule = DailySchedule::where(['id' => $id])->first();
+            if (!$dailySchedule) {
+                throw new Exception('No daily schedule found', 404);
+            }
+            $dailySchedule::update($validated);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Updated Successfully'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $e->getCode());
         }
     }
 }
