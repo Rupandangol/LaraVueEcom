@@ -5,6 +5,10 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+const getDate = () => {
+    const date = new Date();
+    return date.toISOString().split('T')[0]; 
+};
 
 const AdminName = ref(null);
 const AdminId = ref(null);
@@ -46,7 +50,7 @@ const orderPlacedNotify = () => {
                 position: "top-end",
                 icon: "warning",
                 title: `New Order Placed #${e.order_id} by ${e.ordered_by}`,
-                html:`<a href="${e.url}" autofocus>Go to Order</a>`,
+                html: `<a href="${e.url}" autofocus>Go to Order</a>`,
                 showConfirmButton: false,
                 // timer: 1500,
                 showCloseButton: true
@@ -57,11 +61,11 @@ const orderPlacedNotify = () => {
 const adminDeletedNotify = () => {
     window.Echo.channel('admin-deleted')
         .listen('.admin.deleted', (e) => {
-            console.log('asdfasdfasd',e);
+            console.log('asdfasdfasd', e);
             Swal.fire({
-                title:'Admin got Deleted',
-                text:`Admin: ${e.name}, email:${e.email} got deleted by Admin: ${e.deleted_by}`
-            }) 
+                title: 'Admin got Deleted',
+                text: `Admin: ${e.name}, email:${e.email} got deleted by Admin: ${e.deleted_by}`
+            })
         })
 }
 
@@ -152,7 +156,7 @@ onMounted(async () => {
                     </li>
 
                     <li class="nav-item">
-                        <router-link to="/admin/daily-schedule" class="nav-link">
+                        <router-link :to="`/admin/daily-schedule/${getDate()}`" class="nav-link">
                             <i class="nav-icon fas fa-book"></i>
                             <p>
                                 Daily planner

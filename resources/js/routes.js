@@ -200,7 +200,7 @@ export default [
         meta: { requiresAdminAuth: true }
     },
     {
-        path: '/admin/daily-schedule',
+        path: '/admin/daily-schedule/:date?',
         name: 'admin-daily-schedule',
         component: DailyPlannerIndex,
         props: true,
