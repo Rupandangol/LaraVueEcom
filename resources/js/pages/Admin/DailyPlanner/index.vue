@@ -4,6 +4,9 @@ import AdminLayout from '../../../components/Admin/AdminLayout.vue';
 import { onMounted, reactive, ref } from 'vue';
 import Swal from 'sweetalert2';
 import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 const props = defineProps({
     'date': {
@@ -112,6 +115,7 @@ const closeModal = () => {
         <div class="container">
             <div class="heading m-2 p-2 d-flex justify-content-between">
                 <h1>Daily Planner {{ props.date }}</h1>
+                <router-link to="/admin/daily-schedule-calender" class="btn btn-warning">Go to calender</router-link>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success" @click="showModal = true" data-toggle="modal"
                     data-target="#storeDailyScheduleModal">

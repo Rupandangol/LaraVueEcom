@@ -26,6 +26,7 @@ import OrderDetail from './pages/Admin/Orders/detail.vue';
 import OrderEdit from './pages/Admin/Orders/edit.vue';
 import OrderCreate from './pages/Admin/Orders/create.vue';
 import DailyPlannerIndex from './pages/Admin/DailyPlanner/index.vue';
+import DailyPlannerCalenderIndex from './pages/Admin/CalenderPage/index.vue';
 import Chat from './pages/Chat.vue';
 
 
@@ -197,6 +198,12 @@ export default [
         name: 'admin-order-edit',
         component: OrderEdit,
         props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/daily-schedule-calender',
+        name: 'admin-daily-schedule-calender',
+        component: DailyPlannerCalenderIndex,
         meta: { requiresAdminAuth: true }
     },
     {
