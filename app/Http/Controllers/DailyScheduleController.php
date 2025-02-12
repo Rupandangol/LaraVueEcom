@@ -134,4 +134,22 @@ class DailyScheduleController extends Controller
             ], $e->getCode());
         }
     }
+
+    public function getTasksMonths($date = null)
+    {
+        try {
+            $date = explode('-', $date);
+            $task = DailySchedule::whereMonth('date', $date[1])->whereYear('date',$date[0])->get(['date', 'title']);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Fetched successfullly',
+                'data' => $task->toArray()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        }
+    }
 }

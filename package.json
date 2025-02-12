@@ -12,6 +12,10 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@fullcalendar/core": "^6.1.15",
+        "@fullcalendar/daygrid": "^6.1.15",
+        "@fullcalendar/interaction": "^6.1.15",
+        "@fullcalendar/vue3": "^6.1.15",
         "admin-lte": "^3.2.0",
         "chart.js": "^4.4.1",
         "laravel-echo": "^1.16.1",

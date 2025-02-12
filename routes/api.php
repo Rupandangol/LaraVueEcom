@@ -93,6 +93,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
         Route::get('/admins-daily-schedule/{date?}', [DailyScheduleController::class, 'index']);
+        Route::get('/admins-daily-schedule-Monthly/{date?}', [DailyScheduleController::class, 'getTasksMonths']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);
         Route::post('/admins-daily-schedule', [DailyScheduleController::class, 'store']);
         Route::patch('/admins-daily-schedule', [DailyScheduleController::class, 'update']);
