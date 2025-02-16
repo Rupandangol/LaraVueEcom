@@ -7,6 +7,8 @@ import ErrorMsg from '../../../components/layout/ErrorMsg.vue';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { useMoodStore } from '../../../store/mood';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
     'date': {
@@ -14,6 +16,9 @@ const props = defineProps({
         type: String
     }
 });
+
+const moodStore = useMoodStore();
+const { latestMood } = storeToRefs(moodStore);
 const dailySchedule = ref([]);
 const showModal = ref(false);
 const form = reactive({
@@ -90,9 +95,11 @@ const updateStatus = async (id, status) => {
     });
     console.log(response);
 }
-onMounted(() => {
+onMounted(async () => {
     getDate();
     fetchDailySchedule();
+    await moodStore.getLatest();
+    console.log('mooodd==>', latestMood);
 });
 
 const closeModal = () => {
@@ -107,7 +114,10 @@ const closeModal = () => {
     // Remove Bootstrap's modal-open class from <body>
     document.body.classList.remove('modal-open');
 };
-
+const moodAction = (mood) => {
+    moodStore.addMood(mood);
+    moodStore.getLatest();
+}
 </script>
 <template>
     <AdminLayout>
@@ -116,6 +126,17 @@ const closeModal = () => {
             <div class="heading m-2 p-2 d-flex justify-content-between">
                 <h1>Daily Planner {{ props.date }}</h1>
                 <router-link to="/admin/daily-schedule-calender" class="btn btn-warning">Go to calender</router-link>
+                <div>
+                    <span :class="[latestMood == 'happy' ? 'btn btn-success' : 'btn btn-default']"
+                        @click="moodAction('happy')"><i class="fa fa-smile"></i></span>
+                    <span :class="[latestMood == 'sad' ? 'btn btn-danger' : 'btn btn-default']" @click="moodAction('sad')"><i
+                            class="fa fa-frown"></i></span>
+                    <span :class="[latestMood == 'neutral' ? 'btn btn-warning' : 'btn btn-default']"  @click="moodAction('neutral')"><i class="fa fa-meh"></i></span>
+                    <span :class="[latestMood == 'angry' ? 'btn btn-danger' : 'btn btn-default']"  @click="moodAction('angry')"><i class="fa fa-fire"></i></span>
+                    <span :class="[latestMood == 'excited' ? 'btn btn-info' : 'btn btn-default']"  @click="moodAction('excited')"><i class="fa fa-arrows-alt"></i></span>
+                    <span :class="[latestMood == 'tired' ? 'btn btn-dark' : 'btn btn-default']"  @click="moodAction('tired')"><i class="fa fa-wheelchair"></i></span>
+                </div>
+
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-success" @click="showModal = true" data-toggle="modal"
                     data-target="#storeDailyScheduleModal">
