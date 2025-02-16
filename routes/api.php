@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DailyScheduleController;
+use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicMessageController;
 use App\Http\Controllers\RedditQuoteController;
@@ -98,5 +99,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::post('/admins-daily-schedule', [DailyScheduleController::class, 'store']);
         Route::patch('/admins-daily-schedule', [DailyScheduleController::class, 'update']);
         Route::patch('/admins-daily-schedule-update-status/{id}', [DailyScheduleController::class, 'updateStatus']);
+        Route::post('/admins-moods', [MoodController::class, 'store']);
+        Route::get('/admins-moods-latest', [MoodController::class, 'latest']);
     });
 });

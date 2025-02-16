@@ -8,6 +8,7 @@ import store from './store/index.js';
 import { createRouter, createWebHistory } from 'vue-router';
 import Routes from './routes.js';
 import App from './App.vue';
+import { createPinia } from 'pinia';
 
 const app = createApp(App);
 
@@ -35,5 +36,6 @@ router.beforeEach((to, from, next) => {
     }
 });
 app.use(store);
+app.use(createPinia())
 app.use(router);
 app.mount('#app');
