@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('moods', function (Blueprint $table) {
+        Schema::create('todo_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('task');
+            $table->text('description')->nullable();
+            $table->boolean('is_completed')->default(false);
+            $table->date('due_date')->nullable();
             $table->unsignedBigInteger('admin_id');
-            $table->string('mood');
-            $table->text('note')->nullable();
             $table->timestamps();
+
             $table->foreign('admin_id')->on('admins')->references('id')->onDelete('cascade');
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('moods');
+        Schema::dropIfExists('todo_lists');
     }
 };

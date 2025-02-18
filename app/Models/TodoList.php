@@ -4,24 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class DailySchedule extends Model
+class TodoList extends Model
 {
     use HasFactory;
 
+    protected $table = 'todo_lists';
+
     protected $fillable = [
-        'title',
+        'task',
         'description',
-        'date',
-        'start_time',
-        'end_time',
-        'is_all_day',
-        'location',
-        'status',
-        'admin_id'
+        'is_completed',
+        'due_date',
+        'admin_id',
     ];
 
-    public function admin()
+    public function admin(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'admin_id', 'id');
     }

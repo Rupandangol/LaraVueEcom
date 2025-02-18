@@ -12,13 +12,13 @@ class Mood extends Model
 
     protected $table = 'moods';
     protected $fillable = [
-        'user_id',
+        'admin_id',
         'mood',
         'note'
     ];
 
-    public function user(): BelongsTo
+    public function admin(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Admin::class, 'admin_id', 'id');
     }
 }
