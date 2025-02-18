@@ -22,7 +22,7 @@ class MoodController extends Controller
         $moods = Mood::create([
             'mood' => $validated['mood'],
             'note' => $validated['note'] ?? '',
-            'user_id' => Auth::guard('admin')->user()->id
+            'admin_id' => Auth::guard('admin')->user()->id
         ]);
 
         return response()->json([
@@ -35,11 +35,11 @@ class MoodController extends Controller
     public function latest(): JsonResponse
     {
         try {
-            $userId = Auth::guard('admin')->user()->id;
-            if (!$userId) {
+            $adminId = Auth::guard('admin')->user()->id;
+            if (!$adminId) {
                 throw new Exception('Unauthenticated', 401);
             }
-            $latest = Mood::where(['user_id' => $userId])->orderBy('id', 'desc')->first();
+            $latest = Mood::where(['admin_id' => $adminId])->orderBy('id', 'desc')->first();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched Successfully',

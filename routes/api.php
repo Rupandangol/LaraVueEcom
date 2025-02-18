@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicMessageController;
 use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
+use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\Admin\GetAdminDataController;
@@ -101,5 +102,9 @@ Route::group(['prefix' => 'V1'], function () {
         Route::patch('/admins-daily-schedule-update-status/{id}', [DailyScheduleController::class, 'updateStatus']);
         Route::post('/admins-moods', [MoodController::class, 'store']);
         Route::get('/admins-moods-latest', [MoodController::class, 'latest']);
+        Route::get('/admins-todo-list', [TodoListController::class, 'index']);
+        Route::post('/admins-todo-list', [TodoListController::class, 'store']);
+        Route::patch('/admins-todo-list/{id}', [TodoListController::class, 'update']);
+        Route::patch('/admins-todo-list-update-status/{id}', [TodoListController::class, 'updateCompleted']);
     });
 });

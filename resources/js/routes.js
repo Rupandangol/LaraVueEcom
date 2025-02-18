@@ -27,6 +27,7 @@ import OrderEdit from './pages/Admin/Orders/edit.vue';
 import OrderCreate from './pages/Admin/Orders/create.vue';
 import DailyPlannerIndex from './pages/Admin/DailyPlanner/index.vue';
 import DailyPlannerCalenderIndex from './pages/Admin/CalenderPage/index.vue';
+import TodoListIndex from './pages/Admin/TodoList/index.vue';
 import Chat from './pages/Chat.vue';
 
 
@@ -211,6 +212,12 @@ export default [
         name: 'admin-daily-schedule',
         component: DailyPlannerIndex,
         props: true,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/todo-list',
+        name: 'admin-todo-list',
+        component: TodoListIndex,
         meta: { requiresAdminAuth: true }
     },
 
