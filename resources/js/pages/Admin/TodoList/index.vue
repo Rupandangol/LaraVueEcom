@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia';
 
 const todoStore = useTodoStore();
 const { todoList, loading } = storeToRefs(todoStore);
+const {addTask,deleteTask,fetchTodoList,updateCompleted } = todoStore;
 const showModal = ref(false);
 const form = reactive({
     'task': '',
@@ -20,18 +21,22 @@ const clearForm = () => {
     form.due_date = '';
 }
 
-const updateCompleted = async (id) => {
-    await todoStore.updateCompleted(id);
-    await todoStore.fetchTodoList();
+const updatedTask = async (id) => {
+    await updateCompleted(id);
+    await fetchTodoList();
 }
-const addTask=async()=>{
-    await todoStore.addTask(form);
+const removeTask = (id) => {
+    deleteTask(id);
+    fetchTodoList();
+}
+const addTasks = async () => {
+    await addTask(form);
     closeModal();
     clearForm();
-    await todoStore.fetchTodoList();
+    await fetchTodoList();
 }
 onMounted(async () => {
-    await todoStore.fetchTodoList();
+    await fetchTodoList();
     console.log('todolist==>', loading.value)
 });
 
@@ -68,6 +73,7 @@ const closeModal = () => {
                             <th>Description</th>
                             <th>Due date</th>
                             <th>Completed</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,8 +81,11 @@ const closeModal = () => {
                             <td>{{ item.task }}</td>
                             <td>{{ item.description }}</td>
                             <td>{{ item.due_date }}</td>
-                            <td><button :disabled="loading" @click="updateCompleted(item.id)"
-                                    :class="[item.is_completed ? 'btn btn-warning' : 'btn btn-success']"><i :class="[item.is_completed ?'fa fa-check-square':'fa fa-square']"></i> </button></td>
+                            <td><button :disabled="loading" @click="updatedTask(item.id)"
+                                    :class="[item.is_completed ? 'btn btn-warning' : 'btn btn-success']"><i
+                                        :class="[item.is_completed ? 'fa fa-check-square' : 'fa fa-square']"></i> </button>
+                            </td>
+                            <td><button class="btn btn-danger" @click="removeTask(item.id)">Delete</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -93,7 +102,7 @@ const closeModal = () => {
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form class="row" @submit.prevent="addTask">
+                    <form class="row" @submit.prevent="addTasks">
                         <div class="modal-body">
                             <div class="form-group">
                                 <input type="text" v-model="form.task" name="task" class="form-control"

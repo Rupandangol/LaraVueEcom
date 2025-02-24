@@ -118,4 +118,24 @@ class TodoListController extends Controller
             'data' => $todoItem
         ]);
     }
+
+    public function delete($id)
+    {
+        try {
+            $todoItem = TodoList::where(['id' => $id])->first();
+            if (!$todoItem) {
+                throw new Exception('Not found', 404);
+            }
+            $todoItem->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deleted Successfully'
+            ], 202);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }
 }

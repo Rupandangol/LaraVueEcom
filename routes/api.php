@@ -105,6 +105,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/admins-todo-list', [TodoListController::class, 'index']);
         Route::post('/admins-todo-list', [TodoListController::class, 'store']);
         Route::patch('/admins-todo-list/{id}', [TodoListController::class, 'update']);
+        Route::delete('/admins-todo-list/{id}', [TodoListController::class, 'delete']);
         Route::patch('/admins-todo-list-update-status/{id}', [TodoListController::class, 'updateCompleted']);
     });
 });

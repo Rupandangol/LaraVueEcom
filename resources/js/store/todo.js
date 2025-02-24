@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import Swal from "sweetalert2";
+import api from "./api";
 
 export const useTodoStore = defineStore('todo', {
     state: () => ({
@@ -10,11 +11,7 @@ export const useTodoStore = defineStore('todo', {
     actions: {
         async fetchTodoList() {
             const adminToken = localStorage.getItem('admin-token');
-            const response = await axios.get('/api/V1/admins-todo-list', {
-                headers: {
-                    Authorization: `Bearer ${adminToken}`
-                }
-            });
+            const response = await api.get('/admins-todo-list');
             if (response.data.status == 'success') {
                 this.todoList = response.data.data;
             }
@@ -22,16 +19,7 @@ export const useTodoStore = defineStore('todo', {
         async updateCompleted(todo_id) {
             try {
                 this.loading = true;
-                const adminToken = localStorage.getItem("admin-token");
-                if (!adminToken) throw new Error("Admin token not found");
-
-                const response = await axios.patch(
-                    `/api/V1/admins-todo-list-update-status/${todo_id}`,
-                    null, // no request body needed
-                    {
-                        headers: { Authorization: `Bearer ${adminToken}` }
-                    }
-                );
+                const response = await api.patch(`/admins-todo-list-update-status/${todo_id}`,null);
                 this.loading = false;
 
                 if (response.data.status === "success") {
@@ -45,13 +33,28 @@ export const useTodoStore = defineStore('todo', {
             }
         },
         async addTask(formData) {
-            const adminToken = localStorage.getItem("admin-token");
-            const response = axios.post('/api/V1/admins-todo-list', { ...formData }, {
-                headers: {
-                    Authorization: `Bearer ${adminToken}`
-                }
-            });
-            console.log(response);
+            const response = await api.post('/admins-todo-list', { ...formData });
+            if (response.data.status == 'success') {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: `Task Added`,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            }
+        },
+        async deleteTask(id) {
+            const response = await api.delete(`/admins-todo-list/${id}`);
+            if (response.data.status == 'success') {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: `Deleted Successfully`,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            }
         }
     }
 })
