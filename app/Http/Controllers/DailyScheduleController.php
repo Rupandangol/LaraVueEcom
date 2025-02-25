@@ -111,11 +111,11 @@ class DailyScheduleController extends Controller
     public function update($id, Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required'],
-            'description' => ['required'],
-            'start_time' => ['required'],
-            'end_time' => ['required'],
-            'location' => ['required'],
+            'title' => ['sometimes'],
+            'description' => ['sometimes'],
+            'start_time' => ['sometimes'],
+            'end_time' => ['sometimes'],
+            'location' => ['sometimes'],
         ]);
         try {
             $dailySchedule = DailySchedule::where(['id' => $id])->first();
@@ -139,7 +139,7 @@ class DailyScheduleController extends Controller
     {
         try {
             $date = explode('-', $date);
-            $task = DailySchedule::whereMonth('date', $date[1])->whereYear('date',$date[0])->get(['date', 'title']);
+            $task = DailySchedule::whereMonth('date', $date[1])->whereYear('date', $date[0])->get(['date', 'title']);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched successfullly',
@@ -149,6 +149,26 @@ class DailyScheduleController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
+            ], $e->getCode());
+        }
+    }
+
+    public function deleteDailyTask($id)
+    {
+        try {
+            $dailyTask = DailySchedule::where(['id' => $id])->first();
+            if (!$dailyTask) {
+                throw new Exception('Not found', 404);
+            }
+            $dailyTask->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Deleted Successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
             ], $e->getCode());
         }
     }
