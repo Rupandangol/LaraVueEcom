@@ -98,7 +98,8 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/admins-daily-schedule-Monthly/{date?}', [DailyScheduleController::class, 'getTasksMonths']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);
         Route::post('/admins-daily-schedule', [DailyScheduleController::class, 'store']);
-        Route::patch('/admins-daily-schedule', [DailyScheduleController::class, 'update']);
+        Route::patch('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'update']);
+        Route::delete('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'deleteDailyTask']);
         Route::patch('/admins-daily-schedule-update-status/{id}', [DailyScheduleController::class, 'updateStatus']);
         Route::post('/admins-moods', [MoodController::class, 'store']);
         Route::get('/admins-moods-latest', [MoodController::class, 'latest']);

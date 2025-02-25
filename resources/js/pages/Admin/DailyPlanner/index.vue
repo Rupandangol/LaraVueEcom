@@ -9,6 +9,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useMoodStore } from '../../../store/mood';
 import { storeToRefs } from 'pinia';
+import { useDailyPlanner } from '../../../store/dailyPlanner';
 
 const props = defineProps({
     'date': {
@@ -18,6 +19,8 @@ const props = defineProps({
 });
 
 const moodStore = useMoodStore();
+const dailyTaskStore = useDailyPlanner();
+const { destroyTask } = dailyTaskStore;
 const { latestMood } = storeToRefs(moodStore);
 const dailySchedule = ref([]);
 const showModal = ref(false);
@@ -118,6 +121,10 @@ const moodAction = (mood) => {
     moodStore.addMood(mood);
     moodStore.getLatest();
 }
+const deleteDailyPlanner=(id)=>{
+    destroyTask(id);
+    fetchDailySchedule();
+}
 </script>
 <template>
     <AdminLayout>
@@ -129,12 +136,16 @@ const moodAction = (mood) => {
                 <div>
                     <span :class="[latestMood == 'happy' ? 'btn btn-success' : 'btn btn-default']"
                         @click="moodAction('happy')"><i class="fa fa-smile"></i></span>
-                    <span :class="[latestMood == 'sad' ? 'btn btn-danger' : 'btn btn-default']" @click="moodAction('sad')"><i
-                            class="fa fa-frown"></i></span>
-                    <span :class="[latestMood == 'neutral' ? 'btn btn-warning' : 'btn btn-default']"  @click="moodAction('neutral')"><i class="fa fa-meh"></i></span>
-                    <span :class="[latestMood == 'angry' ? 'btn btn-danger' : 'btn btn-default']"  @click="moodAction('angry')"><i class="fa fa-fire"></i></span>
-                    <span :class="[latestMood == 'excited' ? 'btn btn-info' : 'btn btn-default']"  @click="moodAction('excited')"><i class="fa fa-arrows-alt"></i></span>
-                    <span :class="[latestMood == 'tired' ? 'btn btn-dark' : 'btn btn-default']"  @click="moodAction('tired')"><i class="fa fa-wheelchair"></i></span>
+                    <span :class="[latestMood == 'sad' ? 'btn btn-danger' : 'btn btn-default']"
+                        @click="moodAction('sad')"><i class="fa fa-frown"></i></span>
+                    <span :class="[latestMood == 'neutral' ? 'btn btn-warning' : 'btn btn-default']"
+                        @click="moodAction('neutral')"><i class="fa fa-meh"></i></span>
+                    <span :class="[latestMood == 'angry' ? 'btn btn-danger' : 'btn btn-default']"
+                        @click="moodAction('angry')"><i class="fa fa-fire"></i></span>
+                    <span :class="[latestMood == 'excited' ? 'btn btn-info' : 'btn btn-default']"
+                        @click="moodAction('excited')"><i class="fa fa-arrows-alt"></i></span>
+                    <span :class="[latestMood == 'tired' ? 'btn btn-dark' : 'btn btn-default']"
+                        @click="moodAction('tired')"><i class="fa fa-wheelchair"></i></span>
                 </div>
 
                 <!-- Button trigger modal -->
@@ -153,6 +164,7 @@ const moodAction = (mood) => {
                             <th>End time</th>
                             <th>Status</th>
                             <th>Location</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -178,6 +190,9 @@ const moodAction = (mood) => {
                                 </form>
                             </td>
                             <td>{{ item.location }}</td>
+                            <td>
+                                <button class="btn btn-danger" @click="deleteDailyPlanner(item.id)">Delete</button> &nbsp;
+                            </td>
                         </tr>
                     </tbody>
                 </table>
