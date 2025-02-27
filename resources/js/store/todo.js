@@ -9,9 +9,9 @@ export const useTodoStore = defineStore('todo', {
         loading: false
     }),
     actions: {
-        async fetchTodoList() {
-            const adminToken = localStorage.getItem('admin-token');
-            const response = await api.get('/admins-todo-list');
+        async fetchTodoList(archive = null) {
+            const params = archive !== null ? { archive } : {}; // Dynamically add 'archive' if provided
+            const response = await api.get('/admins-todo-list', { params });
             if (response.data.status == 'success') {
                 this.todoList = response.data.data;
             }
@@ -19,7 +19,7 @@ export const useTodoStore = defineStore('todo', {
         async updateCompleted(todo_id) {
             try {
                 this.loading = true;
-                const response = await api.patch(`/admins-todo-list-update-status/${todo_id}`,null);
+                const response = await api.patch(`/admins-todo-list-update-status/${todo_id}`, null);
                 this.loading = false;
 
                 if (response.data.status === "success") {
@@ -55,6 +55,20 @@ export const useTodoStore = defineStore('todo', {
                     showCloseButton: true
                 });
             }
+        },
+        async archiveTask(id) {
+            this.loading = true;
+            const response = await api.patch(`/admins-todo-list-archive/${id}`);
+            if (response.data.status == 'success') {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "warning",
+                    title: `Archived`,
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            }
+            this.loading = false;
         }
     }
 })

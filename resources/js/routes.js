@@ -28,6 +28,7 @@ import OrderCreate from './pages/Admin/Orders/create.vue';
 import DailyPlannerIndex from './pages/Admin/DailyPlanner/index.vue';
 import DailyPlannerCalenderIndex from './pages/Admin/CalenderPage/index.vue';
 import TodoListIndex from './pages/Admin/TodoList/index.vue';
+import TodoListArchiveIndex from './pages/Admin/TodoList/archive.vue';
 import Chat from './pages/Chat.vue';
 
 
@@ -218,6 +219,12 @@ export default [
         path: '/admin/todo-list',
         name: 'admin-todo-list',
         component: TodoListIndex,
+        meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/admin/todo-list-archive',
+        name: 'admin-todo-list-archive',
+        component: TodoListArchiveIndex,
         meta: { requiresAdminAuth: true }
     },
 
