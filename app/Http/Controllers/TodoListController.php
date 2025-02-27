@@ -20,8 +20,14 @@ class TodoListController extends Controller
                 'message' => 'Unauthenticated'
             ], 401);
         }
-
-        $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id])->get();
+        if (request()->query('archive') == 1) {
+            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 1, 'admin_id' => $admin->id])->get();
+        } else {
+            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 0, 'admin_id' => $admin->id])->get();
+        }
+        if (!$todolist) {
+            throw new Exception('Not Found', 404);
+        }
         return response()->json([
             'status' => 'success',
             'message' => 'Fetched successfully',
@@ -131,6 +137,33 @@ class TodoListController extends Controller
                 'status' => 'success',
                 'message' => 'Deleted Successfully'
             ], 202);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }
+
+    public function archive($id)
+    {
+        try {
+            $admin = Auth::guard('admin')->user();
+            if (!$admin) {
+                throw new Exception('Unathenticated', 401);
+            }
+            $todoItem = TodoList::where(['id' => $id, 'admin_id' => $admin->id])->first();
+            if (!$todoItem) {
+                throw new Exception('Not found', 404);
+            }
+            $todoItem->update([
+                'is_archived' => $todoItem->is_archived ? 0 : 1
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Archived successfully',
+                'data' => $todoItem
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',

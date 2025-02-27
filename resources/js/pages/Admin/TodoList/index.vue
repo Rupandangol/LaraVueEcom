@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia';
 
 const todoStore = useTodoStore();
 const { todoList, loading } = storeToRefs(todoStore);
-const {addTask,deleteTask,fetchTodoList,updateCompleted } = todoStore;
+const { addTask, deleteTask, fetchTodoList, updateCompleted, archiveTask } = todoStore;
 const showModal = ref(false);
 const form = reactive({
     'task': '',
@@ -35,6 +35,10 @@ const addTasks = async () => {
     clearForm();
     await fetchTodoList();
 }
+const archive = async (id) => {
+    await archiveTask(id);
+    await fetchTodoList();
+}
 onMounted(async () => {
     await fetchTodoList();
     console.log('todolist==>', loading.value)
@@ -59,11 +63,14 @@ const closeModal = () => {
         <div class="container">
             <div class="heading m-2 p-2 d-flex justify-content-between">
                 <h1>Todo List</h1>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-success" @click="showModal = true" data-toggle="modal"
-                    data-target="#storeTodoListModal">
-                    <i class="fa fa-plus"> Add task</i>
-                </button>
+                <div>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" @click="showModal = true" data-toggle="modal"
+                        data-target="#storeTodoListModal">
+                        <i class="fa fa-plus"> Add task</i>
+                    </button>&nbsp;
+                    <a href="/admin/todo-list-archive" class="btn btn-info">Archive</a>
+                </div>
             </div>
             <div>
                 <table class="table table-boarded">
@@ -83,9 +90,13 @@ const closeModal = () => {
                             <td>{{ item.due_date }}</td>
                             <td><button :disabled="loading" @click="updatedTask(item.id)"
                                     :class="[item.is_completed ? 'btn btn-warning' : 'btn btn-success']"><i
-                                        :class="[item.is_completed ? 'fa fa-check-square' : 'fa fa-square']"></i> </button>
+                                        :class="[item.is_completed ? 'fa fa-check-square' : 'fa fa-square']"></i>
+                                </button>
                             </td>
-                            <td><button class="btn btn-danger" @click="removeTask(item.id)">Delete</button></td>
+                            <td><button class="btn btn-danger" @click="removeTask(item.id)">Delete</button>&nbsp;
+                                <button class="btn btn-info" :disabled="loading"
+                                    @click="archive(item.id)">Archive</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
