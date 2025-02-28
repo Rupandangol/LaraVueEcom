@@ -23,7 +23,10 @@ class TodoListController extends Controller
         if (request()->query('archive') == 1) {
             $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 1, 'admin_id' => $admin->id])->get();
         } else {
-            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 0, 'admin_id' => $admin->id])->get();
+            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 0, 'admin_id' => $admin->id])
+                ->orderBy('is_completed', 'asc')
+                ->orderBy('id', 'desc')
+                ->get();
         }
         if (!$todolist) {
             throw new Exception('Not Found', 404);
