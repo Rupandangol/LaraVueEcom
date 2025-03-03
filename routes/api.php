@@ -6,6 +6,7 @@ use App\Http\Controllers\DailyScheduleController;
 use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicMessageController;
+use App\Http\Controllers\RecurringDailyScheduleController;
 use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\TodoListController;
@@ -109,5 +110,9 @@ Route::group(['prefix' => 'V1'], function () {
         Route::delete('/admins-todo-list/{id}', [TodoListController::class, 'delete']);
         Route::patch('/admins-todo-list-update-status/{id}', [TodoListController::class, 'updateCompleted']);
         Route::patch('/admins-todo-list-archive/{id}', [TodoListController::class, 'archive']);
+        Route::get('/admins-recurring-daily-schedule', [RecurringDailyScheduleController::class, 'index']);
+        Route::post('/admins-recurring-daily-schedule', [RecurringDailyScheduleController::class, 'store']);
+        Route::delete('/admins-recurring-daily-schedule/{id}', [RecurringDailyScheduleController::class, 'delete']);
+        Route::post('/admins-recurring-daily-schedule-add', [RecurringDailyScheduleController::class, 'storeInDailySchedule']);
     });
 });

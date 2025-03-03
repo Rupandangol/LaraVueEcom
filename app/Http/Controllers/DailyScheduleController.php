@@ -33,7 +33,8 @@ class DailyScheduleController extends Controller
         $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d');
         $validated['admin_id'] = $admin->id;
         try {
-            $overlap = DailySchedule::whereDate('date', Carbon::parse($validated['date'])->format('Y-m-d'))
+            $overlap = DailySchedule::where('admin_id', $admin->id)
+                ->whereDate('date', Carbon::parse($validated['date'])->format('Y-m-d'))
                 ->where(function ($query) use ($validated) {
                     $query->whereBetween('start_time', [$validated['start_time'], $validated['end_time']])
                         ->orWhereBetween('end_time', [$validated['start_time'], $validated['end_time']])
