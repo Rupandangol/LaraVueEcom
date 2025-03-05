@@ -15,10 +15,10 @@ class RecurringDailyScheduleController extends Controller
     public function index()
     {
         try {
-            $rDailySchedule = RecurringDailySchedule::select('title', 'description')->orderBy('id', 'desc')->get();
+            $rDailySchedule = RecurringDailySchedule::select('id', 'title', 'description')->orderBy('id', 'desc')->get();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Fetched successfully',
+                'message' => 'Fetched recurring task successfully',
                 'data' => $rDailySchedule->toArray()
             ]);
         } catch (\Exception $e) {
@@ -32,12 +32,13 @@ class RecurringDailyScheduleController extends Controller
     public function storeInDailySchedule(Request $request)
     {
         $validated = $request->validate([
-            'recurring_id' => 'required'
+            'recurring_id' => 'required',
+            'date'=>'required'
         ]);
         try {
             $recurringDS = RecurringDailySchedule::where('id', $validated['recurring_id'])->first();
             $overlap = DailySchedule::where('admin_id', Auth::guard('admin')->user()->id)
-                ->whereDate('date', Carbon::parse($recurringDS['date'])->format('Y-m-d'))
+                ->whereDate('date', Carbon::parse($validated['date'])->format('Y-m-d'))
                 ->where(function ($query) use ($recurringDS) {
                     $query->whereBetween('start_time', [$recurringDS['start_time'], $recurringDS['end_time']])
                         ->orWhereBetween('end_time', [$recurringDS['start_time'], $recurringDS['end_time']])
@@ -61,7 +62,7 @@ class RecurringDailyScheduleController extends Controller
                 'end_time' => $recurringDS['end_time'],
                 'location' => $recurringDS['location'],
                 'status' => $recurringDS['status'],
-                'date' => $recurringDS['date'],
+                'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
                 'admin_id' => Auth::guard('admin')->user()->id
             ]);
             return response()->json([
