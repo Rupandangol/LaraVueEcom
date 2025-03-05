@@ -20,8 +20,9 @@ const props = defineProps({
 
 const moodStore = useMoodStore();
 const dailyTaskStore = useDailyPlanner();
-const { destroyTask } = dailyTaskStore;
+const { destroyTask, fetchRecurringTask, addRecurringTaskToDailyPlanner } = dailyTaskStore;
 const { latestMood } = storeToRefs(moodStore);
+const { recurringTask } = storeToRefs(dailyTaskStore);
 const dailySchedule = ref([]);
 const showModal = ref(false);
 const form = reactive({
@@ -102,7 +103,8 @@ onMounted(async () => {
     getDate();
     fetchDailySchedule();
     await moodStore.getLatest();
-    console.log('mooodd==>', latestMood);
+    fetchRecurringTask();
+
 });
 
 const closeModal = () => {
@@ -121,8 +123,12 @@ const moodAction = (mood) => {
     moodStore.addMood(mood);
     moodStore.getLatest();
 }
-const deleteDailyPlanner=(id)=>{
+const deleteDailyPlanner = (id) => {
     destroyTask(id);
+    fetchDailySchedule();
+}
+const addRecurringTask = (id) => {
+    addRecurringTaskToDailyPlanner(id,props.date);
     fetchDailySchedule();
 }
 </script>
@@ -154,6 +160,16 @@ const deleteDailyPlanner=(id)=>{
                     <i class="fa fa-plus"> Add task</i>
                 </button>
             </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Recurring Tasks
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button v-for="item in recurringTask" @click="addRecurringTask(item.id)" class="dropdown-item">{{
+                        item.title }}</button>
+                </div>
+            </div> <br>
             <div>
                 <table class="table table-boarded">
                     <thead>
@@ -191,7 +207,8 @@ const deleteDailyPlanner=(id)=>{
                             </td>
                             <td>{{ item.location }}</td>
                             <td>
-                                <button class="btn btn-danger" @click="deleteDailyPlanner(item.id)">Delete</button> &nbsp;
+                                <button class="btn btn-danger" @click="deleteDailyPlanner(item.id)">Delete</button>
+                                &nbsp;
                             </td>
                         </tr>
                     </tbody>
