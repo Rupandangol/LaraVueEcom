@@ -23,6 +23,7 @@ use App\Http\Controllers\V1\OrderController;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\RatingController;
 use App\Http\Controllers\V1\UserController;
+use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\WebScraperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -114,5 +115,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::post('/admins-recurring-daily-schedule', [RecurringDailyScheduleController::class, 'store']);
         Route::delete('/admins-recurring-daily-schedule/{id}', [RecurringDailyScheduleController::class, 'delete']);
         Route::post('/admins-recurring-daily-schedule-add', [RecurringDailyScheduleController::class, 'storeInDailySchedule']);
+
+        Route::get('/admin-fetch-weather',[WeatherController::class,'fetchWeather']);
     });
 });
