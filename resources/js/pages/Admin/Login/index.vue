@@ -44,7 +44,9 @@
     </div>
 </template>
 <script>
+import { setAuthToken } from "../../../store/api";
 export default {
+    
     data() {
         return {
             'email': '',
@@ -60,7 +62,8 @@ export default {
                     password: this.password,
                 });
                 const token = response?.data?.token;
-                localStorage.setItem('admin-token', token);
+                // localStorage.setItem('admin-token', token);
+                setAuthToken(token);
                 this.$router.push('/admin/dashboard');
 
             } catch (error) {

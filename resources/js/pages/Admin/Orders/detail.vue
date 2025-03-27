@@ -63,7 +63,7 @@ const getTaxTotal = computed(() => {
 })
 
 const getTotal = computed(() => {
-    return parseFloat(getTaxTotal.value) + parseFloat(order.value.total_price)  - 20;
+    return parseFloat(getTaxTotal.value) + parseFloat(order.value.total_price) - 20;
 })
 
 </script>
@@ -80,10 +80,8 @@ const getTotal = computed(() => {
 
             <div class="row">
                 <div class="col-12">
-                    <h4>
-                        <h3>Details</h3>
-                        <small class="float-right">Date: {{ order.ordered_date }}</small>
-                    </h4>
+                    <h3>Details</h3>
+                    <small class="float-right">Date: {{ order.ordered_date }}</small>
                 </div>
 
             </div>
@@ -95,7 +93,8 @@ const getTotal = computed(() => {
                     <strong>Order date:</strong> {{ order.ordered_date }}<br>
                     <strong>Order Status:</strong> &nbsp;
                     <!-- Button trigger modal -->
-                    <button type="button" :class="status(order.status)" data-toggle="modal" data-target="#orderStatusModal">
+                    <button type="button" :class="status(order.status)" data-toggle="modal"
+                        data-target="#orderStatusModal">
                         {{ order?.status }}
                     </button><br>
                     <strong>Sub Total:</strong> {{ order.total_price }}<br>
@@ -139,7 +138,8 @@ const getTotal = computed(() => {
                         <tbody>
                             <tr v-for="(item, index) in (order?.order_details)">
                                 <td>{{ item.quantity }}</td>
-                                <td><img :src="'/storage/images/' + item.product.image" width="35px" height="35px" alt="">
+                                <td><img :src="'/storage/images/' + item.product.image" width="35px" height="35px"
+                                        alt="">
                                 </td>
                                 <td>{{ item.product.name }}</td>
                                 <td>{{ item.id }}</td>
