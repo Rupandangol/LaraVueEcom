@@ -3,12 +3,18 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useWeatherStore } from '../../store/weather';
+import { storeToRefs } from 'pinia';
 const router = useRouter();
 
 const getDate = () => {
     const date = new Date();
-    return date.toISOString().split('T')[0]; 
+    return date.toISOString().split('T')[0];
 };
+
+const weatherStore = useWeatherStore();
+const { weatherData } = storeToRefs(weatherStore);
+const { fetchWeather } = weatherStore;
 
 const AdminName = ref(null);
 const AdminId = ref(null);
@@ -73,13 +79,15 @@ onMounted(async () => {
     await getAdminData();
     orderPlacedNotify();
     adminDeletedNotify();
+    fetchWeather();
 })
 </script>
 <template>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
         <a href="#" class="brand-link">
-            <span class="brand-text font-weight-light">LEcom Admin</span>
+            <span class="brand-text font-weight-light">LEcom Admin</span>&nbsp;
+            <span>{{ weatherData?.today_data?.temperature }}°</span>
         </a>
 
         <div class="sidebar">

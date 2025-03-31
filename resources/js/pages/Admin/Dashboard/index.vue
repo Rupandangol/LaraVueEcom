@@ -4,6 +4,7 @@ import { Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import axios from 'axios';
 import { computed, nextTick, onMounted, ref } from 'vue';
+import Weather from '../../../components/Weather.vue';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
 const dashboardData = ref([]);
@@ -152,6 +153,7 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
+        <Weather></Weather>
     </AdminLayout>
 </template>
 

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class WeatherController extends Controller
 {
-    protected const myTimezone='Asia/Kathmandu';
+    protected const myTimezone = 'Asia/Kathmandu';
 
     public function fetchWeather()
     {
@@ -55,15 +55,17 @@ class WeatherController extends Controller
                     ]);
                 }
             }
-            $weatherLocationData=WeatherLocation::where('timezone',self::myTimezone)->first();
+            $weatherLocationData = WeatherLocation::where('timezone', self::myTimezone)->first();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched Successfullly',
-                'location_data' => $weatherLocationData,
-                'today_data' => WeatherData::where(['weather_location_id' => $weatherLocationData->id])
-                    ->where('weather_date_time', '<=', Carbon::now(self::myTimezone)->format('Y-m-d H:i:s'))
-                    ->orderBy('id', 'desc')
-                    ->first(),
+                'data' => [
+                    'location_data' => $weatherLocationData,
+                    'today_data' => WeatherData::where(['weather_location_id' => $weatherLocationData->id])
+                        ->where('weather_date_time', '<=', Carbon::now(self::myTimezone)->format('Y-m-d H:i:s'))
+                        ->orderBy('id', 'desc')
+                        ->first(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
