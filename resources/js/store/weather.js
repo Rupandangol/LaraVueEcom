@@ -6,8 +6,8 @@ export const useWeatherStore = defineStore('weather', {
         weatherData: []
     }),
     actions: {
-        async fetchWeather() {
-            const response = await api.get('/admin-fetch-weather');
+        async fetchWeather(place_id) {
+            const response = await api.get(`/admin-fetch-weather/${place_id}`);
             if (response.data.status == 'success') {
                 this.weatherData = response.data.data;
             }

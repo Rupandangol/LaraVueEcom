@@ -9,6 +9,7 @@ use App\Http\Controllers\PublicMessageController;
 use App\Http\Controllers\RecurringDailyScheduleController;
 use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
@@ -77,6 +78,8 @@ Route::group(['prefix' => 'V1'], function () {
 
         Route::get('/public-chat', [PublicMessageController::class, 'index']);
         Route::post('/public-chat', [PublicMessageController::class, 'store']);
+
+        Route::post('/create-subscription',[StripeController::class,'createSubscription']);
     });
     Route::get('/ratings/{product_id}', [RatingController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
@@ -116,6 +119,6 @@ Route::group(['prefix' => 'V1'], function () {
         Route::delete('/admins-recurring-daily-schedule/{id}', [RecurringDailyScheduleController::class, 'delete']);
         Route::post('/admins-recurring-daily-schedule-add', [RecurringDailyScheduleController::class, 'storeInDailySchedule']);
 
-        Route::get('/admin-fetch-weather',[WeatherController::class,'fetchWeather']);
+        Route::get('/admin-fetch-weather/{place_id}',[WeatherController::class,'fetchWeather']);
     });
 });

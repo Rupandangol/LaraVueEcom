@@ -8,24 +8,40 @@ use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WeatherController extends Controller
 {
     protected const myTimezone = 'Asia/Kathmandu';
 
-    public function fetchWeather()
+    public function fetchWeather($place_id)
     {
-        //need to add validation as if no data comes or when limit is reached
+        DB::beginTransaction();
         try {
             if (!WeatherData::whereDate('weather_date_time', '=', Carbon::now(self::myTimezone)->format('Y-m-d'))->exists()) {
+
                 $client = new Client();
-                $response = $client->get('https://www.meteosource.com/api/v1/free/point', [
-                    'query' => [
-                        'key' => config('weather.api_key'),
-                        'place_id' => 'kathmandu',
-                    ]
-                ]);
-                $data = json_decode($response->getBody(), true);
+                try {
+                    $response = $client->get(config('weather.base_url'), [
+                        'query' => [
+                            'key' => config('weather.api_key'),
+                            'place_id' => $place_id,
+                        ]
+                    ]);
+                    $data = json_decode($response->getBody(), true);
+                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                    // Handle 4xx errors
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'API request failed: ' . $e->getResponse()->getBody()->getContents(),
+                    ], $e->getCode());
+                } catch (\GuzzleHttp\Exception\RequestException $e) {
+                    // Handle network errors
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to connect to weather API.',
+                    ], 500);
+                }
                 $weatherLocation = WeatherLocation::firstOrCreate([
                     'timezone' => $data['timezone']
                 ], [
@@ -55,6 +71,7 @@ class WeatherController extends Controller
                     ]);
                 }
             }
+            DB::commit();
             $weatherLocationData = WeatherLocation::where('timezone', self::myTimezone)->first();
             return response()->json([
                 'status' => 'success',
@@ -68,10 +85,15 @@ class WeatherController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
             ], $e->getCode());
         }
+    }
+
+    public function getPlaceId() {
+    
     }
 }
