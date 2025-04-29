@@ -79,7 +79,7 @@ onMounted(async () => {
     await getAdminData();
     orderPlacedNotify();
     adminDeletedNotify();
-    fetchWeather();
+    fetchWeather('kathmandu');
 })
 </script>
 <template>

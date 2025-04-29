@@ -30,6 +30,8 @@ import DailyPlannerCalenderIndex from './pages/Admin/CalenderPage/index.vue';
 import TodoListIndex from './pages/Admin/TodoList/index.vue';
 import TodoListArchiveIndex from './pages/Admin/TodoList/archive.vue';
 import Chat from './pages/Chat.vue';
+import StripeSuccess from './pages/Success.vue';
+import StripeCancel from './pages/Cancel.vue';
 
 
 export default [
@@ -226,6 +228,16 @@ export default [
         name: 'admin-todo-list-archive',
         component: TodoListArchiveIndex,
         meta: { requiresAdminAuth: true }
+    },
+    {
+        path: '/stripe/success',
+        name: 'stripe-success',
+        component: StripeSuccess,
+    },
+    {
+        path: '/stripe/cancel',
+        name: 'stripe-cancel',
+        component: StripeCancel,
     },
 
 ]
