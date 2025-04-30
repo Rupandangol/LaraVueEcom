@@ -26,6 +26,7 @@ use App\Http\Controllers\V1\RatingController;
 use App\Http\Controllers\V1\UserController;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\WebScraperController;
+use App\Http\Middleware\LogIngestMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,7 +57,7 @@ Route::get('/blogs/{id}-{slug}', [BlogController::class, 'show']);
 Route::get('/payment/charge', [PaymentController::class, 'charge']);
 Route::get('/reddit/test', [RedditQuoteController::class, 'test']);
 
-Route::group(['prefix' => 'V1'], function () {
+Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], function () {
     Route::post('/users/register', [UserController::class, 'register'])->name('api-user-register');
     Route::post('/users/login', [UserController::class, 'login'])->name('login');
 
@@ -79,7 +80,7 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/public-chat', [PublicMessageController::class, 'index']);
         Route::post('/public-chat', [PublicMessageController::class, 'store']);
 
-        Route::post('/create-subscription',[StripeController::class,'createSubscription']);
+        Route::post('/create-subscription', [StripeController::class, 'createSubscription']);
     });
     Route::get('/ratings/{product_id}', [RatingController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index'])->name('api-products.index');
@@ -119,6 +120,6 @@ Route::group(['prefix' => 'V1'], function () {
         Route::delete('/admins-recurring-daily-schedule/{id}', [RecurringDailyScheduleController::class, 'delete']);
         Route::post('/admins-recurring-daily-schedule-add', [RecurringDailyScheduleController::class, 'storeInDailySchedule']);
 
-        Route::get('/admin-fetch-weather/{place_id}',[WeatherController::class,'fetchWeather']);
+        Route::get('/admin-fetch-weather/{place_id}', [WeatherController::class, 'fetchWeather']);
     });
 });
