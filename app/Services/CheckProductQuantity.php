@@ -2,17 +2,18 @@
 
 namespace App\Services;
 
+use App\Dto\CheckQuantityDto;
 use App\Models\Product;
 use Exception;
 
 class CheckProductQuantity
 {
 
-    public static function check($product_id, $quantity)
+    public static function check(CheckQuantityDto $checkQuantityDto)
     {
         try {
-            $product = Product::find($product_id);
-            if ($product->stock_quantity >= $quantity) {
+            $product = Product::find($checkQuantityDto->product_id);
+            if ($product->stock_quantity >= $checkQuantityDto->quantity) {
                 return true;
             }
         } catch (Exception $e) {
