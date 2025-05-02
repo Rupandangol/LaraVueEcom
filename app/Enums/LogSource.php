@@ -16,4 +16,5 @@ enum LogSource: string
     case WEBHOOK_GITHUB = 'webhook:github';
     case EXTERNAL_CLIENT = 'external-client';
     case MOBILE_APP = 'mobile-app';
+    case EXCEPTION_HANDLER = 'exception_handler';
 }

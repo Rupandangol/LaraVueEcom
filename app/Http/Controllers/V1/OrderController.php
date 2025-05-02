@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Dto\CheckQuantityDto;
 use App\Enums\Status;
 use App\Events\ProductQuantityUpdater;
 use App\Http\Controllers\Controller;
@@ -47,7 +48,7 @@ class OrderController extends Controller
         $orderData = $this->orderDataBind($request);
         $order = Order::create($orderData);
         foreach ($request->product_id as $key => $item) {
-            if (CheckProductQuantity::check($item, $request->quantity[$key])) {
+            if (CheckProductQuantity::check(new CheckQuantityDto($item, $request->quantity[$key]))) {
                 $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
                 $orderItem[] = OrderDetail::create($orderDetailData);
             } else {

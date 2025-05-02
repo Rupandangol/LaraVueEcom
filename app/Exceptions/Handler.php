@@ -2,6 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Dto\LogDto;
+use App\Enums\LogLevel;
+use App\Enums\LogSource;
+use App\Jobs\LogIngestJob;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -24,7 +28,13 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            $logdata = new LogDto(
+                level: LogLevel::ERROR,
+                message: $e->getMessage(),
+                context: $e->getLine(),
+                source: LogSource::EXCEPTION_HANDLER
+            );
+            LogIngestJob::dispatch($logdata);
         });
     }
 }

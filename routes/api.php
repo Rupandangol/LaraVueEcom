@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DailyScheduleController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicMessageController;
@@ -58,6 +59,7 @@ Route::get('/payment/charge', [PaymentController::class, 'charge']);
 Route::get('/reddit/test', [RedditQuoteController::class, 'test']);
 
 Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], function () {
+    Route::get('/log/export', [LogController::class, 'exportLog']);
     Route::post('/users/register', [UserController::class, 'register'])->name('api-user-register');
     Route::post('/users/login', [UserController::class, 'login'])->name('login');
 
