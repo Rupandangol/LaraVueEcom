@@ -1,0 +1,6 @@
+level,message,context,source
+info,"Api triggered",http://localhost/api/V1/log/export,api-gateway
+info,"Api triggered",http://localhost/api/V1/log/export,api-gateway
+info,"Api triggered",http://localhost/api/V1/log/export,api-gateway
+info,"Api triggered",http://localhost/api/V1/log/export,api-gateway
+info,"Api triggered",http://localhost/api/V1/log/export,api-gateway
