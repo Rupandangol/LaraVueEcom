@@ -13,6 +13,7 @@ use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
+use App\Http\Controllers\V1\Admin\AdminImportExportController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\Admin\GetAdminDataController;
 use App\Http\Controllers\V1\Admin\ToggleLockUserFromAdminController;
@@ -102,6 +103,8 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
+        Route::get('/admins-export', [AdminImportExportController::class,'export']);
+        Route::get('/admins-import', [AdminImportExportController::class,'import']);
         Route::get('/admins-daily-schedule/{date?}', [DailyScheduleController::class, 'index']);
         Route::get('/admins-daily-schedule-Monthly/{date?}', [DailyScheduleController::class, 'getTasksMonths']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);

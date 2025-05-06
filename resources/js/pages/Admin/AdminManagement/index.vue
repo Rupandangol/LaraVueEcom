@@ -20,7 +20,7 @@ const msg = ref('');
 const errors = ref('');
 const admins = ref([]);
 const getAdmins = async () => {
-    loading.value=true;
+    loading.value = true;
     const adminToken = localStorage.getItem('admin-token');
     const response = await axios.get('/api/V1/admins', {
         params: {
@@ -31,7 +31,7 @@ const getAdmins = async () => {
         }
     });
     if (response.status == 200) {
-        loading.value=false;
+        loading.value = false;
         admins.value = response.data.data;
     } else {
         Swal.fire('Error occured');
@@ -72,7 +72,7 @@ const deleteAdmin = (id) => {
                     getAdmins();
                 }
             }).catch((e) => {
-                if(e.response.status===404){
+                if (e.response.status === 404) {
                     Swal.fire({
                         title: "Error!",
                         text: "Not Found",
@@ -87,6 +87,28 @@ const deleteAdmin = (id) => {
 
 }
 
+const adminExportCsv = async () => {
+    try {
+        const response = await axios.get('/api/V1/admins-export', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+            },
+            responseType: 'blob'
+        });
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'admins.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 onMounted(() => {
     getAdmins();
 })
@@ -95,7 +117,10 @@ onMounted(() => {
     <AdminLayout>
         <ErrorMsg :msg="msg" :errors="''" />
         <div class="heading m-2 p-3 d-flex justify-content-between">
-            <h3>Admins</h3>
+            <div class="d-flex ">
+                <h3>Admins</h3>
+                <button target="_blank" @click="adminExportCsv()" class="btn btn-success">Export</button>
+            </div>
             <router-link to="/admin/admins/create" class="btn btn-success"><i class="fa fa-plus"></i> <i
                     class="fa fa-user-tie"></i></router-link>
         </div>
@@ -140,7 +165,7 @@ onMounted(() => {
                         <td><span class="placeholder col-12"></span></td>
                         <td><span class="placeholder col-12"></span></td>
                     </tr>
-                    <tr v-else v-for="(admin, index) in  admins ">
+                    <tr v-else v-for="(admin, index) in admins">
                         <td>{{ index + 1 }}</td>
                         <td>{{ admin.name }}</td>
                         <td>{{ admin.email }}</td>
