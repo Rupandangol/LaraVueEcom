@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DailyScheduleController;
+use App\Http\Controllers\LogAnalyticsController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MoodController;
 use App\Http\Controllers\PaymentController;
@@ -61,6 +62,7 @@ Route::get('/reddit/test', [RedditQuoteController::class, 'test']);
 
 Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], function () {
     Route::get('/log/export', [LogController::class, 'exportLog']);
+    Route::get('/log-analytics', LogAnalyticsController::class);
     Route::post('/users/register', [UserController::class, 'register'])->name('api-user-register');
     Route::post('/users/login', [UserController::class, 'login'])->name('login');
 
@@ -92,6 +94,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:admin']], function () {
+        Route::get('/daily-schedule-analytics',[DailyScheduleController::class,'dailyScheduleAnalytics']);
         Route::get('/admin-data', GetAdminDataController::class);
         Route::get('/admin-dashboard', AdminDashboardController::class);
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
