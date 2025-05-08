@@ -19,7 +19,7 @@ class DailyScheduleFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->title(),
+            'title' => fake()->randomElement(['Gym-chest', 'Gym-push', 'Gym-pull', 'Gym-leg', 'Gym-back', 'Gym-arms', 'Collage', 'sleep', 'work', 'meeting']),
             'description' => fake()->sentence(),
             'date' => fake()->date('Y-m-d'),
             'start_time' => fake()->time('H:i:s'),
@@ -27,7 +27,7 @@ class DailyScheduleFactory extends Factory
             'is_all_day' => fake()->boolean(50),
             'location' => fake()->randomElement(['kathmandu', 'pokhara', 'chitwan']),
             'status' => fake()->randomElement(DailyScheduleStatus::cases())->value,
-            'admin_id'=>fake()->randomElement([1])
+            'admin_id' =>  Admin::factory()
         ];
     }
 }

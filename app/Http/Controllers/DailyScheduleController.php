@@ -9,6 +9,7 @@ use Database\Factories\DailyScheduleFactory;
 use Exception;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Enum;
 
 class DailyScheduleController extends Controller
@@ -172,5 +173,66 @@ class DailyScheduleController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
+    }
+
+    public function dailyScheduleAnalytics(Request $request)
+    {
+        $query = DailySchedule::query();
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+        if ($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->description . '%');
+        }
+        if ($request->filled('start_time')) {
+            $query->where('start_time', '>=', $request->start_time);
+        }
+        if ($request->filled('end_time')) {
+            $query->where('end_time', '<=', $request->end_time);
+        }
+        if ($request->filled('is_all_day')) {
+            $query->where('is_all_day', $request->is_all_day);
+        }
+        if ($request->filled('location')) {
+            $query->where('location', $request->location);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('admin_id')) {
+            $query->where('admin_id', $request->admin_id);
+        }
+
+        $total_count = (clone $query)->count();
+        $title_group = $this->getTotalCount((clone $query), 'title', 'desc', 10);
+        $date_count = $this->getTotalCount((clone $query), 'date', 'desc', 3);
+        $status_count = $this->getTotalCount((clone $query), 'status', 'desc');
+        $is_all_day_count = $this->getTotalCount((clone $query), 'is_all_day', 'desc');
+        $location_count = $this->getTotalCount((clone $query), 'location', 'desc',5);
+        $time_count = $this->getTotalCount((clone $query), 'start_time', 'desc',5);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'fetch successfully',
+            'data' => [
+                'total_count' => $total_count,
+                'is_all_day_count' => $is_all_day_count,
+                'status_count' => $status_count,
+                'title_group' => $title_group,
+                'date_count' => $date_count,
+                'location_count' => $location_count,
+                'time_count' => $time_count,
+                'dailySchedule' => $query->latest()->paginate(10)
+            ]
+        ]);
+    }
+
+    protected function getTotalCount($query, $field, $orderBy, $limit = null)
+    {
+        $total_count = $query->select($field, DB::raw('count(*) as total'))
+            ->groupBy($field)
+            ->orderBy('total', $orderBy)
+            ->limit($limit)
+            ->get();
+        return $total_count;
     }
 }
