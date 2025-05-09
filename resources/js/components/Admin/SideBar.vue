@@ -38,7 +38,7 @@ const logout = () => {
 }
 
 const getAdminData = async () => {
-    await axios.get(`/api/V1/admin-data`, {
+    await axios.get(`/api/V1/admin/data`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('admin-token')}`
         }

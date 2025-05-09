@@ -266,7 +266,7 @@
                 }
             }
         },
-        "/api/V1/admin-data": {
+        "/api/V1/admin/data": {
             "get": {
                 "tags": [
                     "Admin Data"

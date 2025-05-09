@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'gemini' => [
+        'key' => env('GEMINI_KEY'),
+        'base_url'=>'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+    ],
+
 ];
