@@ -18,6 +18,7 @@ use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminImportExportController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\Admin\GetAdminDataController;
+use App\Http\Controllers\V1\Admin\RatingController as AdminRatingController;
 use App\Http\Controllers\V1\Admin\ToggleLockUserFromAdminController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\AdminLoginController;
@@ -105,6 +106,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
             Route::post('logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
             Route::get('export', [AdminImportExportController::class, 'export']);
             Route::get('import', [AdminImportExportController::class, 'import']);
+            Route::get('ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
