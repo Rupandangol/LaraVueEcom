@@ -13,7 +13,7 @@ const barData = ref([]);
 const pieLabel = ref([]);
 const pieData = ref([]);
 const getDashboardData = async () => {
-    const response = await axios.get('/api/V1/admin-dashboard', {
+    const response = await axios.get('/api/V1/admin/dashboard', {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('admin-token')}`
         }
