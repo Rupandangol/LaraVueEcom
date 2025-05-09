@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DailyScheduleController;
+use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\LogAnalyticsController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MoodController;
@@ -47,6 +48,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/gemini/ask', [GeminiController::class, 'ask']);
 // Route::apiResource('/blog-categories', BlogCategory::class);
 Route::get('/blog-categories', [BlogCategoryController::class, 'index']);
 Route::get('/blog-categories/{id}', [BlogCategoryController::class, 'show']);
@@ -94,8 +97,8 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
     Route::post('/admins/login', [AdminLoginController::class, 'login'])->name('api-admin-login');
 
     Route::group(['middleware' => ['auth:admin']], function () {
-        Route::get('/daily-schedule-analytics',[DailyScheduleController::class,'dailyScheduleAnalytics']);
-        Route::get('/admin-data', GetAdminDataController::class);
+        Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
+        Route::get('/admin/data', GetAdminDataController::class);
         Route::get('/admin-dashboard', AdminDashboardController::class);
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
@@ -106,8 +109,8 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
-        Route::get('/admins-export', [AdminImportExportController::class,'export']);
-        Route::get('/admins-import', [AdminImportExportController::class,'import']);
+        Route::get('/admins-export', [AdminImportExportController::class, 'export']);
+        Route::get('/admins-import', [AdminImportExportController::class, 'import']);
         Route::get('/admins-daily-schedule/{date?}', [DailyScheduleController::class, 'index']);
         Route::get('/admins-daily-schedule-Monthly/{date?}', [DailyScheduleController::class, 'getTasksMonths']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);

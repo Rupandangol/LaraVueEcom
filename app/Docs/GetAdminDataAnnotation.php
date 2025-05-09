@@ -7,7 +7,7 @@ class GetAdminDataAnnotation
     /**
      * 
      * @OA\Get(
-     *     path="/api/V1/admin-data",
+     *     path="/api/V1/admin/data",
      *     summary="GetAdminData",
      *     tags={"Admin Data"},
      *     security={{"bearerAuth": {}}},

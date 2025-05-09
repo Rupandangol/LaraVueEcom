@@ -189,7 +189,7 @@ class DailyScheduleController extends Controller
         }
         if ($request->filled('end_time')) {
             $query->where('end_time', '<=', $request->end_time);
-        }
+    }
         if ($request->filled('is_all_day')) {
             $query->where('is_all_day', $request->is_all_day);
         }
