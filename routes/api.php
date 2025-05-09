@@ -18,6 +18,7 @@ use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminImportExportController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
 use App\Http\Controllers\V1\Admin\GetAdminDataController;
+use App\Http\Controllers\V1\Admin\RatingController as AdminRatingController;
 use App\Http\Controllers\V1\Admin\ToggleLockUserFromAdminController;
 use App\Http\Controllers\V1\AdminController;
 use App\Http\Controllers\V1\AdminLoginController;
@@ -98,19 +99,23 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
 
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
-        Route::get('/admin/data', GetAdminDataController::class);
-        Route::get('/admin-dashboard', AdminDashboardController::class);
+        Route::group(['prefix' => '/admin/'], function () {
+            Route::get('data', GetAdminDataController::class);
+            Route::get('dashboard', AdminDashboardController::class);
+            Route::patch('{id}/status-orders/', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
+            Route::post('logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
+            Route::get('export', [AdminImportExportController::class, 'export']);
+            Route::get('import', [AdminImportExportController::class, 'import']);
+            Route::get('ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
+        });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('api-user-delete');
         Route::apiResource('/categories', CategoryController::class);
         Route::resource('/products', ProductController::class)->except('index', 'show');
-        Route::patch('/admin-status-orders/{id}', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
-        Route::post('/admins/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
         Route::resource('/admins', AdminController::class);
-        Route::get('/admins-export', [AdminImportExportController::class, 'export']);
-        Route::get('/admins-import', [AdminImportExportController::class, 'import']);
+
         Route::get('/admins-daily-schedule/{date?}', [DailyScheduleController::class, 'index']);
         Route::get('/admins-daily-schedule-Monthly/{date?}', [DailyScheduleController::class, 'getTasksMonths']);
         Route::get('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'show']);

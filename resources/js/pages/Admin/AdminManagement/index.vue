@@ -89,7 +89,7 @@ const deleteAdmin = (id) => {
 
 const adminExportCsv = async () => {
     try {
-        const response = await axios.get('/api/V1/admins-export', {
+        const response = await axios.get('/api/V1/admin/export', {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('admin-token')}`
             },
