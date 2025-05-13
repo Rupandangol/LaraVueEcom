@@ -20,7 +20,19 @@ class RatingFactory extends Factory
     {
         return [
             'rating' => random_int(0, 5),
-            'review'=> $this->faker->paragraph(),
+            'review' => $this->faker->randomElement([
+                'Good',
+                'Excellent product! Highly recommend!',
+                'This is a game-changer. Love it!',
+                'Great value for the money!',
+                'Easy to use and very helpful.',
+                'Highly satisfied with my purchase',
+                'Not what I expected. Disappointed.',
+                "Poor quality, doesn't last.",
+                "Difficult to use, confusing instructions.",
+                "The product broke right after use.",
+                "Wouldn't recommend this product."
+            ]),
             'user_id' => $this->faker->randomElement(User::pluck('id')),
             'product_id' => $this->faker->randomElement(Product::pluck('id')),
         ];

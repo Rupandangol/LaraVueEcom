@@ -4,17 +4,22 @@ namespace App\Http\Controllers\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rating;
+use App\Services\SummarizerService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use PDO;
 
 class RatingController extends Controller
 {
+    protected $summarizer_service;
+    public function __construct(SummarizerService $summarizer_service)
+    {
+        $this->summarizer_service = $summarizer_service;
+    }
     public function ratingAnalytics(Request $request)
     {
-        //total rating count
-        //review message top 3 message with count
-
         try {
             $query = Rating::query();
             if ($request->filled('product_id')) {
@@ -42,7 +47,10 @@ class RatingController extends Controller
                 ->groupBy('rating')
                 ->orderBy('total', 'desc')
                 ->get();
-
+            $reviews = (clone $query)->select('review')->orderBy('id', 'desc')->limit(1000)->get()->pluck('review')->implode('||');
+            $summarize = Cache::remember('summarized_data_' . Carbon::now()->format('Ymd') . '_' . md5($reviews), now()->addDay(), function () use ($reviews) {
+                return $this->summarizer_service->summarize($reviews);
+            });
             return response()->json([
                 'status' => 'success',
                 'message' => 'Successfully fetched',
@@ -51,6 +59,7 @@ class RatingController extends Controller
                     'top_reviews' => $top_reviews,
                     'rating_count' => $rating_count,
                     'rating' => $rating->latest()->paginate(10),
+                    'summarized_review' => $summarize,
                 ]
             ]);
         } catch (\Exception $e) {

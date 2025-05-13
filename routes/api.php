@@ -107,6 +107,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
             Route::get('export', [AdminImportExportController::class, 'export']);
             Route::get('import', [AdminImportExportController::class, 'import']);
             Route::get('ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
+            Route::get('weather/analytics', [WeatherController::class, 'weatherAnalytics']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');

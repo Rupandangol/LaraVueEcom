@@ -93,7 +93,69 @@ class WeatherController extends Controller
         }
     }
 
-    public function getPlaceId() {
-    
+    public function getPlaceId() {}
+
+
+    public function weatherAnalytics(Request $request)
+    {
+        //total_weather_count
+        //top_3_weather
+        //top_3_temperature
+        //top_3_wind_speed
+
+        $query = WeatherData::query();
+        if ($request->filled('weather')) {
+            $query->where('weather', $request->get('weather'));
+        }
+        if ($request->filled('temperature')) {
+            $query->where('temperature', $request->get('temperature'));
+        }
+        if ($request->filled('wind_speed')) {
+            $query->where('wind_speed', $request->get('wind_speed'));
+        }
+        if ($request->filled('wind_dir')) {
+            $query->where('wind_dir', $request->get('wind_dir'));
+        }
+        if ($request->filled('weather_location_id')) {
+            $query->where('weather_location_id', $request->get('weather_location_id'));
+        }
+        if ($request->filled('date')) {
+            $query->whereDate('weather_date_time', $request->get('date'));
+        }
+        $data = $query;
+
+        $total_count = (clone $query)->count();
+        $top_weather = (clone $query)
+            ->select('weather', DB::raw('Count(*) as total'))
+            ->groupBy('weather')
+            ->orderBy('total', 'desc')
+            ->limit(3)
+            ->get();
+
+        $top_temperature = (clone $query)
+            ->select('temperature', DB::raw('COUNT(*) as total'))
+            ->groupBy('temperature')
+            ->orderBy('total')
+            ->limit(3)
+            ->get();
+
+        $top_wind_speed = (clone $query)
+            ->select('wind_speed', DB::raw('COUNT(*) as total'))
+            ->groupBy('wind_speed')
+            ->orderBy('total')
+            ->limit(3)
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Analytics fetched successfully',
+            'data' => [
+                'total_count' => $total_count,
+                'top_weather' => $top_weather,
+                'top_temperature' => $top_temperature,
+                'top_wind_speed' => $top_wind_speed,
+                'data' => $data->latest('id')->paginate(10)
+            ]
+        ]);
     }
 }
