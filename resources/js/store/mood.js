@@ -14,7 +14,7 @@ export const useMoodStore = defineStore('mood', {
             this.isLoading = true;
             try {
                 const adminToken = localStorage.getItem('admin-token');
-                const response = await axios.post('/api/V1/admins-moods', {
+                const response = await axios.post('/api/V1/admin/moods', {
                     mood: mood,
                     note: 'Created Through Pinia'
                 }, {
@@ -32,7 +32,7 @@ export const useMoodStore = defineStore('mood', {
         async getLatest() {
             try {
                 const adminToken = localStorage.getItem('admin-token');
-                const response = await axios.get('/api/V1/admins-moods-latest', {
+                const response = await axios.get('/api/V1/admin/moods/latest', {
                     headers: {
                         Authorization: `Bearer ${adminToken}`
                     }
