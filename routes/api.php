@@ -56,10 +56,13 @@ Route::get('/blog-categories', [BlogCategoryController::class, 'index']);
 Route::get('/blog-categories/{id}', [BlogCategoryController::class, 'show']);
 
 Route::get('/scrape', [WebScraperController::class, 'scrape']);
-Route::get('/blogs', [BlogController::class, 'index']);
-Route::post('/blogs', [BlogController::class, 'store']);
-Route::delete('/blogs/{id}-{slug}', [BlogController::class, 'destroy']);
-Route::get('/blogs/{id}-{slug}', [BlogController::class, 'show']);
+Route::group(['prefix' => '/blogs'], function () {
+    Route::get('/analytics', [BlogController::class, 'blogAnalytics']);
+    Route::get('/', [BlogController::class, 'index']);
+    Route::post('/', [BlogController::class, 'store']);
+    Route::delete('/{id}-{slug}', [BlogController::class, 'destroy']);
+    Route::get('/{id}-{slug}', [BlogController::class, 'show']);
+});
 
 Route::get('/payment/charge', [PaymentController::class, 'charge']);
 Route::get('/reddit/test', [RedditQuoteController::class, 'test']);
@@ -99,18 +102,18 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
 
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
-        Route::group(['prefix' => '/admin/'], function () {
-            Route::get('data', GetAdminDataController::class);
-            Route::get('dashboard', AdminDashboardController::class);
-            Route::patch('{id}/status-orders/', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
-            Route::post('logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
-            Route::get('export', [AdminImportExportController::class, 'export']);
-            Route::get('import', [AdminImportExportController::class, 'import']);
-            Route::get('ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
-            Route::get('weather/analytics', [WeatherController::class, 'weatherAnalytics']);
-            Route::get('moods/analytics', [MoodController::class, 'moodAnalytics']);
-            Route::post('moods', [MoodController::class, 'store']);
-            Route::get('moods/latest', [MoodController::class, 'latest']);
+        Route::group(['prefix' => '/admin'], function () {
+            Route::get('/data', GetAdminDataController::class);
+            Route::get('/dashboard', AdminDashboardController::class);
+            Route::patch('/{id}/status-orders/', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
+            Route::post('/logout', [AdminLoginController::class, 'logout'])->name('api-admin-logout');
+            Route::get('/export', [AdminImportExportController::class, 'export']);
+            Route::get('/import', [AdminImportExportController::class, 'import']);
+            Route::get('/ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
+            Route::get('/weather/analytics', [WeatherController::class, 'weatherAnalytics']);
+            Route::get('/moods/analytics', [MoodController::class, 'moodAnalytics']);
+            Route::post('/moods', [MoodController::class, 'store']);
+            Route::get('/moods/latest', [MoodController::class, 'latest']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');

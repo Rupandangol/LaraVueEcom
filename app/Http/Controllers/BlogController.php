@@ -8,6 +8,7 @@ use App\Models\Blog;
 use App\Models\BlogCategory;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
@@ -122,5 +123,84 @@ class BlogController extends Controller
             'status' => 'success',
             'message' => 'Deleted Successfully',
         ]);
+    }
+
+    public function blogAnalytics(Request $request)
+    {
+        try {
+            $query = DB::table('blogs');
+            if ($request->filled('status')) {
+                $query->where('status', $request->get('status'));
+            }
+            if ($request->filled('comment_enabled')) {
+                $query->where('comment_enabled', $request->get('comment_enabled'));
+            }
+            if ($request->filled('is_featured')) {
+                $query->where('is_featured', $request->get('is_featured'));
+            }
+            if ($request->filled('title')) {
+                $query->where('title', 'like', '%' . $request->get('title') . '%');
+            }
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->get('user_id'));
+            }
+            if ($request->filled('blog_category_id')) {
+                $query->where('blog_category_id', $request->get('blog_category_id'));
+            }
+            if ($request->filled('date')) {
+                $query->where('created_at', '>=', $request->get('date'));
+            }
+            //total_count
+            //total_status_count
+            //top_title
+            //top_contributor
+            //top_category
+
+            $total_count = (clone $query)->count();
+            $total_status_count = (clone $query)
+                ->select('status', DB::raw('COUNT(*) as total'))
+                ->groupBy('status')
+                ->orderBy('total', 'desc')
+                ->get();
+
+            $top_title = (clone $query)
+                ->select('title', DB::raw('COUNT(*) as total'))
+                ->groupBy('title')
+                ->orderBy('total', 'desc')
+                ->limit(3)
+                ->get();
+
+            $top_contributor = (clone $query)
+                ->select('user_id', DB::raw('COUNT(*) as total'))
+                ->groupBy('user_id')
+                ->orderBy('total', 'desc')
+                ->limit(3)
+                ->get();
+            $top_category = (clone $query)
+                ->select('blog_category_id','blog_categories.blog_category', DB::raw('COUNT(*) as total'))
+                ->leftJoin('blog_categories','blogs.blog_category_id','=','blog_categories.id')
+                ->groupBy('blog_category_id')
+                ->orderBy('total', 'desc')
+                ->limit(3)
+                ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Fetched successfully',
+                'data' => [
+                    'total_count' => $total_count,
+                    'total_status_count' => $total_status_count,
+                    'top_contributor' => $top_contributor,
+                    'top_category' => $top_category,
+                    'top_title' => $top_title,
+                    'blog' => $query->orderBy('id', 'desc')->paginate(10)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

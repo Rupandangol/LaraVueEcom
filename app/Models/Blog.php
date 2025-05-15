@@ -27,7 +27,6 @@ class Blog extends Model
         'is_featured'
     ];
     protected $hidden = [
-        'id',
         'blog_category_id',
         'updated_at',
         'created_at'
