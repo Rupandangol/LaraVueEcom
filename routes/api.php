@@ -108,6 +108,9 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
             Route::get('import', [AdminImportExportController::class, 'import']);
             Route::get('ratings/analytics', [AdminRatingController::class, 'ratingAnalytics']);
             Route::get('weather/analytics', [WeatherController::class, 'weatherAnalytics']);
+            Route::get('moods/analytics', [MoodController::class, 'moodAnalytics']);
+            Route::post('moods', [MoodController::class, 'store']);
+            Route::get('moods/latest', [MoodController::class, 'latest']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
@@ -124,8 +127,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
         Route::patch('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'update']);
         Route::delete('/admins-daily-schedule/{id}', [DailyScheduleController::class, 'deleteDailyTask']);
         Route::patch('/admins-daily-schedule-update-status/{id}', [DailyScheduleController::class, 'updateStatus']);
-        Route::post('/admins-moods', [MoodController::class, 'store']);
-        Route::get('/admins-moods-latest', [MoodController::class, 'latest']);
+
         Route::get('/admins-todo-list', [TodoListController::class, 'index']);
         Route::post('/admins-todo-list', [TodoListController::class, 'store']);
         Route::patch('/admins-todo-list/{id}', [TodoListController::class, 'update']);
