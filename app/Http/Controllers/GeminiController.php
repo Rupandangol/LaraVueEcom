@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\AiReponseDto;
+use App\Models\AiResponse;
+use App\Services\AiResponseInserter;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GeminiController extends Controller
 {
+    protected $ai_response_inserter;
+    public function __construct(AiResponseInserter $ai_response_inserter)
+    {
+        $this->ai_response_inserter = $ai_response_inserter;
+    }
     public function ask(Request $request)
     {
         $validated = $request->validate([
@@ -33,6 +42,16 @@ class GeminiController extends Controller
                 'timeout' => 15
             ]);
             $data = json_decode($response->getBody(), true);
+
+            $ai_response_dto = new AiReponseDto(
+                $validated['prompt'],
+                json_encode($data),
+                $data['modelVersion'] ?? null,
+                $data['usageMetadata']['totalTokenCount'] ?? null,
+                200,
+            );
+            $this->ai_response_inserter->insert($ai_response_dto);
+          
 
             return response()->json([
                 'status' => 'success',
