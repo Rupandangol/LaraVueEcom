@@ -114,6 +114,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
             Route::get('/moods/analytics', [MoodController::class, 'moodAnalytics']);
             Route::post('/moods', [MoodController::class, 'store']);
             Route::get('/moods/latest', [MoodController::class, 'latest']);
+            Route::get('/ai/analytics', [GeminiController::class, 'aiAnalytics']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
