@@ -8,6 +8,7 @@ use App\Services\AiResponseInserter;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GeminiController extends Controller
 {
@@ -51,7 +52,7 @@ class GeminiController extends Controller
                 200,
             );
             $this->ai_response_inserter->insert($ai_response_dto);
-          
+
 
             return response()->json([
                 'status' => 'success',
@@ -62,6 +63,41 @@ class GeminiController extends Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], $e->getCode());
+        }
+    }
+
+    public function aiAnalytics(Request $request)
+    {
+        try {
+            $query = DB::table('ai_responses');
+            if ($request->filled('admin_id')) {
+                $query->where('admin_id', $request->get('admin_id'));
+            }
+            if ($request->filled('prompt')) {
+                $query->where('prompt', 'like', '%' . $request->get('prompt') . '%');
+            }
+            //top prompt
+
+            $top_prompt = (clone $query)
+                ->select('prompt', DB::raw('COUNT(*) as total'))
+                ->groupBy('prompt')
+                ->orderByDesc('total')
+                ->limit(3)
+                ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'fetched successfully',
+                'data' => [
+                    'top_prompt' => $top_prompt,
+                    'ai_responses' => $query->paginate(10),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }
