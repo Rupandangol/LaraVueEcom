@@ -115,6 +115,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
             Route::post('/moods', [MoodController::class, 'store']);
             Route::get('/moods/latest', [MoodController::class, 'latest']);
             Route::get('/ai/analytics', [GeminiController::class, 'aiAnalytics']);
+            Route::get('/ai/export', [GeminiController::class, 'export']);
         });
         Route::patch('/users/toggle-lock', ToggleLockUserFromAdminController::class);
         Route::put('/users/{id}', [UserController::class, 'update'])->name('api-user-update');
@@ -134,6 +135,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
 
         Route::get('/admins-todo-list', [TodoListController::class, 'index']);
         Route::post('/admins-todo-list', [TodoListController::class, 'store']);
+        Route::post('/admins-todo-list/export', [TodoListController::class, 'export']);
         Route::patch('/admins-todo-list/{id}', [TodoListController::class, 'update']);
         Route::delete('/admins-todo-list/{id}', [TodoListController::class, 'delete']);
         Route::patch('/admins-todo-list-update-status/{id}', [TodoListController::class, 'updateCompleted']);
