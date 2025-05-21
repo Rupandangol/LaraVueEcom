@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dto\AiReponseDto;
 use App\Models\AiResponse;
 use App\Services\AiResponseInserter;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -99,5 +100,51 @@ class GeminiController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function export()
+    {
+        $filename = 'ai_response' . Carbon::now()->format('YmdHis');
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+        return response()->stream(function () {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'Ai Reponse Table'
+            ]);
+            $header = [
+                'id',
+                'prompt',
+                'response',
+                'summary',
+                'model',
+                'token_used',
+                'request_id',
+                'status_code',
+                'time'
+            ];
+
+            fputcsv($handle, $header);
+            DB::table('ai_responses')->orderBy('id', 'desc')->chunk(100, function ($items) use ($handle) {
+                foreach ($items as $item) {
+                    fputcsv($handle, [
+                        $item->id ?? '',
+                        $item->prompt ?? '',
+                        $item->summary ?? '',
+                        $item->model ?? '',
+                        $item->token_used ?? '',
+                        $item->request_id ?? '',
+                        $item->status_code ?? '',
+                        $item->time ?? '',
+                    ]);
+                }
+            });
+            fclose($handle);
+        }, 200, $headers);
     }
 }
