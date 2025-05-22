@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\TodoList;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,5 +174,45 @@ class TodoListController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
+    }
+    public function export()
+    {
+        $filename = 'todoList' . Carbon::now()->format('YmdHis');
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+        return response()->stream(function () {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'id',
+                'task',
+                'description',
+                'is_completed',
+                'due_date',
+                'admin_id',
+                'created_at',
+            ]);
+
+            DB::table('todo_lists')
+                ->orderByDesc('id')
+                ->chunk(100, function ($items) use ($handle) {
+                    foreach ($items as $item) {
+                        fputcsv($handle, [
+                            $item->id ?? '',
+                            $item->task ?? '',
+                            $item->description ?? '',
+                            $item->is_completed ?? '',
+                            $item->due_date ?? '',
+                            $item->admin_id ?? '',
+                            $item->created_at ?? '',
+                        ]);
+                    }
+                });
+            fclose($handle);
+        }, 200, $headers);
     }
 }
