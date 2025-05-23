@@ -14,6 +14,7 @@ use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\TodoListController;
+use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\V1\Admin\AdminImportExportController;
 use App\Http\Controllers\V1\Admin\AdminOrderController;
@@ -103,6 +104,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
         Route::group(['prefix' => '/admin'], function () {
+            Route::post('/transaction/import', [TransactionsController::class,'import']);
             Route::get('/data', GetAdminDataController::class);
             Route::get('/dashboard', AdminDashboardController::class);
             Route::patch('/{id}/status-orders/', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');
