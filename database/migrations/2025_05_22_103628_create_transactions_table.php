@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->date('date_time');
+            $table->datetime('date_time');
             $table->string('description')->nullable();
             $table->integer('debit');
             $table->integer('credit');
+            $table->string('tag')->nullable();
             $table->string('status');
             $table->string('channel');
             $table->unsignedBigInteger('admin_id')->nullable();
