@@ -15,7 +15,8 @@ class TransactionsController extends Controller
     public function import(Request $request)
     {
         try {
-            $file = public_path('/log/statement.xls');
+            // $file = public_path('/log/Statement_2025-01-01_to_2025-03-01_2025-05-27_17_25_32.xls');
+            $file = public_path('/log/Statement_2025-03-02_to_2025-05-27_2025-05-27_17_27_08.xls');
             if (!file_exists($file)) {
                 return response()->json([
                     'status' => 'error',
@@ -48,21 +49,37 @@ class TransactionsController extends Controller
         if ($request->filled('date')) {
             $query->whereDate('date_time', $request->get('date'));
         }
+        if ($request->filled('month')) {
+            $query->whereMonth('date_time', $request->get('month'));
+        }
         $top_expenses = (clone $query)
-            ->select('description', DB::raw('COUNT(*) as total'),DB::raw('SUM(debit) as total_spent'))
+            ->select('description', DB::raw('COUNT(*) as total'), DB::raw('SUM(debit) as total_spent'))
             ->groupBy('description')
-            ->orderByDesc('total')
+            ->orderByDesc('total_spent', 'total')
             ->limit(10)
             ->get();
-        $total=(clone $query)->count();
-        $total_spent=(clone $query)->select(DB::raw('SUM(debit) as sum'))
-        ->get();
+        $total = (clone $query)->count();
+        $total_spent = (clone $query)->select(DB::raw('SUM(debit) as sum'))
+            ->get();
+        $forecast = (clone $query)->selectRaw('MONTH(date_time) as month, YEAR(date_time) as year, SUM(debit) as total_spent')
+            ->groupBy('year', 'month')
+            ->orderByDesc('year')
+            ->orderByDesc('month')
+            ->limit(6)
+            ->get();
+        $over_all_time_based_spendings = (clone $query)
+            ->selectRaw('HOUR(date_time) as hour, COUNT(*) as total, SUM(debit) as sum')
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get();
         return response()->json([
             'status' => 'success',
             'message' => 'fetched Successfully',
             'data' => [
                 'total' => $total,
                 'total_spent' => $total_spent,
+                'forecast' => round($forecast->avg('total_spent')),
+                'over_all_time_based_spendings' => $over_all_time_based_spendings,
                 'top_expenses' => $top_expenses,
                 'transactions' => $query->paginate(10),
             ]
