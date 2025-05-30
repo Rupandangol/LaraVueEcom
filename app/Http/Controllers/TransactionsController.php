@@ -56,7 +56,7 @@ class TransactionsController extends Controller
             ->select('description', DB::raw('COUNT(*) as total'), DB::raw('SUM(debit) as total_spent'))
             ->groupBy('description')
             ->orderByDesc('total_spent', 'total')
-            ->limit(10)
+            ->limit(5)
             ->get();
         $total = (clone $query)->count();
         $total_spent = (clone $query)->select(DB::raw('SUM(debit) as sum'))

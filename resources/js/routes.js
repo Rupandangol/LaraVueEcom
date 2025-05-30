@@ -32,7 +32,7 @@ import TodoListArchiveIndex from './pages/Admin/TodoList/archive.vue';
 import Chat from './pages/Chat.vue';
 import StripeSuccess from './pages/Success.vue';
 import StripeCancel from './pages/Cancel.vue';
-
+import TransactionAnalytics from './pages/Admin/Transaction/index.vue';
 
 export default [
     {
@@ -238,6 +238,11 @@ export default [
         path: '/stripe/cancel',
         name: 'stripe-cancel',
         component: StripeCancel,
+    },
+    {
+        path: '/admin/transaction/analytics',
+        name: 'admin-transaction-analytics',
+        component: TransactionAnalytics,
     },
 
 ]

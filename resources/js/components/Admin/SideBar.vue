@@ -179,6 +179,14 @@ onMounted(async () => {
                             </p>
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link :to="`/admin/transaction/analytics`" class="nav-link">
+                            <i class="nav-icon fas fa-address-card"></i>
+                            <p>
+                                Transactions
+                            </p>
+                        </router-link>
+                    </li>
                 </ul>
             </nav>
 
