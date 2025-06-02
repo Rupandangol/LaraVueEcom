@@ -205,7 +205,7 @@ class DailyScheduleController extends Controller
 
         $total_count = (clone $query)->count();
         $title_group = $this->getTotalCount((clone $query), 'title', 'desc', 10);
-        $date_count = $this->getTotalCount((clone $query), 'date', 'desc', 3);
+        $date_count = $this->getTotalCount((clone $query), 'date', 'desc', 10);
         $status_count = $this->getTotalCount((clone $query), 'status', 'desc');
         $is_all_day_count = $this->getTotalCount((clone $query), 'is_all_day', 'desc');
         $location_count = $this->getTotalCount((clone $query), 'location', 'desc',5);

@@ -128,7 +128,7 @@ const deleteDailyPlanner = (id) => {
     fetchDailySchedule();
 }
 const addRecurringTask = (id) => {
-    addRecurringTaskToDailyPlanner(id,props.date);
+    addRecurringTaskToDailyPlanner(id, props.date);
     fetchDailySchedule();
 }
 </script>
@@ -160,14 +160,23 @@ const addRecurringTask = (id) => {
                     <i class="fa fa-plus"> Add task</i>
                 </button>
             </div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Recurring Tasks
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <button v-for="item in recurringTask" @click="addRecurringTask(item.id)" class="dropdown-item">{{
-                        item.title }}</button>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Recurring Tasks
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button v-for="item in recurringTask" @click="addRecurringTask(item.id)"
+                                class="dropdown-item">{{
+                                    item.title }}</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <router-link to="/admin/daily-schedule-analytics" class="btn btn-success">Analytics</router-link>
                 </div>
             </div> <br>
             <div>
