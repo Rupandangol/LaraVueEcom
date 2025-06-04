@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Dto\QrGeneratorDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\ProductCreateRequest;
 use App\Http\Requests\V1\ProductUpdateRequest;
 use App\Http\Resources\V1\ProductCollection;
 use App\Http\Resources\V1\ProductResource;
 use App\Models\Product;
+use App\Services\QrGeneratorService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Matrix\Decomposition\QR;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProductController extends Controller
 {
@@ -88,7 +92,14 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return new ProductResource(Product::with('category')->findOrFail($id));
+        $url = 'google.com'; //change for this product
+        $qrDto=new QrGeneratorDto($url,50);
+        $qrgenerator=new QrGeneratorService();
+        $qr= $qrgenerator->generate($qrDto);
+        $product=Product::with('category')->findOrFail($id);
+        return (new ProductResource($product))->additional([
+            'qr'=>$qr
+        ]);
     }
 
     /**
