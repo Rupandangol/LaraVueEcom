@@ -12,6 +12,7 @@ const route = useRoute();
 const rating = ref([]);
 const avgRating = ref(null);
 const product = ref([]);
+const qr = ref('');
 const relatedProducts = ref([]);
 const quantityValue = ref(1);
 const formData = reactive({
@@ -20,6 +21,7 @@ const formData = reactive({
 const getProductDetail = () => {
     axios.get(`/api/V1/products/${route.params.id}`).then((response) => {
         product.value = response.data.data;
+        qr.value = response.data?.qr;
     })
 }
 const getRelatedProducts = () => {
@@ -109,6 +111,7 @@ onMounted(() => {
                         alt="..." /></div>
                 <div class="col-md-6">
                     <div class="small mb-1">SKU: {{ product?.name }}-{{ product?.id }}</div>
+                    <img :src="qr" alt="QR Code" />
                     <h1 class="display-5 fw-bolder">{{ product?.name }}</h1>
                     <div class="fs-5 mb-5">
                         <span>Rs.{{ product?.price }}</span>

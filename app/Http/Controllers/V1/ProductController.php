@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Matrix\Decomposition\QR;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProductController extends Controller
 {
@@ -88,7 +90,12 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return new ProductResource(Product::with('category')->findOrFail($id));
+        $url = 'google.com'; //change for this product
+        $product=Product::with('category')->findOrFail($id);
+        $qr=base64_encode(QrCode::format('png')->size(50)->generate($url));
+        return (new ProductResource($product))->additional([
+            'qr'=>"data:image/png;base64,{$qr}"
+        ]);
     }
 
     /**
