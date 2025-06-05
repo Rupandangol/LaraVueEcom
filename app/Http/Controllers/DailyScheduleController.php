@@ -178,6 +178,9 @@ class DailyScheduleController extends Controller
     public function dailyScheduleAnalytics(Request $request)
     {
         $query = DailySchedule::query();
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->date);
+        }
         if ($request->filled('title')) {
             $query->where('title', 'like', '%' . $request->title . '%');
         }

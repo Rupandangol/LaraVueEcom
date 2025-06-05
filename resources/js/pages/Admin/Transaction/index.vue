@@ -14,6 +14,11 @@ const barLabel = ref([]);
 const barData = ref([]);
 const pieLabel = ref([]);
 const pieData = ref([]);
+const filters = ref([
+    'description',
+    'month',
+    'date'
+]);
 
 const transactionData = ref([]);
 const transactionDataPagination = ref([]);
@@ -39,6 +44,27 @@ const fetchTransactionAnalytics = async (url) => {
     }
 }
 
+const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (filters.value.description) {
+        params.append('description', filters.value.description);
+    }
+    if (filters.value.month) {
+        params.append('month', filters.value.month);
+    }
+    if (filters.value.date) {
+        params.append('date', filters.value.date);
+    }
+
+    fetchTransactionAnalytics(`/api/V1/admin/transaction/analytics?${params.toString()}`)
+}
+const resetfilters = () => {
+    filters.value.description = '';
+    filters.value.month = '';
+    filters.value.date = '';
+    fetchTransactionAnalytics('/api/V1/admin/transaction/analytics')
+}
 // Chart data
 const barChartData = computed(() => {
     return {
@@ -85,6 +111,21 @@ onMounted(() => {
             <div class="card p-5">
                 <h4>Total: <code>{{ transactionData.total }}</code></h4>
                 <h4>Total Spent: <code>{{ transactionData.total_spent }}</code></h4>
+                <form @submit.prevent="handleSearch" class="row">
+                    <div class="form-group col-md-5">
+                        <input type="text" v-model="filters.description" class="form-control" placeholder="Description">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <input type="date" v-model="filters.date" class="form-control" placeholder="Date">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <input type="month" v-model="filters.month" class="form-control" placeholder="Month">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Search</button> &nbsp;
+                        <button type="reset" @click="resetfilters()" class="btn btn-default"><i class="fas fa-sync"></i></button>
+                    </div>
+                </form>
                 <table class="table table-boarded">
                     <thead>
                         <tr>
@@ -126,7 +167,7 @@ onMounted(() => {
         <div class="row">
             <div class="col-md-8 offset-2 mb-3">
                 <div v-if="(barLabel.length > 0) && (barData.length > 0)" class="card p-5">
-                <h4 class="d-flex justify-content-center">Hour Based Spending Chart</h4>
+                    <h4 class="d-flex justify-content-center">Hour Based Spending Chart</h4>
 
                     <Bar :data="barChartData" :options="chartOptions" />
                 </div>
