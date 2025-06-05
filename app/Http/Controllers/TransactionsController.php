@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\TransactionImport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -45,12 +46,15 @@ class TransactionsController extends Controller
     public function analytics(Request $request)
     {
         $query = DB::table('transactions');
-
         if ($request->filled('date')) {
             $query->whereDate('date_time', $request->get('date'));
         }
+        if ($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->get('description') . '%');
+        }
         if ($request->filled('month')) {
-            $query->whereMonth('date_time', $request->get('month'));
+            $query->whereYear('date_time', Carbon::parse($request->get('month'))->format('Y'))
+                ->whereMonth('date_time', Carbon::parse($request->get('month'))->format('m'));
         }
         $top_expenses = (clone $query)
             ->select('description', DB::raw('COUNT(*) as total'), DB::raw('SUM(debit) as total_spent'))
@@ -81,7 +85,7 @@ class TransactionsController extends Controller
                 'forecast' => round($forecast->avg('total_spent')),
                 'over_all_time_based_spendings' => $over_all_time_based_spendings,
                 'top_expenses' => $top_expenses,
-                'transactions' => $query->paginate(10),
+                'transactions' => $query->paginate(10)->appends($request->only(['description', 'date', 'month'])),
             ]
         ]);
     }

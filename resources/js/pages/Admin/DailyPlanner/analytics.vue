@@ -24,6 +24,16 @@ const donutIsAllDayData = ref([]);
 const pieStatusCountLabel = ref([]);
 const pieStatusCountData = ref([]);
 
+const filters = ref([
+    'date',
+    'description',
+    'start_time',
+    'end_time',
+    'is_all_day',
+    'location',
+    'status',
+    'title'
+]);
 
 const fetchDailyScheduleAnalytics = async (url) => {
     const response = await axios.get(url, {
@@ -129,6 +139,45 @@ const pieStatusCountChartData = computed(() => {
     };
 })
 
+const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (filters.value.date) {
+        params.append('date', filters.value.date);
+    }
+    if (filters.value.description) {
+        params.append('description', filters.value.description);
+    }
+    if (filters.value.start_time) {
+        params.append('start_time', filters.value.start_time);
+    }
+    if (filters.value.end_time) {
+        params.append('end_time', filters.value.end_time);
+    }
+    if (filters.value.is_all_day) {
+        params.append('is_all_day', filters.value.is_all_day);
+    }
+    if (filters.value.location) {
+        params.append('location', filters.value.location);
+    }
+    if (filters.value.status) {
+        params.append('status', filters.value.status);
+    }
+    if (filters.value.title) {
+        params.append('title', filters.value.title);
+    }
+    fetchDailyScheduleAnalytics(`/api/V1/daily-schedule-analytics?${params.toString()}`)
+}
+const resetfilters = () => {
+    filters.value.date = '';
+    filters.value.description = '';
+    filters.value.start_time = '';
+    filters.value.end_time = '';
+    filters.value.is_all_day = '';
+    filters.value.location = '';
+    filters.value.status = '';
+    filters.value.title = '';
+    fetchDailyScheduleAnalytics('/api/V1/daily-schedule-analytics');
+}
 </script>
 <template>
     <AdminLayout>
@@ -138,6 +187,53 @@ const pieStatusCountChartData = computed(() => {
                 <h5>Total Data: <code>{{ analyicsData?.total_count }}</code></h5>
             </div>
             <div class="card p-3">
+                <form @submit.prevent="handleSearch" class="row">
+                    <div class="form-group col-md-3">
+                        <label for="date">Date</label>
+                        <input type="date" v-model="filters.date" class="form-control" placeholder="Date">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="description">Description</label>
+                        <input type="text" v-model="filters.description" class="form-control" placeholder="Description">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="start_time">Start Time</label>
+                        <input type="time" v-model="filters.start_time" class="form-control" placeholder="Start time">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="end_time">End Time</label>
+                        <input type="time" v-model="filters.end_time" class="form-control" placeholder="Start time">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="is_all_day">Is all Day</label>
+                        <select class="form-control" v-model="filters.is_all_day">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="location">Location</label>
+                        <input type="text" v-model="filters.location" class="form-control" placeholder="Start time">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="status">Status</label>
+                        <select v-model="filters.status" class="form-control">
+                            <option value="in_progress">In progress</option>
+                            <option value="pending">Pending</option>
+                            <option value="canceled">Canceled</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="title">Title</label>
+                        <input type="text" v-model="filters.title" class="form-control" placeholder="Start time">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Search</button> &nbsp;
+                        <button type="reset" @click="resetfilters()" class="btn btn-default"><i
+                                class="fas fa-sync"></i></button>
+                    </div>
+                </form>
                 <table class="table table-boarded">
                     <thead>
                         <tr>
@@ -159,7 +255,10 @@ const pieStatusCountChartData = computed(() => {
                             <td>{{ item.description }}</td>
                             <td>{{ item.start_time }}</td>
                             <td>{{ item.end_time }}</td>
-                            <td>{{ item.is_all_day }}</td>
+                            <td>
+                                <span class="badge badge-warning" v-if="item.is_all_day">Yes</span>
+                                <span class="badge badge-success" v-else>No</span>
+                            </td>
                             <td>{{ item.location }}</td>
                             <td>{{ item.status }}</td>
                             <td>{{ item.title }}</td>
