@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import { options } from '@fullcalendar/core/preact.js';
+import { useTransactionStore } from '../../../store/transaction';
 
 
 // Register Chart.js components
@@ -20,9 +21,15 @@ const filters = ref([
     'date'
 ]);
 
+const transactionStore=useTransactionStore();
+
 const transactionData = ref([]);
 const transactionDataPagination = ref([]);
 
+
+const transactionImport=()=>{
+    transactionStore.transactionImport();
+}
 const fetchTransactionAnalytics = async (url) => {
     const response = await axios.get(url, {
         headers: {
@@ -43,6 +50,7 @@ const fetchTransactionAnalytics = async (url) => {
         }
     }
 }
+
 
 const handleSearch = () => {
     const params = new URLSearchParams();
@@ -107,6 +115,7 @@ onMounted(() => {
         <div class="container">
             <div class="heading m-2 p-2 d-flex justify-content-between">
                 <h1>Transaction Analytics</h1>
+                <button @click='transactionImport()' type="button" class="btn btn-success">Import</button>
             </div>
             <div class="card p-5">
                 <h4>Total: <code>{{ transactionData.total }}</code></h4>
@@ -161,7 +170,8 @@ onMounted(() => {
                     </ul>
                 </nav>
 
-                <h4>Forcast for next monty: <code>Rs. {{ transactionData.forecast }}</code></h4>
+                <h4>Forcast(Overall) for next month: <code>Rs. {{ transactionData.over_all_forecast }}</code></h4>
+                <h4>Forcast(3 month) for next month: <code>Rs. {{ transactionData.three_month_forecast }}</code></h4>
             </div>
         </div>
         <div class="row">
