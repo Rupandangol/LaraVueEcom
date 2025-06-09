@@ -17,7 +17,7 @@ class TransactionsController extends Controller
     {
         try {
             // $file = public_path('/log/Statement_2025-01-01_to_2025-03-01_2025-05-27_17_25_32.xls');
-            $file = public_path('/log/Statement_2025-03-02_to_2025-05-27_2025-05-27_17_27_08.xls');
+            $file = public_path('/log/statement1.xls');
             if (!file_exists($file)) {
                 return response()->json([
                     'status' => 'error',
@@ -65,11 +65,16 @@ class TransactionsController extends Controller
         $total = (clone $query)->count();
         $total_spent = (clone $query)->select(DB::raw('SUM(debit) as sum'))
             ->get();
-        $forecast = (clone $query)->selectRaw('MONTH(date_time) as month, YEAR(date_time) as year, SUM(debit) as total_spent')
+        $over_all_forecast = (clone $query)->selectRaw('MONTH(date_time) as month, YEAR(date_time) as year, SUM(debit) as total_spent')
             ->groupBy('year', 'month')
             ->orderByDesc('year')
             ->orderByDesc('month')
-            ->limit(6)
+            ->get();
+        $three_month_forecast = (clone $query)->selectRaw('MONTH(date_time) as month, YEAR(date_time) as year, SUM(debit) as total_spent')
+            ->where('date_time', '>=', Carbon::now()->subMonths(3))
+            ->groupBy('year', 'month')
+            ->orderByDesc('year')
+            ->orderByDesc('month')
             ->get();
         $over_all_time_based_spendings = (clone $query)
             ->selectRaw('HOUR(date_time) as hour, COUNT(*) as total, SUM(debit) as sum')
@@ -82,7 +87,8 @@ class TransactionsController extends Controller
             'data' => [
                 'total' => $total,
                 'total_spent' => $total_spent,
-                'forecast' => round($forecast->avg('total_spent')),
+                'over_all_forecast' => round($over_all_forecast->avg('total_spent')),
+                'three_month_forecast' => round($three_month_forecast->avg('total_spent')),
                 'over_all_time_based_spendings' => $over_all_time_based_spendings,
                 'top_expenses' => $top_expenses,
                 'transactions' => $query->paginate(10)->appends($request->only(['description', 'date', 'month'])),
