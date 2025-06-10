@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dto\AiReponseDto;
+use App\DTOs\AiReponseDto;
 use App\Models\AiResponse;
 use Illuminate\Support\Facades\Auth;
 

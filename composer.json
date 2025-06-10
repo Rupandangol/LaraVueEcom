@@ -25,7 +25,8 @@
         "stripe/stripe-php": "^16.2",
         "symfony/css-selector": "^7.1",
         "symfony/dom-crawler": "^7.1",
-        "zircote/swagger-php": "^4.11"
+        "zircote/swagger-php": "^4.11",
+        "rupandangol/laravel-dto-maker":"dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -81,5 +82,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+        "type": "path",
+        "url": "packages/Rupandangol/LaravelDtoMaker"
+        }
+    ]
 }

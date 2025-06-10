@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Dto\LogDto;
+use App\DTOs\LogDto;
 use App\Enums\LogLevel;
 use App\Enums\LogSource;
 use App\Jobs\LogIngestJob;

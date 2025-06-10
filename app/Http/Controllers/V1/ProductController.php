@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Dto\QrGeneratorDto;
+use App\DTOs\QrGeneratorDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\ProductCreateRequest;
 use App\Http\Requests\V1\ProductUpdateRequest;

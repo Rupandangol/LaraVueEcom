@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Dto\AiReponseDto;
+use App\DTOs\AiReponseDto;
 use App\Models\AiResponse;
 use App\Services\AiResponseInserter;
 use Carbon\Carbon;

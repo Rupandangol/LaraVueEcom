@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Dto\LogDto;
+use App\DTOs\LogDto;
 use App\Services\LogIngestService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

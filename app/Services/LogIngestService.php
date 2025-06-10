@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dto\LogDto;
+use App\DTOs\LogDto;
 use App\Models\Log;
 
 class LogIngestService

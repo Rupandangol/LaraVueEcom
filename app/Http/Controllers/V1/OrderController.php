@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Dto\CheckQuantityDto;
+use App\DTOs\CheckQuantityDto;
 use App\Enums\Status;
 use App\Events\ProductQuantityUpdater;
 use App\Http\Controllers\Controller;

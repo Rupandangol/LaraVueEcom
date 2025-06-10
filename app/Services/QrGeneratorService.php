@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dto\QrGeneratorDto;
+use App\DTOs\QrGeneratorDto;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrGeneratorService
