@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dto\CheckQuantityDto;
+use App\DTOs\CheckQuantityDto;
 use App\Models\Product;
 use Exception;
 

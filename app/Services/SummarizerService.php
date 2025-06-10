@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Dto\AiReponseDto;
+use App\DTOs\AiReponseDto;
 use GuzzleHttp\Client;
 
 class SummarizerService

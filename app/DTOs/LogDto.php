@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto;
+namespace App\DTOs;
 
 use App\Enums\LogLevel;
 use App\Enums\LogSource;
