@@ -6,6 +6,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property-read int $id
+ * @property-read string $total_price
+ * @property-read string|null $country   
+ * @property-read string|null $zone
+ * @property-read string|null $district  
+ * @property-read string|null $street   
+ * @property-read string|null $zip_code   
+ * @property-read string|null $status   
+ * @property-read string|null $created_at   
+ */
 class OrderResource extends JsonResource
 {
     /**

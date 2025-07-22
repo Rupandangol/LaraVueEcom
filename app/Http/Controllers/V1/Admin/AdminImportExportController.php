@@ -91,7 +91,7 @@ class AdminImportExportController extends Controller
                 DB::table('admins')->insert([
                     'name' => $row[0] ?? '',
                     'email' => $row[1] ?? '',
-                    'password' => $row[2] ?? $password ?? '',
+                    'password' => $row[2] ?? $password,
                     'created_at' => $nowDate,
                     'updated_at' => $nowDate,
                 ]);

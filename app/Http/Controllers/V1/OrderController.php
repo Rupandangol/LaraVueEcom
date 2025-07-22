@@ -64,7 +64,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Order created successfully',
-            'data' => ['order' => $order, 'orderDetails' => $orderItem],
+            'data' => ['order' => $order, 'orderDetails' => $orderItem ?? []],
         ], 200);
     }
 
@@ -108,9 +108,6 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request->all());
-        dd($request->product_id);
-
         Order::findOrFail($id)->delete();
         $orderData = $this->orderDataBind($request);
         $order = Order::create($orderData);
@@ -118,14 +115,13 @@ class OrderController extends Controller
             $orderDetailData = $this->orderDetailDataBind($order, $request, $key);
             $orderItem[] = OrderDetail::create($orderDetailData);
         }
-        dd($request->product_id);
         event(new ProductQuantityUpdater($request->product_id));
         $this->clearCartData();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Order Updated successfully',
-            'data' => ['order' => $order, 'orderDetails' => $orderItem],
+            'data' => ['order' => $order, 'orderDetails' => $orderItem ?? []],
         ], 200);
     }
 

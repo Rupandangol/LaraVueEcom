@@ -24,7 +24,7 @@ class PusherBroadcast implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, string>
      */
     public function broadcastOn(): array
     {

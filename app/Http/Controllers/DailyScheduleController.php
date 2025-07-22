@@ -126,7 +126,7 @@ class DailyScheduleController extends Controller
             if (! $dailySchedule) {
                 throw new Exception('No daily schedule found', 404);
             }
-            $dailySchedule::update($validated);
+            $dailySchedule->update($validated);
 
             return response()->json([
                 'status' => 'success',

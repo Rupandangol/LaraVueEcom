@@ -18,7 +18,7 @@ class BlogController extends Controller
     public function index()
     {
         try {
-            $blog = Blog::paginate()->load(['blogCategory']);
+            $blog = Blog::with(['blogCategory'])->paginate();
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

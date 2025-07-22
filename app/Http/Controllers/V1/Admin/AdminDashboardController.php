@@ -16,8 +16,8 @@ class AdminDashboardController extends Controller
      */
     public function __invoke()
     {
-        $userCount = User::all()->count();
-        $productCount = Product::all()->count();
+        $userCount = User::count();
+        $productCount = Product::count();
         $pendingOrderCount = Order::where('status', 'pending')->count();
         $deliveredOrderCount = Order::where('status', 'delivered')->count();
         $orderDate = DB::select(
