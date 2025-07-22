@@ -20,15 +20,15 @@ class TodoListController extends Controller
                 'message' => 'Unauthenticated',
             ], 401);
         }
-        if (request()->query('archive') == 1) {
-            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 1, 'admin_id' => $admin->id])->get();
+        if ((int)request()->query('archive') == 1) {
+            $todolist = TodoList::where(['is_archived' => 1, 'admin_id' => $admin->id])->get();
         } else {
-            $todolist = TodoList::where(['admin_id' => Auth::guard('admin')->user()->id, 'is_archived' => 0, 'admin_id' => $admin->id])
+            $todolist = TodoList::where(['is_archived' => 0, 'admin_id' => $admin->id])
                 ->orderBy('is_completed', 'asc')
                 ->orderBy('id', 'desc')
                 ->get();
         }
-        if (! $todolist) {
+        if ($todolist->isEmpty()) {
             throw new Exception('Not Found', 404);
         }
 
@@ -185,7 +185,7 @@ class TodoListController extends Controller
 
     public function export()
     {
-        $filename = 'todoList'.Carbon::now()->format('YmdHis');
+        $filename = 'todoList' . Carbon::now()->format('YmdHis');
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",

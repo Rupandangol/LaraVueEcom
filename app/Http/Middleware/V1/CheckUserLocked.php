@@ -16,7 +16,7 @@ class CheckUserLocked
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth('user')->user();
-        if ($user && $user->lock === 1) {
+        if ($user && $user->lock == 1) {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'You account is locked. Pls contact support!!',

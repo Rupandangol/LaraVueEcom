@@ -48,7 +48,7 @@ class RatingController extends Controller
                 ->groupBy('rating')
                 ->orderBy('total', 'desc')
                 ->get();
-            $reviews = (clone $query)->select('review')->orderBy('id', 'desc')->limit(1000)->get()->pluck('review')->implode('||');
+            $reviews = (clone $query)->select('review')->orderBy('id', 'desc')->limit(1000)->pluck('review')->implode('||');
             $summarize = Cache::remember('summarized_data_'.Carbon::now()->format('Ymd').'_'.md5($reviews), now()->addDay(), function () use ($reviews) {
                 return $this->summarizer_service->summarize($reviews);
             });

@@ -53,7 +53,7 @@ class LogController extends Controller
             $log = new LogDto(
                 level: LogLevel::ERROR,
                 message: $e->getMessage(),
-                context: $e->getLine(),
+                context: (string)$e->getLine(),
                 source: LogSource::API_GATEWAY
             );
             LogIngestJob::dispatch($log);

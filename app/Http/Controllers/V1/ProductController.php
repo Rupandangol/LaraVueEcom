@@ -36,7 +36,7 @@ class ProductController extends Controller
                 'category_id' => '',
             ];
         }
-        $products = Product::when(count($array_filter) > 0, function ($q) use ($array_filter) {
+        $products = Product::when(true, function ($q) use ($array_filter) {
             foreach ($array_filter as $column => $value) {
                 if ($column === 'category_id' && $value != '') {
                     $q->where($column, $value);
@@ -48,14 +48,14 @@ class ProductController extends Controller
                         $q->where($column, '>=', substr($priceData[0], 1));
                     }
                 } else {
-                    $q->where($column, 'LIKE', '%'.$value.'%');
+                    $q->where($column, 'LIKE', '%' . $value . '%');
                 }
             }
         })->with('category')->get();
-        if (! Cache::has('products_'.$array_filter['name'].'_'.$array_filter['price'].'_'.$array_filter['stock_quantity'].'_'.$array_filter['category_id'])) {
-            $productData = Cache::put('products_'.$array_filter['name'].'_'.$array_filter['price'].'_'.$array_filter['stock_quantity'].'_'.$array_filter['category_id'], $products, 100);
+        if (! Cache::has('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'])) {
+            $productData = Cache::put('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id'], $products, 100);
         }
-        $productData = Cache::get('products_'.$array_filter['name'].'_'.$array_filter['price'].'_'.$array_filter['stock_quantity'].'_'.$array_filter['category_id']);
+        $productData = Cache::get('products_' . $array_filter['name'] . '_' . $array_filter['price'] . '_' . $array_filter['stock_quantity'] . '_' . $array_filter['category_id']);
 
         return new ProductCollection($productData);
         // return new ProductCollection(Cache::remember('products', 10, function () {
@@ -74,10 +74,11 @@ class ProductController extends Controller
         $data['price'] = $request->price;
         $data['stock_quantity'] = $request->stock_quantity;
         if ($request->hasFile('image')) {
-            $imageName = time().'.'.$request->file('image')->extension();
+            $imageName = time() . '.' . $request->file('image')->extension();
             // $path = $request->file('image')->storeAs('public/images/', $imageName);
             $manager = new ImageManager(new Driver);
-            $img = $manager->read($request->file('image'))->resize(400, 300)->toJpeg(80)->save('storage/images/'.$imageName);
+            $img = $manager->read($request->file('image'))->resize(400, 300)->toJpeg(80);
+            $img->save('storage/images/' . $imageName);
             $data['image'] = $imageName;
         }
 
@@ -113,10 +114,11 @@ class ProductController extends Controller
         $data['stock_quantity'] = $request->stock_quantity;
         if ($request->hasFile('image')) {
             $this->removeImage($product->image);
-            $imageName = time().'.'.$request->file('image')->extension();
+            $imageName = time() . '.' . $request->file('image')->extension();
             // $path = $request->file('image')->storeAs('public/images/', $imageName);
             $manager = new ImageManager(new Driver);
-            $img = $manager->read($request->file('image'))->resize(400, 300)->toJpeg(80)->save('storage/images/'.$imageName);
+            $img = $manager->read($request->file('image'))->resize(400, 300)->toJpeg(80);
+            $img->save('storage/images/'.$imageName);
             $data['image'] = $imageName;
         }
 
@@ -158,7 +160,7 @@ class ProductController extends Controller
      */
     public function removeImage($imageName)
     {
-        $imagePath = 'storage/images/'.$imageName;
+        $imagePath = 'storage/images/' . $imageName;
         if (file_exists($imagePath)) {
             unlink($imagePath);
         }

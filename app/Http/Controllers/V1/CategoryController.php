@@ -26,17 +26,16 @@ class CategoryController extends Controller
                 'name' => '',
             ];
         }
-        $categories = Category::when(count($array_filters) > 0, function ($q) use ($array_filters) {
-            foreach ($array_filters as $column => $value) {
-                if ($value != '') {
-                    $q->where($column, 'LIKE', '%'.$value.'%');
-                }
-            }
-        })->with('products')->get();
-        if (! Cache::has('categories_'.$array_filters['name'])) {
-            $cachedData = Cache::put('categories_'.($array_filters['name'] ?? ''), $categories, 3);
+        $categories = Category::query()
+            ->when($array_filters['name'] !== '', function ($q) use ($array_filters) {
+                $q->where('name', 'LIKE', '%' . $array_filters['name'] . '%');
+            })
+            ->with('products')
+            ->get();
+        if (! Cache::has('categories_' . $array_filters['name'])) {
+            $cachedData = Cache::put('categories_' . ($array_filters['name'] ?? ''), $categories, 3);
         }
-        $cachedData = Cache::get('categories_'.($array_filters['name'] ?? ''));
+        $cachedData = Cache::get('categories_' . ($array_filters['name'] ?? ''));
 
         return new CategoryCollection($cachedData);
     }

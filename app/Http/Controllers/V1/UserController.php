@@ -26,7 +26,7 @@ class UserController extends Controller
                 'message' => 'Invalid Credentials',
             ], 401);
         }
-        if ($user->lock === 1) {
+        if ($user->lock == 1) {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Your account is locked. Pls contact support!!',

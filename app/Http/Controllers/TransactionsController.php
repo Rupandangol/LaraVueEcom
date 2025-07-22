@@ -21,18 +21,11 @@ class TransactionsController extends Controller
                     'message' => 'File doesnt exists',
                 ], 404);
             }
-            $uploaded = Excel::import(new TransactionImport, $file);
-            if ($uploaded) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Imported successfully',
-                ], 200);
-            }
-
+            Excel::import(new TransactionImport, $file);
             return response()->json([
-                'status' => 'error',
-                'message' => 'Something went wrong',
-            ], 500);
+                'status' => 'success',
+                'message' => 'Imported successfully',
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -57,7 +50,8 @@ class TransactionsController extends Controller
         $top_expenses = (clone $query)
             ->select('description', DB::raw('COUNT(*) as total'), DB::raw('SUM(debit) as total_spent'))
             ->groupBy('description')
-            ->orderByDesc('total_spent', 'total')
+            ->orderByDesc('total_spent')
+            ->orderByDesc('total')
             ->limit(5)
             ->get();
         $total = (clone $query)->count();
