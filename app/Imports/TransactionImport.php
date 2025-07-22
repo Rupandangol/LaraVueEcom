@@ -14,9 +14,8 @@ class TransactionImport implements ToModel, WithStartRow
     {
         return 10;
     }
+
     /**
-     * @param array $row
-     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function model(array $row)
@@ -30,7 +29,7 @@ class TransactionImport implements ToModel, WithStartRow
                 'credit' => $row[4],
                 'status' => $row[5],
                 'channel' => $row[7],
-                'admin_id' => $admin_id
+                'admin_id' => $admin_id,
             ]);
         }
     }

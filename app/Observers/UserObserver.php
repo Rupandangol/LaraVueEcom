@@ -6,8 +6,8 @@ use App\Models\User;
 
 class UserObserver
 {
-    public function created(User $user) 
+    public function created(User $user)
     {
-        session(['test'=>'test']);    
+        session(['test' => 'test']);
     }
 }

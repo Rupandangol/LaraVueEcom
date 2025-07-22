@@ -11,10 +11,11 @@ class Mood extends Model
     use HasFactory;
 
     protected $table = 'moods';
+
     protected $fillable = [
         'admin_id',
         'mood',
-        'note'
+        'note',
     ];
 
     public function admin(): BelongsTo

@@ -22,7 +22,7 @@ class RatingStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating'=>['required'],
+            'rating' => ['required'],
         ];
     }
 }

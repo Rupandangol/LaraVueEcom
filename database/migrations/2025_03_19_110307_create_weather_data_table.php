@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('weather_location_id');
             $table->timestamps();
 
-            $table->foreign('weather_location_id')->on('weather_locations')->references('id')->onDelete('cascade'); 
+            $table->foreign('weather_location_id')->on('weather_locations')->references('id')->onDelete('cascade');
         });
     }
 

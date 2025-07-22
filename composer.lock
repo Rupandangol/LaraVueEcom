@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c42adbd804e2bce3f76fe7c0a1a5800",
+    "content-hash": "62811f0ef6b9a9769ffbb425a768941e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5103,17 +5103,17 @@
             "time": "2025-06-11T04:19:00+00:00"
         },
         {
-            "name": "rupandangol/laravel-dto-maker",
+            "name": "rupandangol/laravel-class-maker",
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Rupandangol/Laravel-dto-maker.git",
-                "reference": "f9c8e603a14645949d2f430571df906e6248da79"
+                "url": "https://github.com/Rupandangol/Laravel-class-maker.git",
+                "reference": "8e27f2a258faf6bf19570f07e7d3513dc5af6268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Rupandangol/Laravel-dto-maker/zipball/f9c8e603a14645949d2f430571df906e6248da79",
-                "reference": "f9c8e603a14645949d2f430571df906e6248da79",
+                "url": "https://api.github.com/repos/Rupandangol/Laravel-class-maker/zipball/8e27f2a258faf6bf19570f07e7d3513dc5af6268",
+                "reference": "8e27f2a258faf6bf19570f07e7d3513dc5af6268",
                 "shasum": ""
             },
             "require": {
@@ -5125,13 +5125,13 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Rupandangol\\LaravelDtoMaker\\DtoMakerServiceProvider"
+                        "Rupandangol\\LaravelClassMaker\\ClassMakerServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Rupandangol\\LaravelDtoMaker\\": "src/"
+                    "Rupandangol\\LaravelClassMaker\\": "src/"
                 }
             },
             "license": [
@@ -5142,12 +5142,12 @@
                     "name": "rupan dangol"
                 }
             ],
-            "description": "Laravel helper to create Dto",
+            "description": "Laravel helper to create Class like service class, enum , trait, dto and so on",
             "support": {
-                "source": "https://github.com/Rupandangol/Laravel-dto-maker/tree/v1.0.1",
-                "issues": "https://github.com/Rupandangol/Laravel-dto-maker/issues"
+                "source": "https://github.com/Rupandangol/Laravel-class-maker/tree/v1.1.0",
+                "issues": "https://github.com/Rupandangol/Laravel-class-maker/issues"
             },
-            "time": "2025-06-10T06:31:50+00:00"
+            "time": "2025-06-11T07:25:41+00:00"
         },
         {
             "name": "simplesoftwareio/simple-qrcode",
@@ -10821,7 +10821,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "rupandangol/laravel-dto-maker": 20,
+        "rupandangol/laravel-class-maker": 20,
         "rupandangol/laravel-analytics-helper": 20
     },
     "prefer-stable": true,

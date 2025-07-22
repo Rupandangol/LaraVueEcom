@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Models\TodoList;
 use Carbon\Carbon;
 use Exception;
@@ -15,10 +14,10 @@ class TodoListController extends Controller
     public function index()
     {
         $admin = Auth::guard('admin')->user();
-        if (!$admin) {
+        if (! $admin) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unauthenticated'
+                'message' => 'Unauthenticated',
             ], 401);
         }
         if (request()->query('archive') == 1) {
@@ -29,13 +28,14 @@ class TodoListController extends Controller
                 ->orderBy('id', 'desc')
                 ->get();
         }
-        if (!$todolist) {
+        if (! $todolist) {
             throw new Exception('Not Found', 404);
         }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Fetched successfully',
-            'data' => $todolist->toArray()
+            'data' => $todolist->toArray(),
         ]);
     }
 
@@ -44,7 +44,7 @@ class TodoListController extends Controller
         DB::beginTransaction();
         try {
             $admin = Auth::guard('admin')->user();
-            if (!$admin) {
+            if (! $admin) {
                 throw new Exception('Unathenticated', 401);
             }
             $validated = $request->validate([
@@ -56,42 +56,46 @@ class TodoListController extends Controller
                 'task' => $validated['task'],
                 'description' => $validated['description'] ?? '',
                 'due_date' => $validated['due_date'] ?? null,
-                'admin_id' => $admin->id
+                'admin_id' => $admin->id,
             ]);
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Created succsfully',
-                'data' => $todo
+                'data' => $todo,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
+
     public function updateCompleted($id)
     {
         try {
             $admin = Auth::guard('admin')->user();
-            if (!$admin) {
+            if (! $admin) {
                 throw new Exception('Unathenticated', 401);
             }
             $todoItem = TodoList::where(['id' => $id])->first();
             $todoItem->update([
-                'is_completed' => $todoItem->is_completed ? 0 : 1
+                'is_completed' => $todoItem->is_completed ? 0 : 1,
             ]);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Updated Completed successfully',
-                'data' => $todoItem
+                'data' => $todoItem,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -101,31 +105,32 @@ class TodoListController extends Controller
         $validated = $request->validate([
             'task' => ['sometimes', 'string'],
             'description' => ['sometimes', 'nullable'],
-            'due_date' => ['sometimes', 'nullable', 'date']
+            'due_date' => ['sometimes', 'nullable', 'date'],
         ]);
         $auth = Auth::guard('admin')->user();
-        if (!$auth) {
+        if (! $auth) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Unathorized'
+                'message' => 'Unathorized',
             ], 401);
         }
         $todoItem = TodoList::where([
             'id' => $id,
-            'admin_id' => $auth->id
+            'admin_id' => $auth->id,
         ])->first();
-        if (!$todoItem) {
+        if (! $todoItem) {
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Not found'
+                'message' => 'Not found',
             ], 404);
         }
         $todoItem->update($validated);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Updated successfully',
-            'data' => $todoItem
+            'data' => $todoItem,
         ]);
     }
 
@@ -133,18 +138,19 @@ class TodoListController extends Controller
     {
         try {
             $todoItem = TodoList::where(['id' => $id])->first();
-            if (!$todoItem) {
+            if (! $todoItem) {
                 throw new Exception('Not found', 404);
             }
             $todoItem->delete();
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Deleted Successfully'
+                'message' => 'Deleted Successfully',
             ], 202);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -153,31 +159,33 @@ class TodoListController extends Controller
     {
         try {
             $admin = Auth::guard('admin')->user();
-            if (!$admin) {
+            if (! $admin) {
                 throw new Exception('Unathenticated', 401);
             }
             $todoItem = TodoList::where(['id' => $id, 'admin_id' => $admin->id])->first();
-            if (!$todoItem) {
+            if (! $todoItem) {
                 throw new Exception('Not found', 404);
             }
             $todoItem->update([
-                'is_archived' => $todoItem->is_archived ? 0 : 1
+                'is_archived' => $todoItem->is_archived ? 0 : 1,
             ]);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Archived successfully',
-                'data' => $todoItem
+                'data' => $todoItem,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
+
     public function export()
     {
-        $filename = 'todoList' . Carbon::now()->format('YmdHis');
+        $filename = 'todoList'.Carbon::now()->format('YmdHis');
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
@@ -185,6 +193,7 @@ class TodoListController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
+
         return response()->stream(function () {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, [

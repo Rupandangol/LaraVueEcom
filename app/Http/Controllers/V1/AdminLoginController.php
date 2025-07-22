@@ -7,23 +7,22 @@ use App\Http\Requests\V1\AdminLoginRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AdminLoginController extends Controller
 {
     public function login(AdminLoginRequest $request)
     {
         $admin = Admin::where('email', $request->email)->first();
-        if (!$admin || !Hash::check($request->password, $admin->password)) {
+        if (! $admin || ! Hash::check($request->password, $admin->password)) {
             return response()->json([
-                'status'=>'failed',
-                'message'=>'Invalid Credentials'
-            ],401);
+                'status' => 'failed',
+                'message' => 'Invalid Credentials',
+            ], 401);
         }
 
         return response()->json([
             'admin' => $admin,
-            'token' => $admin->createToken($request->email, ['role:admin'])->plainTextToken
+            'token' => $admin->createToken($request->email, ['role:admin'])->plainTextToken,
         ]);
     }
 
@@ -31,9 +30,10 @@ class AdminLoginController extends Controller
     {
 
         auth()->user()->tokens()->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Logout Successfully'
+            'message' => 'Logout Successfully',
         ], 200);
     }
 }

@@ -26,7 +26,7 @@ class AdminUpdateRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                'unique:admins,email,' . $this->route()->parameter('admin')
+                'unique:admins,email,'.$this->route()->parameter('admin'),
             ],
             'password' => ['required', 'min:4', 'max:10'],
         ];

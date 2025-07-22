@@ -3,31 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\AiReponseDto;
-use App\Models\AiResponse;
 use App\Services\AiResponseInserter;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class GeminiController extends Controller
 {
     protected $ai_response_inserter;
+
     public function __construct(AiResponseInserter $ai_response_inserter)
     {
         $this->ai_response_inserter = $ai_response_inserter;
     }
+
     public function ask(Request $request)
     {
         $validated = $request->validate([
-            'prompt' => 'required|string'
+            'prompt' => 'required|string',
         ]);
         try {
-            $client = new Client();
-            $response = $client->post(config('services.gemini.base_url'),  [
+            $client = new Client;
+            $response = $client->post(config('services.gemini.base_url'), [
                 'query' => [
-                    'key' => config('services.gemini.key')
+                    'key' => config('services.gemini.key'),
                 ],
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -36,12 +36,12 @@ class GeminiController extends Controller
                     'contents' => [
                         [
                             'parts' => [
-                                ['text' => $validated['prompt']]
-                            ]
-                        ]
-                    ]
+                                ['text' => $validated['prompt']],
+                            ],
+                        ],
+                    ],
                 ]),
-                'timeout' => 15
+                'timeout' => 15,
             ]);
             $data = json_decode($response->getBody(), true);
 
@@ -54,15 +54,14 @@ class GeminiController extends Controller
             );
             $this->ai_response_inserter->insert($ai_response_dto);
 
-
             return response()->json([
                 'status' => 'success',
-                'data' => $data['candidates'][0]['content']['parts'][0]['text']
+                'data' => $data['candidates'][0]['content']['parts'][0]['text'],
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -75,9 +74,9 @@ class GeminiController extends Controller
                 $query->where('admin_id', $request->get('admin_id'));
             }
             if ($request->filled('prompt')) {
-                $query->where('prompt', 'like', '%' . $request->get('prompt') . '%');
+                $query->where('prompt', 'like', '%'.$request->get('prompt').'%');
             }
-            //top prompt
+            // top prompt
 
             $top_prompt = (clone $query)
                 ->select('prompt', DB::raw('COUNT(*) as total'))
@@ -92,19 +91,19 @@ class GeminiController extends Controller
                 'data' => [
                     'top_prompt' => $top_prompt,
                     'ai_responses' => $query->paginate(10),
-                ]
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }
 
     public function export()
     {
-        $filename = 'ai_response' . Carbon::now()->format('YmdHis');
+        $filename = 'ai_response'.Carbon::now()->format('YmdHis');
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
@@ -112,10 +111,11 @@ class GeminiController extends Controller
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Expires' => '0',
         ];
+
         return response()->stream(function () {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, [
-                'Ai Reponse Table'
+                'Ai Reponse Table',
             ]);
             $header = [
                 'id',
@@ -126,7 +126,7 @@ class GeminiController extends Controller
                 'token_used',
                 'request_id',
                 'status_code',
-                'time'
+                'time',
             ];
 
             fputcsv($handle, $header);

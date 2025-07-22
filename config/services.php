@@ -33,7 +33,7 @@ return [
 
     'gemini' => [
         'key' => env('GEMINI_KEY'),
-        'base_url'=>'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+        'base_url' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
     ],
 
 ];

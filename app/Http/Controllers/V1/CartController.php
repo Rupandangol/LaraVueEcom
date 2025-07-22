@@ -7,7 +7,6 @@ use App\Http\Requests\V1\CartStoreRequest;
 use App\Http\Requests\V1\CartUpdateRequest;
 use App\Http\Resources\V1\CartCollection;
 use App\Models\Cart;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -18,6 +17,7 @@ class CartController extends Controller
     public function index()
     {
         $userId = Auth::user()->id;
+
         return new CartCollection(Cart::with('products')->where('user_id', $userId)->get());
     }
 
@@ -28,7 +28,6 @@ class CartController extends Controller
     {
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
-
 
         $cart = Cart::where([
             'product_id' => $request->product_id,
@@ -42,9 +41,9 @@ class CartController extends Controller
         } else {
             $cart = Cart::create($data);
         }
+
         return $cart;
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -58,9 +57,10 @@ class CartController extends Controller
         $data = $request->all();
         $data['user_id'] = $userId;
         $cartItem->update($data);
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Updated Successfully'
+            'message' => 'Updated Successfully',
         ], 200);
     }
 
@@ -70,9 +70,10 @@ class CartController extends Controller
     public function destroy(string $id)
     {
         $cartItem = Cart::findOrFail($id)->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully',
         ], 200);
     }
 
@@ -83,9 +84,10 @@ class CartController extends Controller
     {
         $user_id = Auth::user()->id;
         $count = Cart::where('user_id', $user_id)->count();
+
         return response()->json([
             'status' => 'success',
-            'count' => $count
+            'count' => $count,
         ], 200);
     }
 }

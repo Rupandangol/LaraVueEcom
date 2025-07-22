@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\WeatherData;
 use App\Models\WeatherLocation;
 use Carbon\Carbon;
-use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,22 +17,22 @@ class WeatherController extends Controller
     {
         DB::beginTransaction();
         try {
-            if (!WeatherData::whereDate('weather_date_time', '=', Carbon::now(self::myTimezone)->format('Y-m-d'))->exists()) {
+            if (! WeatherData::whereDate('weather_date_time', '=', Carbon::now(self::myTimezone)->format('Y-m-d'))->exists()) {
 
-                $client = new Client();
+                $client = new Client;
                 try {
                     $response = $client->get(config('weather.base_url'), [
                         'query' => [
                             'key' => config('weather.api_key'),
                             'place_id' => $place_id,
-                        ]
+                        ],
                     ]);
                     $data = json_decode($response->getBody(), true);
                 } catch (\GuzzleHttp\Exception\ClientException $e) {
                     // Handle 4xx errors
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'API request failed: ' . $e->getResponse()->getBody()->getContents(),
+                        'message' => 'API request failed: '.$e->getResponse()->getBody()->getContents(),
                     ], $e->getCode());
                 } catch (\GuzzleHttp\Exception\RequestException $e) {
                     // Handle network errors
@@ -43,7 +42,7 @@ class WeatherController extends Controller
                     ], 500);
                 }
                 $weatherLocation = WeatherLocation::firstOrCreate([
-                    'timezone' => $data['timezone']
+                    'timezone' => $data['timezone'],
                 ], [
                     'lat' => $data['lat'],
                     'lon' => $data['lon'],
@@ -51,8 +50,8 @@ class WeatherController extends Controller
                     'elevation' => $data['elevation'],
                 ]);
                 foreach ($data['hourly']['data'] as $item) {
-                    if (!isset($item['date'], $item['weather'], $item['summary'], $item['temperature'])) {
-                        //do something later
+                    if (! isset($item['date'], $item['weather'], $item['summary'], $item['temperature'])) {
+                        // do something later
                     }
 
                     WeatherData::firstOrCreate([
@@ -73,6 +72,7 @@ class WeatherController extends Controller
             }
             DB::commit();
             $weatherLocationData = WeatherLocation::where('timezone', self::myTimezone)->first();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched Successfullly',
@@ -82,10 +82,11 @@ class WeatherController extends Controller
                         ->where('weather_date_time', '<=', Carbon::now(self::myTimezone)->format('Y-m-d H:i:s'))
                         ->orderBy('id', 'desc')
                         ->first(),
-                ]
+                ],
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -95,13 +96,12 @@ class WeatherController extends Controller
 
     public function getPlaceId() {}
 
-
     public function weatherAnalytics(Request $request)
     {
-        //total_weather_count
-        //top_3_weather
-        //top_3_temperature
-        //top_3_wind_speed
+        // total_weather_count
+        // top_3_weather
+        // top_3_temperature
+        // top_3_wind_speed
 
         $query = WeatherData::query();
         if ($request->filled('weather')) {
@@ -154,8 +154,8 @@ class WeatherController extends Controller
                 'top_weather' => $top_weather,
                 'top_temperature' => $top_temperature,
                 'top_wind_speed' => $top_wind_speed,
-                'data' => $data->latest('id')->paginate(10)
-            ]
+                'data' => $data->latest('id')->paginate(10),
+            ],
         ]);
     }
 }

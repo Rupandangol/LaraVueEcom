@@ -19,10 +19,10 @@ class OrderDetailFactory extends Factory
     public function definition(): array
     {
         return [
-            'order_id'=>$this->faker->randomElement(Order::pluck('id')),
-            'product_id'=>$this->faker->randomElement(Product::pluck('id')),
-            'quantity'=>$this->faker->randomDigit(),
-            'price'=>$this->faker->randomDigitNotZero()
+            'order_id' => $this->faker->randomElement(Order::pluck('id')),
+            'product_id' => $this->faker->randomElement(Product::pluck('id')),
+            'quantity' => $this->faker->randomDigit(),
+            'price' => $this->faker->randomDigitNotZero(),
         ];
     }
 }

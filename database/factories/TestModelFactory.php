@@ -17,10 +17,10 @@ class TestModelFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=>fake()->name(),
-            'age'=>fake()->numberBetween(),
-            'address'=>fake()->address(),
-            'phone'=>fake()->phoneNumber()
+            'name' => fake()->name(),
+            'age' => fake()->numberBetween(),
+            'address' => fake()->address(),
+            'phone' => fake()->phoneNumber(),
         ];
     }
 }

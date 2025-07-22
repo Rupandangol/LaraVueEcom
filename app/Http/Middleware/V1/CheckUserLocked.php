@@ -19,7 +19,7 @@ class CheckUserLocked
         if ($user && $user->lock === 1) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'You account is locked. Pls contact support!!'
+                'message' => 'You account is locked. Pls contact support!!',
             ], 403);
         }
 

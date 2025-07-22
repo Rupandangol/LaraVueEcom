@@ -8,6 +8,7 @@ namespace App\Docs;
  *         version="1.0.0",
  *         description="API documentation with Sanctum Bearer token authentication"
  *     ),
+ *
  *     @OA\SecurityScheme(
  *         securityScheme="bearerAuth",
  *         type="http",

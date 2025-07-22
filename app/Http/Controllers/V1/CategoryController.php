@@ -8,9 +8,8 @@ use App\Http\Requests\V1\CategoryUpdateRequest;
 use App\Http\Resources\V1\CategoryCollection;
 use App\Http\Resources\V1\CategoryResource;
 use App\Models\Category;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -20,24 +19,25 @@ class CategoryController extends Controller
     public function index()
     {
         $array_filters = request()->only([
-            'name'
+            'name',
         ]);
         if (count($array_filters) == 0) {
             $array_filters = [
-                'name' => ''
+                'name' => '',
             ];
         }
         $categories = Category::when(count($array_filters) > 0, function ($q) use ($array_filters) {
             foreach ($array_filters as $column => $value) {
                 if ($value != '') {
-                    $q->where($column, 'LIKE', '%' . $value . '%');
+                    $q->where($column, 'LIKE', '%'.$value.'%');
                 }
             }
         })->with('products')->get();
-        if (!Cache::has('categories_' . $array_filters['name'])) {
-            $cachedData = Cache::put('categories_' . ($array_filters['name'] ?? ''), $categories, 3);
+        if (! Cache::has('categories_'.$array_filters['name'])) {
+            $cachedData = Cache::put('categories_'.($array_filters['name'] ?? ''), $categories, 3);
         }
-        $cachedData = Cache::get('categories_' . ($array_filters['name'] ?? ''));
+        $cachedData = Cache::get('categories_'.($array_filters['name'] ?? ''));
+
         return new CategoryCollection($cachedData);
     }
 
@@ -49,6 +49,7 @@ class CategoryController extends Controller
         $data['name'] = $request->name;
         $data['description'] = $request->description;
         $data['slug'] = Str::of($request->name)->slug('-');
+
         return Category::create($data);
     }
 
@@ -68,6 +69,7 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, string $id)
     {
         $category = Category::findOrFail($id);
+
         return $category->update($request->all());
     }
 
@@ -77,9 +79,10 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         Category::findOrFail($id)->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully',
         ], 200);
     }
 }

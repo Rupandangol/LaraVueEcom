@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\DTOs\CheckQuantityDto;
+use App\Enums\ProductQuantityType;
 use App\Enums\Status;
+use App\Events\OrderPlacedNotificationAdminSideEvent;
 use App\Events\ProductQuantityUpdater;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\OrderStoreRequest;
@@ -12,20 +14,12 @@ use App\Http\Resources\V1\OrderResource;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use App\Models\ShippingAddress;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use App\Enums\ProductQuantityType;
-use App\Events\OrderPlacedNotificationAdminSideEvent;
 use App\Models\Product;
-use App\Models\User;
-use App\Notifications\OrderPlacedNotification;
+use App\Models\ShippingAddress;
 use App\Services\CheckProductQuantity;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
-use function PHPSTORM_META\map;
 
 class OrderController extends Controller
 {
@@ -36,6 +30,7 @@ class OrderController extends Controller
     {
         $userId = Auth::user()->id;
         $orders = Order::with('orderDetails')->where('user_id', $userId)->get();
+
         return new OrderCollection($orders);
     }
 
@@ -53,10 +48,11 @@ class OrderController extends Controller
                 $orderItem[] = OrderDetail::create($orderDetailData);
             } else {
                 DB::rollBack();
+
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Order Failed',
-                    'data' => ['error product' => $item]
+                    'data' => ['error product' => $item],
                 ], 200);
             }
         }
@@ -68,7 +64,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Order created successfully',
-            'data' => ['order' => $order, 'orderDetails' => $orderItem]
+            'data' => ['order' => $order, 'orderDetails' => $orderItem],
         ], 200);
     }
 
@@ -82,9 +78,10 @@ class OrderController extends Controller
             $array[] = [
                 'product_id' => $item,
                 'quantity' => $quantities[$key],
-                'type' => ProductQuantityType::TYPE_DECREMENT
+                'type' => ProductQuantityType::TYPE_DECREMENT,
             ];
         }
+
         return $array;
     }
 
@@ -94,6 +91,7 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order = Order::with('orderDetails')->findOrFail($id);
+
         return new OrderResource($order);
     }
 
@@ -123,12 +121,14 @@ class OrderController extends Controller
         dd($request->product_id);
         event(new ProductQuantityUpdater($request->product_id));
         $this->clearCartData();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Order Updated successfully',
-            'data' => ['order' => $order, 'orderDetails' => $orderItem]
+            'data' => ['order' => $order, 'orderDetails' => $orderItem],
         ], 200);
     }
+
     /**
      * Update Order status
      */
@@ -143,15 +143,16 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         $order = Order::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
-        if (!$order) {
+        if (! $order) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Not Authorized'
+                'message' => 'Not Authorized',
             ], 401);
         }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully',
         ], 200);
     }
 
@@ -169,8 +170,10 @@ class OrderController extends Controller
             'zip_code' => $shippingAddress->zip_code,
             'status' => Status::PENDING,
         ];
+
         return $data;
     }
+
     public function orderDetailDataBind($order, $request, $key): array
     {
         $data = [
@@ -179,6 +182,7 @@ class OrderController extends Controller
             'quantity' => $request->quantity[$key],
             'price' => $request->price[$key],
         ];
+
         return $data;
     }
 

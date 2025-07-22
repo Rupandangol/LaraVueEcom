@@ -5,24 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderDetail extends Model
 {
     use HasFactory;
-    protected $table='order_details';
-    protected $fillable=[
+
+    protected $table = 'order_details';
+
+    protected $fillable = [
         'order_id',
         'product_id',
         'quantity',
         'price',
     ];
 
-    public function order() : BelongsTo {
-        return $this->belongsTo(Order::class,'id','order_id');
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'id', 'order_id');
     }
-    
-    public function product() : BelongsTo {
-        return $this->belongsTo(Product::class,'product_id','id');
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

@@ -11,9 +11,10 @@ class PublicMessageController extends Controller
     public function index()
     {
         $message = Message::with('users')->get();
+
         return response()->json([
             'status' => 'success',
-            'data' => $message
+            'data' => $message,
         ]);
     }
 
@@ -31,7 +32,7 @@ class PublicMessageController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $message
+            'data' => $message,
         ]);
     }
 }

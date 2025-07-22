@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class RedditQuoteController extends Controller
 {
@@ -12,9 +10,9 @@ class RedditQuoteController extends Controller
 
     public function test()
     {
-       $client=new Client();
-       $response=$client->get($this->link);
-       
-       dd(json_decode($response->getBody()->getContents()));
+        $client = new Client;
+        $response = $client->get($this->link);
+
+        dd(json_decode($response->getBody()->getContents()));
     }
 }

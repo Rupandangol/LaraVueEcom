@@ -18,26 +18,26 @@ class AdminOrderController extends Controller
     public function index()
     {
         $array_filter = request()->only([
-            "name",
-            "status",
-            "country",
-            "zone",
-            "district",
-            "street",
-            "zip_code",
+            'name',
+            'status',
+            'country',
+            'zone',
+            'district',
+            'street',
+            'zip_code',
         ]);
 
         $orders = new OrderCollection(Order::whereHas('user', function ($q) use ($array_filter) {
             if ($array_filter['name'] != '') {
-                $q->where('name', 'LIKE', '%' . $array_filter['name'] . '%');
+                $q->where('name', 'LIKE', '%'.$array_filter['name'].'%');
             }
         })->when(count($array_filter) > 0, function ($q) use ($array_filter) {
             foreach ($array_filter as $column => $value) {
                 if ($column != 'name') {
-                    $q->where($column, 'LIKE', '%' . $value . '%');
+                    $q->where($column, 'LIKE', '%'.$value.'%');
                 }
             }
-        })->with(['orderDetails', 'user'])->orderBy('id','DESC')->get());
+        })->with(['orderDetails', 'user'])->orderBy('id', 'DESC')->get());
         foreach ($orders as &$item) {
             $total = 0;
             foreach ($item['orderDetails'] as $subItem) {
@@ -45,9 +45,10 @@ class AdminOrderController extends Controller
             }
             $item['total_price'] = $total;
         }
+
         return response()->json([
             'status' => 'success',
-            'data' => $orders
+            'data' => $orders,
         ], 200);
         // $orders = new OrderCollection(Order::with('orderDetails', 'user')->get());
         // foreach ($orders as &$item) {
@@ -93,9 +94,10 @@ class AdminOrderController extends Controller
     public function destroy(string $id)
     {
         Order::findOrFail($id)->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully',
         ], 200);
     }
 
@@ -109,9 +111,10 @@ class AdminOrderController extends Controller
             $order->update($request->all());
             broadcast(new OrderStatusBroadcastEvent($order));
         }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Updated Successfully'
+            'message' => 'Updated Successfully',
         ]);
     }
 }

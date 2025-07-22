@@ -5,15 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\BlogCreatedEvent;
 use App\Http\Requests\BlogStoreRequest;
 use App\Models\Blog;
-use App\Models\BlogCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use MatanYadaev\EloquentSpatial\Objects\Point;
-
-use function PHPSTORM_META\map;
-use function PHPUnit\Framework\isNull;
 
 class BlogController extends Controller
 {
@@ -27,12 +22,13 @@ class BlogController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
+
         return response()->json([
             'status' => 'success',
-            'data' => $blog
+            'data' => $blog,
         ]);
     }
 
@@ -49,13 +45,14 @@ class BlogController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully Created',
-            'data' => $blog->load(['user', 'blogCategory'])
+            'data' => $blog->load(['user', 'blogCategory']),
         ], 201);
     }
 
@@ -67,9 +64,10 @@ class BlogController extends Controller
             'blog_category_id' => $validatedData['blog_category_id'],
             'content' => $validatedData['content'],
             'written_from' => new Point($validatedData['latitude'], $validatedData['longitude']),
-            'user_id' => 3 // Add auth users for this later
+            'user_id' => 3, // Add auth users for this later
         ];
     }
+
     /**
      * Display the specified resource.
      */
@@ -84,13 +82,13 @@ class BlogController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $blog
+            'data' => $blog,
         ]);
     }
 
@@ -116,9 +114,10 @@ class BlogController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Deleted Successfully',
@@ -139,7 +138,7 @@ class BlogController extends Controller
                 $query->where('is_featured', $request->get('is_featured'));
             }
             if ($request->filled('title')) {
-                $query->where('title', 'like', '%' . $request->get('title') . '%');
+                $query->where('title', 'like', '%'.$request->get('title').'%');
             }
             if ($request->filled('user_id')) {
                 $query->where('user_id', $request->get('user_id'));
@@ -150,11 +149,11 @@ class BlogController extends Controller
             if ($request->filled('date')) {
                 $query->where('created_at', '>=', $request->get('date'));
             }
-            //total_count
-            //total_status_count
-            //top_title
-            //top_contributor
-            //top_category
+            // total_count
+            // total_status_count
+            // top_title
+            // top_contributor
+            // top_category
 
             $total_count = (clone $query)->count();
             $total_status_count = (clone $query)
@@ -177,8 +176,8 @@ class BlogController extends Controller
                 ->limit(3)
                 ->get();
             $top_category = (clone $query)
-                ->select('blog_category_id','blog_categories.blog_category', DB::raw('COUNT(*) as total'))
-                ->leftJoin('blog_categories','blogs.blog_category_id','=','blog_categories.id')
+                ->select('blog_category_id', 'blog_categories.blog_category', DB::raw('COUNT(*) as total'))
+                ->leftJoin('blog_categories', 'blogs.blog_category_id', '=', 'blog_categories.id')
                 ->groupBy('blog_category_id')
                 ->orderBy('total', 'desc')
                 ->limit(3)
@@ -193,13 +192,13 @@ class BlogController extends Controller
                     'top_contributor' => $top_contributor,
                     'top_category' => $top_category,
                     'top_title' => $top_title,
-                    'blog' => $query->orderBy('id', 'desc')->paginate(10)
-                ]
+                    'blog' => $query->orderBy('id', 'desc')->paginate(10),
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }

@@ -34,13 +34,13 @@ class AdminDashboardController extends Controller
             month;"
         );
         $orderStatusData = DB::select(
-            "SELECT  status,count(status) as total FROM orders
+            'SELECT  status,count(status) as total FROM orders
             GROUP BY status;
-             "
+             '
         );
 
-        $top5Products = DB::select("SELECT product_id, count(product_id) as ordered_count from order_details
-          group by product_id order by ordered_count desc limit 5;");
+        $top5Products = DB::select('SELECT product_id, count(product_id) as ordered_count from order_details
+          group by product_id order by ordered_count desc limit 5;');
 
         return response()->json([
             'userCount' => $userCount,
@@ -49,7 +49,7 @@ class AdminDashboardController extends Controller
             'deliveredOrderCount' => $deliveredOrderCount,
             'orderDate' => $orderDate,
             'orderStatusData' => $orderStatusData,
-            'top5Products'=>$top5Products,
+            'top5Products' => $top5Products,
         ]);
     }
 }

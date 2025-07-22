@@ -18,9 +18,9 @@ class MoodFactory extends Factory
     public function definition(): array
     {
         return [
-            'mood'=>$this->faker->randomElement(['happy','angry','sad','excited','tired']),
-            'note'=>$this->faker->paragraph(),
-            'admin_id'=>$this->faker->randomElement(Admin::pluck('id'))
+            'mood' => $this->faker->randomElement(['happy', 'angry', 'sad', 'excited', 'tired']),
+            'note' => $this->faker->paragraph(),
+            'admin_id' => $this->faker->randomElement(Admin::pluck('id')),
         ];
     }
 }

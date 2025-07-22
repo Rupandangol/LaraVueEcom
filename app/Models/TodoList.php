@@ -18,7 +18,7 @@ class TodoList extends Model
         'is_completed',
         'due_date',
         'admin_id',
-        'is_archived'
+        'is_archived',
     ];
 
     public function admin(): BelongsTo

@@ -18,7 +18,7 @@ class DailySchedule extends Model
         'is_all_day',
         'location',
         'status',
-        'admin_id'
+        'admin_id',
     ];
 
     public function admin()

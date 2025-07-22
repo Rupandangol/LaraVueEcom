@@ -3,14 +3,12 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use function PHPSTORM_META\map;
 
 class CategoriesEndpointsTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -19,10 +17,10 @@ class CategoriesEndpointsTest extends TestCase
         $category = [
             'name' => 'Test Category',
             'slug' => 'test-category',
-            'description' => 'Test Description'
+            'description' => 'Test Description',
         ];
-       $response= $this->json('post', '/api/V1/categories', $category);
+        $response = $this->json('post', '/api/V1/categories', $category);
 
-       $response->assertStatus(401);
+        $response->assertStatus(401);
     }
 }

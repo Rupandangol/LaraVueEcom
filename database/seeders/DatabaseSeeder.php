@@ -15,7 +15,6 @@ use App\Models\Product;
 use App\Models\Rating;
 use App\Models\TestModel;
 use App\Models\User;
-use Database\Factories\TestModelFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -38,7 +37,7 @@ class DatabaseSeeder extends Seeder
         Admin::factory(10)->create();
         $this->call([
             UserSeeder::class,
-            AdminSeeder::class
+            AdminSeeder::class,
         ]);
         Category::factory(50)->create();
         Product::factory(1000)->create();

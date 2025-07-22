@@ -20,16 +20,16 @@ class UserController extends Controller
     public function login(UserLoginRequest $request)
     {
         $user = User::where(['email' => $request->email])->first();
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Invalid Credentials'
+                'message' => 'Invalid Credentials',
             ], 401);
         }
         if ($user->lock === 1) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Your account is locked. Pls contact support!!'
+                'message' => 'Your account is locked. Pls contact support!!',
             ], 403);
         }
         $data['token'] = $user->createToken($request->email, ['role:user'])->plainTextToken;
@@ -37,10 +37,12 @@ class UserController extends Controller
         $response = [
             'status' => 'success',
             'message' => 'User Logged in Successfully',
-            'data' => $data
+            'data' => $data,
         ];
+
         return response()->json($response, 200);
     }
+
     public function register(RegisterUserRequest $request)
     {
         $user = User::create($request->all());
@@ -51,6 +53,7 @@ class UserController extends Controller
             'message' => 'User is created successfully.',
             'data' => $data,
         ];
+
         return response()->json($response, 201);
     }
 
@@ -58,9 +61,10 @@ class UserController extends Controller
     {
 
         auth()->user()->tokens()->delete();
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Logout Successfully'
+            'message' => 'Logout Successfully',
         ], 200);
     }
 
@@ -77,14 +81,15 @@ class UserController extends Controller
         }
         $arrayFilter = request()->only([
             'name',
-            'email'
+            'email',
         ]);
         $user = User::when(count($arrayFilter) > 0, function ($q) use ($arrayFilter) {
             foreach ($arrayFilter as $column => $item) {
-                $q->where($column, 'LIKE', '%' . $item . '%');
+                $q->where($column, 'LIKE', '%'.$item.'%');
             }
         })->orderBy($sort_field, $arraySort['sort_direction'])->paginate(50);
-        //need to implement pagination on frontend
+
+        // need to implement pagination on frontend
         return new UserCollection($user);
     }
 
@@ -93,26 +98,30 @@ class UserController extends Controller
         // return User::findOrFail($id);
         return new UserResource(User::findOrFail($id));
     }
+
     public function getUserData()
     {
         $user = Auth::user();
+
         // return User::findOrFail($id);
         return new UserResource($user);
     }
+
     public function update(UserUpdateRequest $request, string $id)
     {
         try {
             $user = User::findOrFail($id);
             $user->update($request->all());
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Updated Successfully',
-                'data' => $user
+                'data' => $user,
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -122,14 +131,15 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Successfully Deleted'
+                'message' => 'Successfully Deleted',
             ]);
         } catch (Exception $error) {
             return response()->json([
                 'status' => 'failed',
-                'message' => $error->getMessage()
+                'message' => $error->getMessage(),
             ]);
         }
     }
@@ -137,10 +147,10 @@ class UserController extends Controller
     public function updateFromUser(UserUpdateFromUserRequest $request, string $id)
     {
         $user = User::findOrFail($id);
-        if (!Hash::check($request->old_password, $user->password)) {
+        if (! Hash::check($request->old_password, $user->password)) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Incorrect Old Password'
+                'message' => 'Incorrect Old Password',
             ]);
         }
         $user->update([
@@ -148,9 +158,10 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ]);
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Updated Successfully'
+            'message' => 'Updated Successfully',
         ]);
     }
 }

@@ -104,8 +104,8 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
         Route::group(['prefix' => '/admin'], function () {
-            Route::post('/transaction/import', [TransactionsController::class,'import']);
-            Route::get('/transaction/analytics', [TransactionsController::class,'analytics']);
+            Route::post('/transaction/import', [TransactionsController::class, 'import']);
+            Route::get('/transaction/analytics', [TransactionsController::class, 'analytics']);
             Route::get('/data', GetAdminDataController::class);
             Route::get('/dashboard', AdminDashboardController::class);
             Route::patch('/{id}/status-orders/', [AdminOrderController::class, 'statusUpdate'])->name('api-admin-status-orders');

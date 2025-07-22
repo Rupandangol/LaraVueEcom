@@ -23,13 +23,13 @@ class MoodController extends Controller
         $moods = Mood::create([
             'mood' => $validated['mood'],
             'note' => $validated['note'] ?? '',
-            'admin_id' => Auth::guard('admin')->user()->id
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Mood created successfully',
-            'data' => $moods
+            'data' => $moods,
         ], 201);
     }
 
@@ -37,19 +37,20 @@ class MoodController extends Controller
     {
         try {
             $adminId = Auth::guard('admin')->user()->id;
-            if (!$adminId) {
+            if (! $adminId) {
                 throw new Exception('Unauthenticated', 401);
             }
             $latest = Mood::where(['admin_id' => $adminId])->orderBy('id', 'desc')->first();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched Successfully',
-                'data' => $latest
+                'data' => $latest,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -64,7 +65,7 @@ class MoodController extends Controller
             $query->where('admin_id', $request->get('admin'));
         }
         if ($request->filled('note')) {
-            $query->where('note', 'like', '%' . $request->get('note') . '%');
+            $query->where('note', 'like', '%'.$request->get('note').'%');
         }
         if ($request->filled('from_date')) {
             $query->where('created_at', '>=', $request->get('from_date'));
@@ -95,7 +96,7 @@ class MoodController extends Controller
                 'top_moods' => $top_moods,
                 'top_notes' => $top_notes,
                 'moods_data' => $moods_data,
-            ]
+            ],
         ]);
     }
 }

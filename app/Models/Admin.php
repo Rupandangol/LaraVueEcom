@@ -4,26 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
 class Admin extends Authenticatable
 {
-    use HasFactory,HasApiTokens;
+    use HasApiTokens,HasFactory;
 
     protected $table = 'admins';
 
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
     ];
 
     protected $casts = [
-        'password' => 'hashed'
+        'password' => 'hashed',
     ];
 
-    protected $hidden=[
-        'password'
+    protected $hidden = [
+        'password',
     ];
 }

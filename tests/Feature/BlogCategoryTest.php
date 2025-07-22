@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\BlogCategory;
-use Database\Factories\BlogCategoryFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BlogCategoryTest extends TestCase
@@ -36,7 +34,7 @@ class BlogCategoryTest extends TestCase
                     'time_of_creation',
                     'random',     // These are appended attributes
                     'blog_count', // These are appended attributes
-                ]
+                ],
             ],
             'status',
         ]);
@@ -47,7 +45,7 @@ class BlogCategoryTest extends TestCase
      */
     public function test_show_blog_category(): void
     {
-        $bc=BlogCategory::factory()->create();
+        $bc = BlogCategory::factory()->create();
         $response = $this->json('GET', '/api/blog-categories/'.$bc->id);
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -57,8 +55,8 @@ class BlogCategoryTest extends TestCase
                 'priority',
                 'description',
                 'blog_category',
-                'time_of_creation'
-            ]
+                'time_of_creation',
+            ],
         ]);
     }
 }

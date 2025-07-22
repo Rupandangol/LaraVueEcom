@@ -31,7 +31,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderPlacedNotificationAdminSideEvent::class => [
             OrderPlacedNotificationAdminSideListener::class,
-        ]
+        ],
     ];
 
     /**

@@ -16,6 +16,7 @@ class StripeController extends Controller
                 'success_url' => 'http://localhost/stripe/success',
                 'cancel_url' => 'http://localhost/stripe/cancel',
             ]);
+
         return response()->json(['url' => $checkout->url]);
     }
 }

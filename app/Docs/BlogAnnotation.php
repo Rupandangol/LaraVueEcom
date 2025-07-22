@@ -2,17 +2,20 @@
 
 namespace App\Docs;
 
-class BlogAnnotation 
+class BlogAnnotation
 {
     /**
      * @OA\Post(
      *     path="/api/blogs",
      *     summary="Create a new blog",
      *     tags={"Blogs"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="title",
      *                 type="string",
@@ -35,11 +38,14 @@ class BlogAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Blog successfully created",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="status",
      *                 type="string",
@@ -99,6 +105,7 @@ class BlogAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Invalid input"
@@ -111,6 +118,6 @@ class BlogAnnotation
      */
     public function store()
     {
-        //For Documentation
+        // For Documentation
     }
 }

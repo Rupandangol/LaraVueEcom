@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
  */
@@ -21,7 +22,7 @@ class CategoryFactory extends Factory
             'slug' => function (array $attribute) {
                 return Str::of($attribute['name'])->slug('-');
             },
-            'description' => $this->faker->paragraph()
+            'description' => $this->faker->paragraph(),
         ];
     }
 }

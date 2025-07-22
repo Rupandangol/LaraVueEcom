@@ -12,6 +12,7 @@ class QrGeneratorService
         $qr = base64_encode(QrCode::format($qrGeneratorDto->type)
             ->size($qrGeneratorDto->size)
             ->generate($qrGeneratorDto->url));
+
         return "data:image/{$qrGeneratorDto->type};base64,{$qr}";
     }
 }

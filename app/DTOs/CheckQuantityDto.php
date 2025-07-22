@@ -2,8 +2,6 @@
 
 namespace App\DTOs;
 
-use Ramsey\Uuid\Type\Integer;
-
 class CheckQuantityDto
 {
     public function __construct(

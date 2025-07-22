@@ -22,18 +22,18 @@ class OrderStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'total_price'=>['required'],
+            'total_price' => ['required'],
             // 'country'=>['required'],
             // 'zone'=>['required'],
             // 'district'=>['required'],
             // 'street'=>['required'],
             // 'zip_code'=>['required'],
-            'product_id'=>['required'],
-            'product_id.*'=>['required'],
-            'quantity'=>['required'],
-            'quantity.*'=>['required'],
-            'price'=>['required'],
-            'price.*'=>['required']
+            'product_id' => ['required'],
+            'product_id.*' => ['required'],
+            'quantity' => ['required'],
+            'quantity.*' => ['required'],
+            'price' => ['required'],
+            'price.*' => ['required'],
         ];
     }
 }

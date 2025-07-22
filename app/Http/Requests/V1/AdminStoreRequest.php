@@ -22,9 +22,9 @@ class AdminStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>['required'],
-            'email'=>['required','email','unique:admins,email'],
-            'password'=>['required','min:4','max:10']
+            'name' => ['required'],
+            'email' => ['required', 'email', 'unique:admins,email'],
+            'password' => ['required', 'min:4', 'max:10'],
         ];
     }
 }

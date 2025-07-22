@@ -15,9 +15,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->tokenCan('role:admin')){
+        if (auth()->user()->tokenCan('role:admin')) {
             return $next($request);
         }
-        return response()->json(["message"=>'Not Authorized'],401);
+
+        return response()->json(['message' => 'Not Authorized'], 401);
     }
 }
