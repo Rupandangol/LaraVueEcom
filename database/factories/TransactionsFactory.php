@@ -22,10 +22,11 @@ class TransactionsFactory extends Factory
 
         return [
             'date_time' => Carbon::now()->format('Y-m-d H:i:s'),
-            'description' => fake()->sentence(),
+            'description' => fake()->realText(),
             'debit' => fake()->randomElement([100, 200, 300, 1999, 2000]),
             'credit' => fake()->randomElement([100, 200, 300, 1999, 2000]),
             'status' => fake()->randomElement(['COMPLETE', 'REVERTED']),
+            'tag' => fake()->randomElement(['food', 'family_expenses', 'personal', 'sharing', 'bills']),
             'channel' => fake()->randomElement(['App', 'THIRDPARTY']),
             'admin_id' => $admin_id,
         ];

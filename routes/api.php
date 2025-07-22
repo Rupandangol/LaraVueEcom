@@ -104,6 +104,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
         Route::group(['prefix' => '/admin'], function () {
+            Route::get('/transaction/custom-search', [TransactionsController::class, 'customSearch']);
             Route::post('/transaction/import', [TransactionsController::class, 'import']);
             Route::get('/transaction/analytics', [TransactionsController::class, 'analytics']);
             Route::get('/data', GetAdminDataController::class);
