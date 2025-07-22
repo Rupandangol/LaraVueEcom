@@ -9,10 +9,10 @@ class TestModel extends Model
 {
     use HasFactory;
 
-    protected $fillables=[
+    protected $fillables = [
         'name',
         'age',
         'address',
-        'phone'
+        'phone',
     ];
 }

@@ -18,12 +18,12 @@ class ShippingAddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'=>$this->faker->randomElement(User::pluck('id')),
-            'country'=>$this->faker->country(),
-            'zone'=>$this->faker->word(),
-            'district'=>$this->faker->word(),
-            'street'=>$this->faker->streetAddress(),
-            'zip_code'=>$this->faker->numberBetween(1000,9999),
+            'user_id' => $this->faker->randomElement(User::pluck('id')),
+            'country' => $this->faker->country(),
+            'zone' => $this->faker->word(),
+            'district' => $this->faker->word(),
+            'street' => $this->faker->streetAddress(),
+            'zip_code' => $this->faker->numberBetween(1000, 9999),
         ];
     }
 }

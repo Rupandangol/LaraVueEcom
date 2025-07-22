@@ -4,8 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -15,6 +13,7 @@ class AdminDeletedBroadcastEvent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $data;
+
     /**
      * Create a new event instance.
      */
@@ -40,13 +39,12 @@ class AdminDeletedBroadcastEvent implements ShouldBroadcast
         return 'admin.deleted';
     }
 
-
     public function broadcastWith(): array
     {
         return [
             'name' => $this->data['name'],
             'email' => $this->data['email'],
-            'deleted_by'=>$this->data['deleted_by']
+            'deleted_by' => $this->data['deleted_by'],
         ];
     }
 }

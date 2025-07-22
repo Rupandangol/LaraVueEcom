@@ -14,6 +14,6 @@ class WeatherLocation extends Model
         'lon',
         'units',
         'timezone',
-        'elevation'
+        'elevation',
     ];
 }

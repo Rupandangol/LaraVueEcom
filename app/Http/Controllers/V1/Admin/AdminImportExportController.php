@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +14,14 @@ class AdminImportExportController extends Controller
         'id',
         'name',
         'email',
-        'created_at'
+        'created_at',
     ];
+
     public function export()
     {
         try {
-            $filename = 'admin' . Carbon::now()->format('YmdHis') . '.csv';
+            $filename = 'admin'.Carbon::now()->format('YmdHis').'.csv';
+
             return response()->stream(function () {
                 $handle = fopen('php://output', 'w');
                 fputcsv($handle, $this->header, ',');
@@ -28,7 +29,7 @@ class AdminImportExportController extends Controller
                 fclose($handle);
             }, 200, [
                 'Content-Type' => 'text/csv',
-                'Content-Disposition' => "attachment; filename=\"$filename\""
+                'Content-Disposition' => "attachment; filename=\"$filename\"",
             ]);
         } catch (\Exception $e) {
         }
@@ -51,10 +52,10 @@ class AdminImportExportController extends Controller
     public function import(Request $request)
     {
         $filepath = public_path('log/admins.csv');
-        if (!file_exists($filepath)) {
+        if (! file_exists($filepath)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'File Not found'
+                'message' => 'File Not found',
             ], 404);
         }
         $handle = fopen($filepath, 'r');
@@ -72,17 +73,19 @@ class AdminImportExportController extends Controller
                     if ($DataOrientation != array_map('strtolower', $row)) {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'Column field or Orientation invalid, needs to be name,email'
+                            'message' => 'Column field or Orientation invalid, needs to be name,email',
                         ]);
                     }
+
                     continue;
                 }
                 if (DB::table('admins')->where('name', $row[0])->orWhere('email', $row[1])->first()) {
                     $badRow[] = [
                         'name' => $row[0],
                         'email' => $row[1],
-                        'remark' => 'Already Exists'
+                        'remark' => 'Already Exists',
                     ];
+
                     continue;
                 }
                 DB::table('admins')->insert([
@@ -94,16 +97,18 @@ class AdminImportExportController extends Controller
                 ]);
             }
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'import successful',
-                'error_row' => $badRow
+                'error_row' => $badRow,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         } finally {
             if (is_resource($handle)) {

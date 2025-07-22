@@ -8,7 +8,6 @@ use Exception;
 
 class CheckProductQuantity
 {
-
     public static function check(CheckQuantityDto $checkQuantityDto)
     {
         try {
@@ -18,6 +17,7 @@ class CheckProductQuantity
             }
         } catch (Exception $e) {
         }
+
         return false;
     }
 }

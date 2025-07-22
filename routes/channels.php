@@ -4,7 +4,6 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 // Route::post('/api/broadcasting/auth', function () {
 //     return Broadcast::auth(request());
 // });
@@ -31,17 +29,17 @@ Broadcast::channel('blog-created', function () {
 Broadcast::channel('public-chat', function () {
     return true;
 });
-Broadcast::channel('order.status.{userId}', function (User $user,int $userId) {
-    return (int)$user->id === (int)$userId;
-},['guards'=>['sanctum']]);
+Broadcast::channel('order.status.{userId}', function (User $user, int $userId) {
+    return (int) $user->id === (int) $userId;
+}, ['guards' => ['sanctum']]);
 
 Broadcast::channel('public-chat', function (User $user) {
     return true;
-},['guards'=>['sanctum']]);
+}, ['guards' => ['sanctum']]);
 
 Broadcast::channel('public-chat-whisper', function (User $user) {
     return true;
-},['guards'=>['sanctum']]);
+}, ['guards' => ['sanctum']]);
 
 // Broadcast::channel('order.placed', function (Admin $admin) {
 //     dump($admin);

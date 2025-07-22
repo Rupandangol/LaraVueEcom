@@ -6,7 +6,6 @@ use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
@@ -14,7 +13,9 @@ use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 class Blog extends Model
 {
     use HasFactory, HasSpatial;
+
     protected $table = 'blogs';
+
     protected $fillable = [
         'user_id',
         'title',
@@ -24,19 +25,21 @@ class Blog extends Model
         'content',
         'written_from',
         'comment_enabled',
-        'is_featured'
+        'is_featured',
     ];
+
     protected $hidden = [
         'blog_category_id',
         'updated_at',
-        'created_at'
+        'created_at',
     ];
 
     protected $casts = [
-        'written_from' => Point::class
+        'written_from' => Point::class,
     ];
+
     protected $appends = [
-        'test_money'
+        'test_money',
     ];
 
     public function getTitleAttribute($value)
@@ -58,6 +61,7 @@ class Blog extends Model
     {
         return $query->where(['id' => $id, 'slug' => $slug]);
     }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

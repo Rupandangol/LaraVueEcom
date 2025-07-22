@@ -16,10 +16,10 @@ class LogAnalyticsController extends Controller
             $query->where('level', $request->get('level'));
         }
         if ($request->filled('message')) {
-            $query->where('message', 'like', '%' . $request->get('message') . '%');
+            $query->where('message', 'like', '%'.$request->get('message').'%');
         }
         if ($request->filled('context')) {
-            $query->where('context', 'like', '%' . $request->get('context') . '%');
+            $query->where('context', 'like', '%'.$request->get('context').'%');
         }
         if ($request->filled('source')) {
             $query->where('source', $request->get('source'));
@@ -30,7 +30,7 @@ class LogAnalyticsController extends Controller
 
         $logs = $query;
         $log_count = (clone $query)->count();
-        $top_messages =(clone $query)
+        $top_messages = (clone $query)
             ->select('message', DB::raw('count(*) as total'))
             ->groupBy('message')
             ->orderByDesc('total')
@@ -44,8 +44,8 @@ class LogAnalyticsController extends Controller
             ->get();
 
         $errors_over_time = (clone $query)
-            ->select(DB::raw("DATE(created_at) as date"), DB::raw('count(*) as total'))
-            ->groupBy(DB::raw("DATE(created_at)"))
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as total'))
+            ->groupBy(DB::raw('DATE(created_at)'))
             ->orderBy('total', 'desc')
             ->limit(10)
             ->get();
@@ -59,7 +59,7 @@ class LogAnalyticsController extends Controller
                 'errors_over_time' => $errors_over_time,
                 'top_messages' => $top_messages,
                 'logs' => $logs->latest()->paginate(10),
-            ]
+            ],
         ]);
     }
 }

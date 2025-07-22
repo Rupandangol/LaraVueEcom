@@ -13,13 +13,14 @@ class Product extends Model
     use HasFactory;
 
     protected $table = 'products';
+
     protected $fillable = [
         'name',
         'description',
         'price',
         'stock_quantity',
         'category_id',
-        'image'
+        'image',
     ];
 
     public function category(): BelongsTo
@@ -34,6 +35,6 @@ class Product extends Model
 
     public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class,'product_id','id');
+        return $this->hasMany(OrderDetail::class, 'product_id', 'id');
     }
 }

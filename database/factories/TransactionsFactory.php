@@ -19,6 +19,7 @@ class TransactionsFactory extends Factory
     public function definition(): array
     {
         $admin_id = Admin::take(1)->first();
+
         return [
             'date_time' => Carbon::now()->format('Y-m-d H:i:s'),
             'description' => fake()->sentence(),
@@ -26,7 +27,7 @@ class TransactionsFactory extends Factory
             'credit' => fake()->randomElement([100, 200, 300, 1999, 2000]),
             'status' => fake()->randomElement(['COMPLETE', 'REVERTED']),
             'channel' => fake()->randomElement(['App', 'THIRDPARTY']),
-            'admin_id' => $admin_id
+            'admin_id' => $admin_id,
         ];
     }
 }

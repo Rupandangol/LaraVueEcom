@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('status', [
                 'enable',
-                'disable'
+                'disable',
             ]);
             $table->integer('priority');
             $table->text('description');

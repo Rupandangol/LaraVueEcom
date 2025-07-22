@@ -47,7 +47,8 @@ class ProductObserver
         $this->cacheClearProduct();
     }
 
-    protected function cacheClearProduct(){
+    protected function cacheClearProduct()
+    {
         Cache::flush();
         // Cache::forget('products');
     }

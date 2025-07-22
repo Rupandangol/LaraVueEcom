@@ -24,7 +24,7 @@ class OrderStatusUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'=>['required',Rule::enum(Status::class)]
+            'status' => ['required', Rule::enum(Status::class)],
         ];
     }
 }

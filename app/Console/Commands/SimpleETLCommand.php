@@ -6,8 +6,6 @@ use App\Models\AllUser;
 use App\Models\User;
 use Illuminate\Console\Command;
 
-use function PHPSTORM_META\map;
-
 class SimpleETLCommand extends Command
 {
     /**
@@ -48,12 +46,12 @@ class SimpleETLCommand extends Command
         foreach ($users as $key => $user) {
             $NewData[] = $this->separateName($user->name);
         }
-        $collection=collect($NewData);
+        $collection = collect($NewData);
         $this->table([
             'first_name',
-            'last_name'
+            'last_name',
         ], $collection);
-        if (!$this->confirm("Are you sure?")) {
+        if (! $this->confirm('Are you sure?')) {
             $this->output->info('Cancelled');
             exit;
         }
@@ -68,7 +66,7 @@ class SimpleETLCommand extends Command
         $this->info('Completed');
     }
 
-    private function separateName(String $name): array
+    private function separateName(string $name): array
     {
         $firstName = '';
         $lastName = '';
@@ -78,12 +76,13 @@ class SimpleETLCommand extends Command
             $lastName = $bName[1] ?? '';
         }
         if (count($bName) >= 3) {
-            $firstName = $bName[0] . ' ' . $bName[1];
+            $firstName = $bName[0].' '.$bName[1];
             array_splice($bName, 0, 2);
             foreach ($bName as $item) {
-                $lastName .= $item . ' ';
+                $lastName .= $item.' ';
             }
         }
+
         return ['first_name' => $firstName, 'last_name' => $lastName];
     }
 }

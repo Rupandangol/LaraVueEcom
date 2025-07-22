@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('status', [
                 'enable',
-                'disable'
+                'disable',
             ]);
             $table->boolean('comment_enabled')->default(1);
             $table->boolean('is_featured')->default(0);

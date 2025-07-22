@@ -29,9 +29,9 @@ class RatingFactory extends Factory
                 'Highly satisfied with my purchase',
                 'Not what I expected. Disappointed.',
                 "Poor quality, doesn't last.",
-                "Difficult to use, confusing instructions.",
-                "The product broke right after use.",
-                "Wouldn't recommend this product."
+                'Difficult to use, confusing instructions.',
+                'The product broke right after use.',
+                "Wouldn't recommend this product.",
             ]),
             'user_id' => $this->faker->randomElement(User::pluck('id')),
             'product_id' => $this->faker->randomElement(Product::pluck('id')),

@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\DailyScheduleStatus;
 use App\Models\DailySchedule;
 use Carbon\Carbon;
-use Database\Factories\DailyScheduleFactory;
 use Exception;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Enum;
@@ -28,7 +26,7 @@ class DailyScheduleController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'location' => 'required',
-            'date' => 'required'
+            'date' => 'required',
         ]);
         $validated['status'] = DailyScheduleStatus::PENDING;
         $validated['date'] = Carbon::parse($validated['date'])->format('Y-m-d');
@@ -49,36 +47,38 @@ class DailyScheduleController extends Controller
             if ($overlap) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'The specified time range overlaps with an existing schedule.'
+                    'message' => 'The specified time range overlaps with an existing schedule.',
                 ], 401);
             }
             DailySchedule::create($validated);
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Daily schedule updated'
+                'message' => 'Daily schedule updated',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
 
-    public function index(string $date = null)
+    public function index(?string $date = null)
     {
         try {
             $getdate = ($date != null) ? Carbon::parse($date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
             $dailySchedule = DailySchedule::wheredate('date', $getdate)->orderBy('start_time', 'asc')->get();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'fetched successfully',
-                'data' => $dailySchedule
+                'data' => $dailySchedule,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -88,28 +88,30 @@ class DailyScheduleController extends Controller
         $validated = $request->validate([
             'status' => [
                 'required',
-                new Enum(DailyScheduleStatus::class)
-            ]
+                new Enum(DailyScheduleStatus::class),
+            ],
         ]);
         try {
             $dailySchedule = DailySchedule::where(['id' => $id])->first();
-            if (!$dailySchedule) {
+            if (! $dailySchedule) {
                 throw new Exception('No Schedule Found', 404);
             }
             $dailySchedule->update([
-                'status' => $validated['status']
+                'status' => $validated['status'],
             ]);
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Updated Successfully'
+                'message' => 'Updated Successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
+
     public function update($id, Request $request)
     {
         $validated = $request->validate([
@@ -121,18 +123,19 @@ class DailyScheduleController extends Controller
         ]);
         try {
             $dailySchedule = DailySchedule::where(['id' => $id])->first();
-            if (!$dailySchedule) {
+            if (! $dailySchedule) {
                 throw new Exception('No daily schedule found', 404);
             }
             $dailySchedule::update($validated);
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Updated Successfully'
+                'message' => 'Updated Successfully',
             ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -142,10 +145,11 @@ class DailyScheduleController extends Controller
         try {
             $date = explode('-', $date);
             $task = DailySchedule::whereMonth('date', $date[1])->whereYear('date', $date[0])->get(['date', 'title']);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched successfullly',
-                'data' => $task->toArray()
+                'data' => $task->toArray(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -159,18 +163,19 @@ class DailyScheduleController extends Controller
     {
         try {
             $dailyTask = DailySchedule::where(['id' => $id])->first();
-            if (!$dailyTask) {
+            if (! $dailyTask) {
                 throw new Exception('Not found', 404);
             }
             $dailyTask->delete();
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Deleted Successfully'
+                'message' => 'Deleted Successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -182,17 +187,17 @@ class DailyScheduleController extends Controller
             $query->whereDate('date', $request->date);
         }
         if ($request->filled('title')) {
-            $query->where('title', 'like', '%' . $request->title . '%');
+            $query->where('title', 'like', '%'.$request->title.'%');
         }
         if ($request->filled('description')) {
-            $query->where('description', 'like', '%' . $request->description . '%');
+            $query->where('description', 'like', '%'.$request->description.'%');
         }
         if ($request->filled('start_time')) {
             $query->where('start_time', '>=', $request->start_time);
         }
         if ($request->filled('end_time')) {
             $query->where('end_time', '<=', $request->end_time);
-    }
+        }
         if ($request->filled('is_all_day')) {
             $query->where('is_all_day', $request->is_all_day);
         }
@@ -211,8 +216,9 @@ class DailyScheduleController extends Controller
         $date_count = $this->getTotalCount((clone $query), 'date', 'desc', 10);
         $status_count = $this->getTotalCount((clone $query), 'status', 'desc');
         $is_all_day_count = $this->getTotalCount((clone $query), 'is_all_day', 'desc');
-        $location_count = $this->getTotalCount((clone $query), 'location', 'desc',5);
-        $time_count = $this->getTotalCount((clone $query), 'start_time', 'desc',5);
+        $location_count = $this->getTotalCount((clone $query), 'location', 'desc', 5);
+        $time_count = $this->getTotalCount((clone $query), 'start_time', 'desc', 5);
+
         return response()->json([
             'status' => 'success',
             'message' => 'fetch successfully',
@@ -224,8 +230,8 @@ class DailyScheduleController extends Controller
                 'date_count' => $date_count,
                 'location_count' => $location_count,
                 'time_count' => $time_count,
-                'dailySchedule' => $query->latest()->paginate(10)
-            ]
+                'dailySchedule' => $query->latest()->paginate(10),
+            ],
         ]);
     }
 
@@ -236,6 +242,7 @@ class DailyScheduleController extends Controller
             ->orderBy('total', $orderBy)
             ->limit($limit)
             ->get();
+
         return $total_count;
     }
 }

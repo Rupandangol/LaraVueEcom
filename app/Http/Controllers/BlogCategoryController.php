@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 
 class BlogCategoryController extends Controller
 {
@@ -17,7 +16,7 @@ class BlogCategoryController extends Controller
 
         return response()->json([
             'data' => $blogCategory,
-            'status' => 'success'
+            'status' => 'success',
         ], 200);
     }
 
@@ -47,13 +46,13 @@ class BlogCategoryController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $blogCategory
+            'data' => $blogCategory,
         ]);
     }
 

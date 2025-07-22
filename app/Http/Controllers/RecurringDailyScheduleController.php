@@ -16,15 +16,16 @@ class RecurringDailyScheduleController extends Controller
     {
         try {
             $rDailySchedule = RecurringDailySchedule::select('id', 'title', 'description')->orderBy('id', 'desc')->get();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Fetched recurring task successfully',
-                'data' => $rDailySchedule->toArray()
+                'data' => $rDailySchedule->toArray(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -33,7 +34,7 @@ class RecurringDailyScheduleController extends Controller
     {
         $validated = $request->validate([
             'recurring_id' => 'required',
-            'date'=>'required'
+            'date' => 'required',
         ]);
         try {
             $recurringDS = RecurringDailySchedule::where('id', $validated['recurring_id'])->first();
@@ -52,7 +53,7 @@ class RecurringDailyScheduleController extends Controller
             if ($overlap) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'The specified time range overlaps with an existing schedule.'
+                    'message' => 'The specified time range overlaps with an existing schedule.',
                 ], 401);
             }
             DailySchedule::create([
@@ -63,16 +64,17 @@ class RecurringDailyScheduleController extends Controller
                 'location' => $recurringDS['location'],
                 'status' => $recurringDS['status'],
                 'date' => Carbon::parse($validated['date'])->format('Y-m-d'),
-                'admin_id' => Auth::guard('admin')->user()->id
+                'admin_id' => Auth::guard('admin')->user()->id,
             ]);
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Daily schedule updated'
+                'message' => 'Daily schedule updated',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -84,35 +86,37 @@ class RecurringDailyScheduleController extends Controller
             'description' => 'required',
             'start_time' => 'required',
             'end_time' => 'required',
-            'location' => 'required'
+            'location' => 'required',
         ]);
         try {
             $validated['status'] = DailyScheduleStatus::PENDING;
             $validated['date'] = Carbon::now()->format('Y-m-d');
             RecurringDailySchedule::create($validated);
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Daily schedule updated'
+                'message' => 'Daily schedule updated',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
+
     public function delete($id)
     {
         try {
             $recurringDS = RecurringDailySchedule::where(['id' => $id])->first();
-            if (!$recurringDS) {
+            if (! $recurringDS) {
                 throw new Exception('Not found', 404);
             }
             $recurringDS->delete();
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }

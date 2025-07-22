@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class BlogCategory extends Model
@@ -20,21 +18,21 @@ class BlogCategory extends Model
         'blog_category',
         'status',
         'description',
-        'priority'
+        'priority',
     ];
 
     protected $hidden = [
         'id',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $appends = [
-        'time_of_creation'
+        'time_of_creation',
     ];
 
     protected $casts = [
-        'priority' => 'integer'
+        'priority' => 'integer',
     ];
 
     public function getRandomAttribute()

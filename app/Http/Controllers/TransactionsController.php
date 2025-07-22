@@ -7,9 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use PHPUnit\Framework\Constraint\Count;
-
-use function Laravel\Prompts\error;
 
 class TransactionsController extends Controller
 {
@@ -18,27 +15,28 @@ class TransactionsController extends Controller
         try {
             // $file = public_path('/log/Statement_2025-01-01_to_2025-03-01_2025-05-27_17_25_32.xls');
             $file = public_path('/log/statement1.xls');
-            if (!file_exists($file)) {
+            if (! file_exists($file)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'File doesnt exists'
+                    'message' => 'File doesnt exists',
                 ], 404);
             }
             $uploaded = Excel::import(new TransactionImport, $file);
             if ($uploaded) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Imported successfully'
+                    'message' => 'Imported successfully',
                 ], 200);
             }
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something went wrong'
+                'message' => 'Something went wrong',
             ], 500);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], $e->getCode());
         }
     }
@@ -50,7 +48,7 @@ class TransactionsController extends Controller
             $query->whereDate('date_time', $request->get('date'));
         }
         if ($request->filled('description')) {
-            $query->where('description', 'like', '%' . $request->get('description') . '%');
+            $query->where('description', 'like', '%'.$request->get('description').'%');
         }
         if ($request->filled('month')) {
             $query->whereYear('date_time', Carbon::parse($request->get('month'))->format('Y'))
@@ -81,6 +79,7 @@ class TransactionsController extends Controller
             ->groupBy('hour')
             ->orderBy('hour')
             ->get();
+
         return response()->json([
             'status' => 'success',
             'message' => 'fetched Successfully',
@@ -92,7 +91,7 @@ class TransactionsController extends Controller
                 'over_all_time_based_spendings' => $over_all_time_based_spendings,
                 'top_expenses' => $top_expenses,
                 'transactions' => $query->paginate(10)->appends($request->only(['description', 'date', 'month'])),
-            ]
+            ],
         ]);
     }
 }

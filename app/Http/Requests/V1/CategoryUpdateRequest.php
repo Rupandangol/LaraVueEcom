@@ -21,15 +21,15 @@ class CategoryUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if($this->method()=='PUT'){
+        if ($this->method() == 'PUT') {
             return [
-                'name'=>['required'],
-                'description'=>['required']
+                'name' => ['required'],
+                'description' => ['required'],
             ];
-        }else{
-            return[
-                'name'=>['sometimes','required'],
-                'description'=>['sometimes','required'],
+        } else {
+            return [
+                'name' => ['sometimes', 'required'],
+                'description' => ['sometimes', 'required'],
             ];
         }
     }

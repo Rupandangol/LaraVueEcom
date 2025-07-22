@@ -6,8 +6,6 @@ use App\Enums\ProductQuantityType;
 use App\Events\ProductQuantityUpdater;
 use App\Models\Product;
 use Exception;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class ProductQuantityUpdaterListener
 {
@@ -34,7 +32,7 @@ class ProductQuantityUpdaterListener
                     $newQuantity = $product['stock_quantity'] - $item['quantity'];
                 }
                 $product->update([
-                    'stock_quantity' => $newQuantity
+                    'stock_quantity' => $newQuantity,
                 ]);
             }
         } catch (Exception $e) {

@@ -9,7 +9,6 @@ use App\Http\Requests\V1\AdminUpdateRequest;
 use App\Http\Resources\V1\AdminCollection;
 use App\Http\Resources\V1\AdminResource;
 use App\Models\Admin;
-use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -20,15 +19,16 @@ class AdminController extends Controller
     {
         $array_filter = request()->only([
             'name',
-            'email'
+            'email',
         ]);
         $admin = Admin::when(count($array_filter) > 0, function ($query) use ($array_filter) {
             foreach ($array_filter as $column => $item) {
-                $query->where($column, 'LIKE', '%' . $item . '%');
+                $query->where($column, 'LIKE', '%'.$item.'%');
             }
         })->paginate();
+
         return new AdminCollection($admin);
-        // return new AdminCollection(Admin::paginate());   
+        // return new AdminCollection(Admin::paginate());
     }
 
     /**
@@ -53,6 +53,7 @@ class AdminController extends Controller
     public function update(AdminUpdateRequest $request, string $id)
     {
         $admin = Admin::findOrFail($id);
+
         return $admin->update($request->all());
     }
 
@@ -64,13 +65,14 @@ class AdminController extends Controller
         $oldadmin = [
             'name' => $admin->name,
             'email' => $admin->email,
-            'deleted_by' => auth()->guard('admin')->user()->name
+            'deleted_by' => auth()->guard('admin')->user()->name,
         ];
         $admin->delete();
         event(new AdminDeletedBroadcastEvent($oldadmin));
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully',
         ], 200);
     }
 }

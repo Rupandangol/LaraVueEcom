@@ -21,15 +21,15 @@ class CartUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if($this->method=='PUT'){
+        if ($this->method == 'PUT') {
             return [
-                'product_id'=>['required'],
-                'quantity'=>['required']
+                'product_id' => ['required'],
+                'quantity' => ['required'],
             ];
-        }else{
+        } else {
             return [
-                'product_id'=>['sometimes','required'],
-                'quantity'=>['sometimes','required']
+                'product_id' => ['sometimes', 'required'],
+                'quantity' => ['sometimes', 'required'],
             ];
         }
 

@@ -18,8 +18,9 @@ class AiResponseInserter
                 'model' => $data->model ?? null,
                 'tokens_used' => $data->tokens_used ?? null,
                 'status_code' => $data->status_code,
-                'admin_id' =>  $auth ? $auth->id : null
+                'admin_id' => $auth ? $auth->id : null,
             ]);
+
             return $ai_response;
         } catch (\Exception $e) {
         }

@@ -10,6 +10,7 @@ class ShippingAddress extends Model
     use HasFactory;
 
     protected $table = 'shipping_addresses';
+
     protected $fillable = [
         'user_id',
         'country',

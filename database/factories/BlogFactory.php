@@ -21,13 +21,14 @@ class BlogFactory extends Factory
     {
         $title = $this->faker->sentence();
         $slug = Str::slug($title);
+
         return [
             'title' => $title,
             'slug' => $slug,
-            'status' => $this->faker->randomElement(['enable','disable']),
+            'status' => $this->faker->randomElement(['enable', 'disable']),
             'content' => $this->faker->paragraph(),
             'user_id' => $this->faker->randomElement(User::pluck('id')),
-            'blog_category_id' => $this->faker->randomElement(BlogCategory::pluck('id'))
+            'blog_category_id' => $this->faker->randomElement(BlogCategory::pluck('id')),
         ];
     }
 }

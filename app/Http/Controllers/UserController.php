@@ -12,8 +12,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=User::paginate(50);
-        return view('Users.index',['users'=>$users]);
+        $users = User::paginate(50);
+
+        return view('Users.index', ['users' => $users]);
     }
 
     /**
@@ -45,8 +46,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user=User::findOrFail($id);
-        return view('Users.edit',['user'=>$user]);
+        $user = User::findOrFail($id);
+
+        return view('Users.edit', ['user' => $user]);
     }
 
     /**
@@ -54,16 +56,17 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator=$request->validate([
-            'name'=>'required',
-            'email'=>'required|email'
+        $validator = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
         ]);
-        $data=[
-            'name'=>$request->name,
-            'email'=>$request->email
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
         ];
-        $user=User::where(['id'=>$id])->update($data);
-        return redirect(route('users'))->with('success','Updated Successfully');
+        $user = User::where(['id' => $id])->update($data);
+
+        return redirect(route('users'))->with('success', 'Updated Successfully');
     }
 
     /**
@@ -71,8 +74,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user=User::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->back()->with('success','Deleted Successfully');
+
+        return redirect()->back()->with('success', 'Deleted Successfully');
     }
 }

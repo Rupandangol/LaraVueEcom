@@ -19,9 +19,9 @@ class CartFactory extends Factory
     public function definition(): array
     {
         return [
-            'product_id'=>$this->faker->randomElement(Product::pluck('id')),
-            'user_id'=>$this->faker->randomElement(User::pluck('id')),
-            'quantity'=>$this->faker->numberBetween(0,9)
+            'product_id' => $this->faker->randomElement(Product::pluck('id')),
+            'user_id' => $this->faker->randomElement(User::pluck('id')),
+            'quantity' => $this->faker->numberBetween(0, 9),
         ];
     }
 }

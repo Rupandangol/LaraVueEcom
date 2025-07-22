@@ -14,7 +14,7 @@ class LogController extends Controller
     public function exportLog()
     {
         try {
-            $filename = 'log_' . Carbon::now()->format('YmdHis') . '.csv';
+            $filename = 'log_'.Carbon::now()->format('YmdHis').'.csv';
             $headers = [
                 'Content-Type' => 'text/csv',
                 'Content-Disposition' => "attachment; filename=\"$filename\"",
@@ -22,6 +22,7 @@ class LogController extends Controller
                 'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
                 'Expires' => '0',
             ];
+
             return response()->stream(function () {
                 $handle = fopen('php://output', 'w');
                 fputcsv($handle, [
@@ -29,7 +30,7 @@ class LogController extends Controller
                     'level',
                     'message',
                     'context',
-                    'source'
+                    'source',
                 ]);
                 DB::table('logs')
                     ->select('id', 'level', 'message', 'context', 'source')
@@ -56,6 +57,7 @@ class LogController extends Controller
                 source: LogSource::API_GATEWAY
             );
             LogIngestJob::dispatch($log);
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),

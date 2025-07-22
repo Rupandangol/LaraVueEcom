@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/admin/{view}',BackendApplicationController::class)->where('view','(.*)');
-Route::get('{view}',ApplicationController::class)->where('view','(.*)');
+Route::get('/admin/{view}', BackendApplicationController::class)->where('view', '(.*)');
+Route::get('{view}', ApplicationController::class)->where('view', '(.*)');
 // Route::get('/login',[LoginController::class,'index']);
 // Route::post('/login',[LoginController::class,'login'])->name('login');
 // Route::get('/logout',[LoginController::class,'logout'])->name('logout');

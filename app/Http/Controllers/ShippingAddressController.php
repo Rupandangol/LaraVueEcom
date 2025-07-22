@@ -25,6 +25,7 @@ class ShippingAddressController extends Controller
     {
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
+
         return ShippingAddress::updateOrCreate(['user_id' => $data['user_id']], $data);
     }
 
@@ -33,8 +34,9 @@ class ShippingAddressController extends Controller
      */
     public function show()
     {
-        $userId=Auth::user()->id;
-        $shippingAddress=ShippingAddress::where('user_id',$userId)->first();
+        $userId = Auth::user()->id;
+        $shippingAddress = ShippingAddress::where('user_id', $userId)->first();
+
         return new ShippingAddressResource($shippingAddress);
     }
 

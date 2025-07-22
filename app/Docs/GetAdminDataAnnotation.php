@@ -2,20 +2,22 @@
 
 namespace App\Docs;
 
-class GetAdminDataAnnotation 
+class GetAdminDataAnnotation
 {
     /**
-     * 
      * @OA\Get(
      *     path="/api/V1/admin/data",
      *     summary="GetAdminData",
      *     tags={"Admin Data"},
      *     security={{"bearerAuth": {}}},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Admin Data",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
@@ -47,6 +49,7 @@ class GetAdminDataAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Invalid input"
@@ -59,6 +62,6 @@ class GetAdminDataAnnotation
      */
     public function __invoke()
     {
-        //For Documentation
+        // For Documentation
     }
 }

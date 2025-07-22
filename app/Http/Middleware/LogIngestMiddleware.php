@@ -26,6 +26,7 @@ class LogIngestMiddleware
             source: LogSource::API_GATEWAY
         );
         LogIngestJob::dispatch($logData);
+
         return $next($request);
     }
 }

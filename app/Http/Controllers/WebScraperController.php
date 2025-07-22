@@ -20,9 +20,9 @@ class WebScraperController extends Controller
         $data = $this->webScraperService->scrape($url);
 
         return response()->json([
-            'status'=>'success',
-            'message'=>'Web Scrape completed',
-            'data' => $data
+            'status' => 'success',
+            'message' => 'Web Scrape completed',
+            'data' => $data,
         ]);
     }
 }

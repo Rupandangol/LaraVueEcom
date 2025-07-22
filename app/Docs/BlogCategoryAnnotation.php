@@ -2,19 +2,21 @@
 
 namespace App\Docs;
 
-
-class BlogCategoryAnnotation 
+class BlogCategoryAnnotation
 {
     /**
      * @OA\Get(
      *     path="/api/blog-categories",
      *     summary="Get a list of Blog Categories",
      *     tags={"Blog Categories"},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="status",
      *                 type="string",
@@ -23,8 +25,10 @@ class BlogCategoryAnnotation
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
+     *
      *                 @OA\Items(
      *                     type="object",
+     *
      *                    @OA\Property(
      *                 property="status",
      *                 type="string",
@@ -64,6 +68,7 @@ class BlogCategoryAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Invalid request"
@@ -72,7 +77,7 @@ class BlogCategoryAnnotation
      */
     public function index()
     {
-        //For Documentation
+        // For Documentation
     }
 
     /**
@@ -80,20 +85,25 @@ class BlogCategoryAnnotation
      *     path="/api/blog-categories/{id}",
      *     summary="Get details of a Blog Category",
      *     tags={"Blog Categories"},
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the blog category",
+     *
      *         @OA\Schema(
      *             type="integer"
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="status",
      *                 type="string",
@@ -130,11 +140,14 @@ class BlogCategoryAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Blog category not found",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="status",
      *                 type="string",
@@ -147,6 +160,7 @@ class BlogCategoryAnnotation
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Invalid request"
@@ -155,6 +169,6 @@ class BlogCategoryAnnotation
      */
     public function show()
     {
-        //For Documentation
+        // For Documentation
     }
 }

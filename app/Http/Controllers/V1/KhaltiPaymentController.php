@@ -10,7 +10,7 @@ class KhaltiPaymentController extends Controller
     public function pay()
     {
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => 'https://a.khalti.com/api/v2/epayment/initiate/',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -33,24 +33,25 @@ class KhaltiPaymentController extends Controller
         }
         }
         ',
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Authorization: key 47f3741d81de478d929ff10213a5a8c0',
                 'Content-Type: application/json',
-            ),
-        ));
+            ],
+        ]);
 
         $response = curl_exec($curl);
 
         curl_close($curl);
+
         // echo $response;
         return $response;
     }
 
     public function lookup(Request $request)
     {
-        $pidx = (string)$request->pidx;
+        $pidx = (string) $request->pidx;
         $curl = curl_init();
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_URL => 'https://a.khalti.com/api/v2/epayment/lookup/',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -62,15 +63,16 @@ class KhaltiPaymentController extends Controller
             CURLOPT_POSTFIELDS => `{
                 "pidx": $pidx
             }`,
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Authorization: key 47f3741d81de478d929ff10213a5a8c0',
                 'Content-Type: application/json',
-            ),
-        ));
+            ],
+        ]);
 
         $response = curl_exec($curl);
 
         curl_close($curl);
+
         // echo $response;
         return $response;
     }

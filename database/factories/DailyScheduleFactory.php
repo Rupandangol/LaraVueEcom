@@ -27,7 +27,7 @@ class DailyScheduleFactory extends Factory
             'is_all_day' => fake()->boolean(50),
             'location' => fake()->randomElement(['kathmandu', 'pokhara', 'chitwan']),
             'status' => fake()->randomElement(DailyScheduleStatus::cases())->value,
-            'admin_id' =>  Admin::factory()
+            'admin_id' => Admin::factory(),
         ];
     }
 }
