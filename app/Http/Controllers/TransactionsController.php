@@ -48,7 +48,7 @@ class TransactionsController extends Controller
             $query->whereDate('date_time', $request->get('date'));
         }
         if ($request->filled('description')) {
-            $query->where('description', 'like', '%'.$request->get('description').'%');
+            $query->where('description', 'like', '%' . $request->get('description') . '%');
         }
         if ($request->filled('month')) {
             $query->whereYear('date_time', Carbon::parse($request->get('month'))->format('Y'))
@@ -90,8 +90,13 @@ class TransactionsController extends Controller
                 'three_month_forecast' => round($three_month_forecast->avg('total_spent')),
                 'over_all_time_based_spendings' => $over_all_time_based_spendings,
                 'top_expenses' => $top_expenses,
-                'transactions' => $query->paginate(10)->appends($request->only(['description', 'date', 'month'])),
+                'transactions' => $query->orderBy('id', 'desc')->paginate(10)->appends($request->only(['description', 'date', 'month'])),
             ],
         ]);
+    }
+
+    public function customSearch(Request $request)
+    {
+        dd($request);
     }
 }
