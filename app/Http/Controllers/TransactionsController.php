@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Imports\TransactionImport;
+use App\Models\Transactions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,6 +24,7 @@ class TransactionsController extends Controller
                 ], 404);
             }
             Excel::import(new TransactionImport, $file);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Imported successfully',
@@ -41,7 +44,7 @@ class TransactionsController extends Controller
             $query->whereDate('date_time', $request->get('date'));
         }
         if ($request->filled('description')) {
-            $query->where('description', 'like', '%' . $request->get('description') . '%');
+            $query->where('description', 'like', '%'.$request->get('description').'%');
         }
         if ($request->filled('month')) {
             $query->whereYear('date_time', Carbon::parse($request->get('month'))->format('Y'))
@@ -91,6 +94,19 @@ class TransactionsController extends Controller
 
     public function customSearch(Request $request)
     {
-        dd($request);
+        $request->validate([
+            'description' => 'nullable|string|max:255',
+        ]);
+        $results = new LengthAwarePaginator([], 0, 10);
+        if ($request->filled('description')) {
+            $results = Transactions::search($request->get('description'))
+                ->paginate(10)
+                ->appends($request->only(['description']));
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $results,
+        ]);
     }
 }

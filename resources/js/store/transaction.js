@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 
 export const useTransactionStore = defineStore('transaction', {
     state: () => ({
-        transactionData: []
+        transactionData: [],
+        meiliSearchResult: []
     }),
     actions: {
         async transactionImport() {
@@ -20,6 +21,17 @@ export const useTransactionStore = defineStore('transaction', {
                     response.data.status,
                     response.data.message
                 )
+            }
+        },
+        async customMeiliSearch(params) {
+            const response = await api.get('/admin/transaction/custom-search', { params });
+            if (response.data.status == 'success') {
+                const paginated = response.data.data;
+
+                // Mimic the expected structure
+                this.transactionData = {
+                    transactions: paginated,
+                };
             }
         }
     }

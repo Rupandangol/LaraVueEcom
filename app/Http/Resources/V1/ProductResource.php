@@ -8,10 +8,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @property-read int $id
  * @property-read string $name
- * @property-read string|null $description   
+ * @property-read string|null $description
  * @property-read string|null $price
- * @property-read string|null $stock_quantity  
- * @property-read string|null $image   
+ * @property-read string|null $stock_quantity
+ * @property-read string|null $image
  */
 class ProductResource extends JsonResource
 {

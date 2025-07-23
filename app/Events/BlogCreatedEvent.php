@@ -34,6 +34,7 @@ class BlogCreatedEvent implements ShouldBroadcast, ShouldQueue
             new PrivateChannel('blog-created'),
         ];
     }
+
     public function broadcastWith(): array
     {
         return [

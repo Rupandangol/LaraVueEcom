@@ -20,7 +20,7 @@ class TodoListController extends Controller
                 'message' => 'Unauthenticated',
             ], 401);
         }
-        if ((int)request()->query('archive') == 1) {
+        if ((int) request()->query('archive') == 1) {
             $todolist = TodoList::where(['is_archived' => 1, 'admin_id' => $admin->id])->get();
         } else {
             $todolist = TodoList::where(['is_archived' => 0, 'admin_id' => $admin->id])
@@ -185,7 +185,7 @@ class TodoListController extends Controller
 
     public function export()
     {
-        $filename = 'todoList' . Carbon::now()->format('YmdHis');
+        $filename = 'todoList'.Carbon::now()->format('YmdHis');
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",

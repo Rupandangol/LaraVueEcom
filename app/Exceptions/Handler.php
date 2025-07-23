@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
             $logdata = new LogDto(
                 level: LogLevel::ERROR,
                 message: $e->getMessage(),
-                context: (string)$e->getLine(),
+                context: (string) $e->getLine(),
                 source: LogSource::EXCEPTION_HANDLER
             );
             LogIngestJob::dispatch($logdata);

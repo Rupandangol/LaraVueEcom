@@ -28,14 +28,14 @@ class CategoryController extends Controller
         }
         $categories = Category::query()
             ->when($array_filters['name'] !== '', function ($q) use ($array_filters) {
-                $q->where('name', 'LIKE', '%' . $array_filters['name'] . '%');
+                $q->where('name', 'LIKE', '%'.$array_filters['name'].'%');
             })
             ->with('products')
             ->get();
-        if (! Cache::has('categories_' . $array_filters['name'])) {
-            $cachedData = Cache::put('categories_' . ($array_filters['name'] ?? ''), $categories, 3);
+        if (! Cache::has('categories_'.$array_filters['name'])) {
+            $cachedData = Cache::put('categories_'.($array_filters['name'] ?? ''), $categories, 3);
         }
-        $cachedData = Cache::get('categories_' . ($array_filters['name'] ?? ''));
+        $cachedData = Cache::get('categories_'.($array_filters['name'] ?? ''));
 
         return new CategoryCollection($cachedData);
     }

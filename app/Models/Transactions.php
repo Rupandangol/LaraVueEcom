@@ -8,8 +8,8 @@ use Laravel\Scout\Searchable;
 
 class Transactions extends Model
 {
-    use Searchable;
     use HasFactory;
+    use Searchable;
 
     protected $fillable = [
         'date_time',
