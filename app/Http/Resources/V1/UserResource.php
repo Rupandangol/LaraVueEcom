@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @property-read int $id
  * @property-read string $name
- * @property-read boolean $lock
+ * @property-read bool $lock
  * @property-read string $email
  * @property-read string $email_verified_at
  */

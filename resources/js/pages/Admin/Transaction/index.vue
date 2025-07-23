@@ -6,6 +6,7 @@ import { Bar, Pie } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import { options } from '@fullcalendar/core/preact.js';
 import { useTransactionStore } from '../../../store/transaction';
+import { storeToRefs } from 'pinia';
 
 
 // Register Chart.js components
@@ -20,15 +21,26 @@ const filters = ref([
     'month',
     'date'
 ]);
+const meilifilters = ref([
+    'description',
+]);
 
-const transactionStore=useTransactionStore();
-
-const transactionData = ref([]);
+const transactionStore = useTransactionStore();
+const { transactionData } = storeToRefs(transactionStore);
+// const transactionData = ref([]);
 const transactionDataPagination = ref([]);
 
 
-const transactionImport=()=>{
+const transactionImport = () => {
     transactionStore.transactionImport();
+}
+
+const customMeiliSearch = () => {
+    const params = {};
+    if (meilifilters.value.description) {
+       params.description = meilifilters.value.description;
+    }
+    transactionStore.customMeiliSearch(params);
 }
 const fetchTransactionAnalytics = async (url) => {
     const response = await axios.get(url, {
@@ -71,6 +83,7 @@ const resetfilters = () => {
     filters.value.description = '';
     filters.value.month = '';
     filters.value.date = '';
+    meilifilters.value.description = '';
     fetchTransactionAnalytics('/api/V1/admin/transaction/analytics')
 }
 // Chart data
@@ -132,7 +145,20 @@ onMounted(() => {
                     </div>
                     <div class="col-md-2">
                         <button type="submit" class="btn btn-primary">Search</button> &nbsp;
-                        <button type="reset" @click="resetfilters()" class="btn btn-default"><i class="fas fa-sync"></i></button>
+                        <button type="reset" @click="resetfilters()" class="btn btn-default"><i
+                                class="fas fa-sync"></i></button>
+                    </div>
+                </form>
+
+                <form @submit.prevent="customMeiliSearch" class="row">
+                    <div class="form-group col-md-8">
+                        <input type="text" v-model="meilifilters.description" class="form-control"
+                            placeholder="Description">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">Meili Search</button> &nbsp;
+                        <button type="reset" @click="resetfilters()" class="btn btn-default"><i
+                                class="fas fa-sync"></i></button>
                     </div>
                 </form>
                 <table class="table table-boarded">
