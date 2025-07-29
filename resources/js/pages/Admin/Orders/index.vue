@@ -88,9 +88,28 @@ const deleteOrder = (id) => {
             })
         }
     });
-
 }
-
+const reportGenerate = async () => {
+    try {
+        const response = await axios.get('/api/V1/admin-orders-report', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+            },
+            responseType: 'blob'
+        });
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'report.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.log(error);
+    }
+}
 onMounted(() => {
     getOrders();
 })
@@ -99,6 +118,7 @@ onMounted(() => {
     <AdminLayout>
         <div class="heading m-2 p-3 d-flex justify-content-between">
             <h3>Orders</h3>
+            <button class="btn btn-success" target="_blank" @click="reportGenerate()">Generate Report</button>
             <router-link class="btn btn-info btn-sm" :to="{ name: 'admin-order-create' }">Create Order</router-link>
         </div>
 
@@ -170,7 +190,7 @@ onMounted(() => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="loading" v-for="placeholder in [1, 1, 1, 1] " class="placeholder-glow">
+                    <tr v-if="loading" v-for="placeholder in [1, 1, 1, 1]" class="placeholder-glow">
                         <td><span class="placeholder col-12"></span></td>
                         <td><span class="placeholder col-12"></span></td>
                         <td><span class="placeholder col-12"></span></td>
@@ -185,7 +205,7 @@ onMounted(() => {
                         <td>{{ order?.ordered_date }}</td>
                         <td>{{ order.total_price }}</td>
                         <td>{{ order.country }},<br>{{ order.zone }},{{ order.district }},<br>{{ order.street }},{{
-                order.zip_code }}</td>
+                            order.zip_code }}</td>
                         <td>
                             <div :class="status(order?.status)">
                                 {{ order?.status }}
