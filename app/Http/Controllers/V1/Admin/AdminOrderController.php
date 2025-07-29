@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\OrderStatusUpdateRequest;
 use App\Http\Resources\V1\OrderCollection;
 use App\Http\Resources\V1\OrderResource;
+use App\Interfaces\ReportGeneratorInterface;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -115,6 +117,22 @@ class AdminOrderController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Updated Successfully',
+        ]);
+    }
+
+    public function report(ReportGeneratorInterface $report_generator)
+    {
+        $qwe = $report_generator->generate('orders', [
+            'id',
+            'user_id',
+            'total_price',
+            'status',
+        ]);
+        $filename = 'report_'.Carbon::now()->format('YmdHis').'.csv';
+
+        return response()->stream($qwe, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
         ]);
     }
 }

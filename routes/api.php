@@ -126,6 +126,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('api-user-delete');
         Route::apiResource('/categories', CategoryController::class);
         Route::resource('/products', ProductController::class)->except('index', 'show');
+        Route::get('/admin-orders-report', [AdminOrderController::class, 'report']);
         Route::resource('/admin-orders', AdminOrderController::class)->name('show', 'api-admin-orders.show');
         Route::resource('/admins', AdminController::class);
 
