@@ -11,6 +11,7 @@ use App\Interfaces\ReportGeneratorInterface;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Rupandangol\Slugger\Contracts\SlugGeneratorInterface;
 
 class AdminOrderController extends Controller
 {
@@ -31,12 +32,12 @@ class AdminOrderController extends Controller
 
         $orders = new OrderCollection(Order::whereHas('user', function ($q) use ($array_filter) {
             if ($array_filter['name'] != '') {
-                $q->where('name', 'LIKE', '%'.$array_filter['name'].'%');
+                $q->where('name', 'LIKE', '%' . $array_filter['name'] . '%');
             }
         })->when(count($array_filter) > 0, function ($q) use ($array_filter) {
             foreach ($array_filter as $column => $value) {
                 if ($column != 'name') {
-                    $q->where($column, 'LIKE', '%'.$value.'%');
+                    $q->where($column, 'LIKE', '%' . $value . '%');
                 }
             }
         })->with(['orderDetails', 'user'])->orderBy('id', 'DESC')->get());
@@ -120,19 +121,24 @@ class AdminOrderController extends Controller
         ]);
     }
 
-    public function report(ReportGeneratorInterface $report_generator)
-    {
-        $qwe = $report_generator->generate('orders', [
-            'id',
-            'user_id',
-            'total_price',
-            'status',
-        ]);
-        $filename = 'report_'.Carbon::now()->format('YmdHis').'.csv';
+    // public function report(ReportGeneratorInterface $report_generator)
+    // {
+    //     $qwe = $report_generator->generate('orders', [
+    //         'id',
+    //         'user_id',
+    //         'total_price',
+    //         'status',
+    //     ]);
+    //     $filename = 'report_'.Carbon::now()->format('YmdHis').'.csv';
 
-        return response()->stream($qwe, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
-        ]);
+    //     return response()->stream($qwe, 200, [
+    //         'Content-Type' => 'text/csv',
+    //         'Content-Disposition' => "attachment; filename=\"$filename\"",
+    //     ]);
+    // }
+    public function report(SlugGeneratorInterface $slug_generator)
+    {
+        $item = $slug_generator->generate('asdf ajklsdj alskdf jas fiqouewroq');
+        dd($item );
     }
 }

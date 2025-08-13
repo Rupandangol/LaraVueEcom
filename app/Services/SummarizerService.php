@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\AiReponseDto;
+use App\Interfaces\ResponseInserterInterface;
 use GuzzleHttp\Client;
 
 class SummarizerService
@@ -11,7 +12,7 @@ class SummarizerService
 
     public $ai_response_inserter;
 
-    public function __construct(AiResponseInserter $ai_response_inserter)
+    public function __construct(ResponseInserterInterface $ai_response_inserter)
     {
         $this->ai_response_inserter = $ai_response_inserter;
         $this->client = new Client([
