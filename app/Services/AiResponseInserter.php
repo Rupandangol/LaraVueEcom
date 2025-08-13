@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\DTOs\AiReponseDto;
+use App\Interfaces\ResponseInserterInterface;
 use App\Models\AiResponse;
 use Illuminate\Support\Facades\Auth;
 
-class AiResponseInserter
+class AiResponseInserter implements ResponseInserterInterface
 {
     public function insert(AiReponseDto $data)
     {

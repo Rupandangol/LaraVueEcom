@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23e9b81a214ca9b938897206e4d9d381",
+    "content-hash": "4d5e8d76676ed386c15770e9a50c70df",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5288,6 +5288,44 @@
             "time": "2025-06-25T14:20:11+00:00"
         },
         {
+            "name": "rupandangol/blog-package",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/Rupandangol/BlogPackage",
+                "reference": "1bdb4a462392213339804efdcedd6cf3c2ef1fa9"
+            },
+            "require": {
+                "illuminate/support": "^9.0|^10.0",
+                "php": ">=8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Rupandangol\\BlogPackage\\BlogServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rupandangol\\BlogPackage\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "rupandangol"
+                }
+            ],
+            "description": "Blog Crud",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "rupandangol/laravel-analytics-helper",
             "version": "dev-main",
             "source": {
@@ -5373,6 +5411,40 @@
                 "issues": "https://github.com/Rupandangol/Laravel-class-maker/issues"
             },
             "time": "2025-06-11T07:25:41+00:00"
+        },
+        {
+            "name": "rupandangol/slugger",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/Rupandangol/Slugger",
+                "reference": "54b4b758b4d0ab4515a1583e6cad30a925a7b602"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Rupandangol\\Slugger\\SlugGeneratorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rupandangol\\Slugger\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "rupan dangol"
+                }
+            ],
+            "description": "Slug generator",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "simplesoftwareio/simple-qrcode",
@@ -11235,8 +11307,10 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "rupandangol/blog-package": 20,
         "rupandangol/laravel-analytics-helper": 20,
-        "rupandangol/laravel-class-maker": 20
+        "rupandangol/laravel-class-maker": 20,
+        "rupandangol/slugger": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

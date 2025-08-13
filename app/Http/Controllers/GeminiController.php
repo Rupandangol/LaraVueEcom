@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\AiReponseDto;
+use App\Interfaces\ResponseInserterInterface;
 use App\Services\AiResponseInserter;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -13,7 +14,7 @@ class GeminiController extends Controller
 {
     protected $ai_response_inserter;
 
-    public function __construct(AiResponseInserter $ai_response_inserter)
+    public function __construct(ResponseInserterInterface $ai_response_inserter)
     {
         $this->ai_response_inserter = $ai_response_inserter;
     }

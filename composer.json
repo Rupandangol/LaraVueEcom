@@ -22,8 +22,10 @@
         "mll-lab/laravel-graphiql": "^3.2",
         "nuwave/lighthouse": "^6.45",
         "pusher/pusher-php-server": "^7.2",
+        "rupandangol/blog-package": "dev-main",
         "rupandangol/laravel-analytics-helper": "dev-main",
         "rupandangol/laravel-class-maker": "dev-main",
+        "rupandangol/slugger": "dev-main",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-permission": "^6.2",
         "stripe/stripe-php": "^16.2",
@@ -97,6 +99,14 @@
         {
             "type": "vcs",
             "url": "https://github.com/Rupandangol/laravel-analytics-package.git"
+        },
+        {
+            "type": "path",
+            "url": "packages/Rupandangol/Slugger"
+        },
+        {
+            "type": "path",
+            "url": "packages/Rupandangol/BlogPackage"
         }
     ]
 }
