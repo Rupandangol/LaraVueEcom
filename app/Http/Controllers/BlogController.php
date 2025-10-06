@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LogLevel;
+use App\Enums\LogSource;
 use App\Events\BlogCreatedEvent;
 use App\Http\Requests\BlogStoreRequest;
 use App\Models\Blog;
+use App\Models\SystemLog;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +20,12 @@ class BlogController extends Controller
      */
     public function index()
     {
+        SystemLog::create([
+            'level' => LogLevel::INFO,
+            'message' =>'test',
+            'context' => 'test',
+            'source' => LogSource::API_GATEWAY,
+        ]);
         try {
             $blog = Blog::with(['blogCategory'])->paginate();
         } catch (Exception $e) {

@@ -3,9 +3,10 @@
 namespace App\Services;
 
 use App\DTOs\LogDto;
+use App\Interfaces\LogIngestInterface;
 use App\Models\Log;
 
-class LogIngestService
+class LogIngestService implements LogIngestInterface
 {
     public function log(LogDto $log)
     {

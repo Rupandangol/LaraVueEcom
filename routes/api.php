@@ -13,6 +13,7 @@ use App\Http\Controllers\RecurringDailyScheduleController;
 use App\Http\Controllers\RedditQuoteController;
 use App\Http\Controllers\ShippingAddressController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\SystemLogController;
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\V1\Admin\AdminDashboardController;
@@ -103,6 +104,7 @@ Route::group(['prefix' => 'V1', 'middleware' => [LogIngestMiddleware::class]], f
 
     Route::group(['middleware' => ['auth:admin']], function () {
         Route::get('/daily-schedule-analytics', [DailyScheduleController::class, 'dailyScheduleAnalytics']);
+        Route::post('/system-logs', [SystemLogController::class, 'store']);
         Route::group(['prefix' => '/admin'], function () {
             Route::get('/transaction/custom-search', [TransactionsController::class, 'customSearch']);
             Route::post('/transaction/import', [TransactionsController::class, 'import']);

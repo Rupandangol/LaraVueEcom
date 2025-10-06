@@ -47,6 +47,11 @@ return [
             'database' => ':memory:',
             'prefix' => '',
         ],
+        'sqlite_logs' => [
+            'driver' => 'sqlite',
+            'database' => database_path('logs.sqlite'),
+            'prefix' => '',
+        ],
 
         'mysql' => [
             'driver' => 'mysql',
