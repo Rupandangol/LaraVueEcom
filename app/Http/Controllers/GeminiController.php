@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\DTOs\AiReponseDto;
 use App\Interfaces\ResponseInserterInterface;
-use App\Services\AiResponseInserter;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;

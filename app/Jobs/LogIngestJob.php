@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\DTOs\LogDto;
-use App\Services\LogIngestService;
+use App\Services\LogIngestFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -25,8 +25,9 @@ class LogIngestJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(LogIngestService $logIngestService): void
+    public function handle(): void
     {
+        $logIngestService=LogIngestFactory::make('log');
         $logIngestService->log($this->log_dto);
     }
 }

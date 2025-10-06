@@ -170,6 +170,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         App\Providers\ReportGeneratorProvider::class,
+        App\Providers\LogIngestProvider::class,
+        App\Providers\ReponseInserterProvider::class,
     ])->toArray(),
 
     /*
